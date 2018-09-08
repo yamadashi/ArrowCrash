@@ -6,6 +6,8 @@
 //シーンを跨いで必要な情報
 struct SharedData {
 	//ゲームの結果とかをリザルトで使いたいときとか
+	int player_num;
+	int cellSize = 20; //とりあえず
 };
 
 

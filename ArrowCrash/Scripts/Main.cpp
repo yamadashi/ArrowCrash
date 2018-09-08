@@ -1,14 +1,16 @@
 ﻿
 # include <Siv3D.hpp>
+#include "Title.h"
+#include "Game.h"
 
 void Main()
 {
-	const Font font(30);
+	MySceneManager sceneManager;
+	sceneManager.add<Title>(SceneName::Title);
+	sceneManager.add<Game>(SceneName::Game);
 
 	while (System::Update())
 	{
-		font(L"ようこそ、Siv3D の世界へ！").draw();
-
-		Circle(Mouse::Pos(), 50).draw({ 255, 0, 0, 127 });
+		sceneManager.updateAndDraw();
 	}
 }
