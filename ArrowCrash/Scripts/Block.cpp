@@ -6,7 +6,8 @@
 Block::Block(const Point& point_, const Point& pos, const int cellSize)
 	:destroyed(false),
 	point(point),
-	rect(pos, cellSize)
+	rect(pos, cellSize),
+	settled(false)
 {}
 
 
@@ -45,7 +46,9 @@ void ArrowBlock::draw() const {
 
 InvincibleBlock::InvincibleBlock(const Point& point_, const Point& pos, const int cellSize)
 	:Block(point_, pos, cellSize)
-{}
+{
+	setSettled(); //Ç‡Ç§ÇøÇÂÇ¡Ç∆ó«Ç¢ä¥Ç∂Ç…èëÇØÇªÇ§
+}
 
 void InvincibleBlock::draw() const {
 	rect.draw(Palette::Gray);

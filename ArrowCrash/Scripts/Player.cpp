@@ -4,11 +4,11 @@ Player::Player(int player_num, const GameData& gameData_)
 	:number(player_num),
 	gameData(gameData_),
 	field(gameData.stdPositions.at(number),gameData.cellSize),
-	generator()
+	generator(field)
 {}
 
 void Player::update() {
-	generator.update;
+	generator.update();
 }
 
 void Player::draw() const {

@@ -2,6 +2,6 @@
 
 
 struct GameData {
-	int cellSize;
-	std::vector<Point> stdPositions;
+	int cellSize; //ブロックのサイズ
+	std::vector<Point> stdPositions; //各プレイヤーのフィールドの基準点
 };

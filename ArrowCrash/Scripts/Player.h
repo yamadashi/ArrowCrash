@@ -8,6 +8,8 @@ private:
 	const GameData& gameData;
 
 	Field field;
+	// 一括で爆発するためフィールド上の全てのArrowBlockへの参照を持っておく
+	std::vector<ArrowBlock&> arrowBlocks;
 	BlockGenerator generator;
 
 public:

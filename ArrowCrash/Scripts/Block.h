@@ -10,13 +10,16 @@ private:
 protected:
 	const Rect rect;
 	const Point point;
+	bool settled;
 
 public:
 	Block(const Point& point, const Point& pos, const int cellSize);
-	~Block() = default;
-	virtual void draw() const = 0;
+	virtual ~Block() = default;
 
+	virtual void draw() const = 0;
 	virtual void destroy() { destroyed = true; }
+	bool isSettled() const { return settled; }
+	void setSettled() { settled = true; }
 };
 
 
@@ -34,7 +37,7 @@ public:
 
 class ArrowBlock : public Block {
 private:
-	ExplosionDirection direction;
+	const ExplosionDirection direction;
 	Explodable& field;
 
 public:

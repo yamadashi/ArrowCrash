@@ -8,7 +8,7 @@ using BlockGrid = std::vector<std::vector<std::shared_ptr<Block>>>;
 
 class Field : public Explodable {
 private:
-	Point stdPos; //Šî€“_
+	const Point stdPos; //Šî€“_
 	BlockGrid cells;
 
 
