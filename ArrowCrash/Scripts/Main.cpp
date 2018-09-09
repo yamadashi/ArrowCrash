@@ -5,6 +5,8 @@
 
 void Main()
 {
+	//Window::Resize(1280, 960);
+
 	MySceneManager sceneManager;
 	sceneManager.add<Title>(SceneName::Title);
 	sceneManager.add<Game>(SceneName::Game);

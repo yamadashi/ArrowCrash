@@ -8,11 +8,11 @@
 
 class Game : public Scene {
 private:
-	GameData data;
+	GameData gameData;
 
 	std::vector<Player> players;
 
-	void setData();
+	void setGameData();
 
 public:
 	void init() override;

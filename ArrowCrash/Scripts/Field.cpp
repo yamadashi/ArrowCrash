@@ -8,8 +8,9 @@ Field::Field(const Point& stdPos_, int cellSize)
 		cells.emplace_back();
 		for (int j = 0; j < constants::col_len; j++) {
 			if (i == constants::row_len - 1 || j == 0 || j == constants::col_len - 1) {
-				Point point(i, j);
-				cells[i].emplace_back(InvincibleBlock(point, stdPos.movedBy(point*cellSize), cellSize));
+				cells[i].emplace_back(new InvincibleBlock(
+					{ i, j }, stdPos.movedBy(Point(j, i)*cellSize), cellSize
+				));
 			}
 			else
 				cells[i].emplace_back(nullptr);

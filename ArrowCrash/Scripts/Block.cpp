@@ -5,7 +5,7 @@
 
 Block::Block(const Point& point_, const Point& pos, const int cellSize)
 	:destroyed(false),
-	point(point),
+	point(point_),
 	rect(pos, cellSize),
 	settled(false)
 {}
@@ -52,4 +52,5 @@ InvincibleBlock::InvincibleBlock(const Point& point_, const Point& pos, const in
 
 void InvincibleBlock::draw() const {
 	rect.draw(Palette::Gray);
+	PutText(point).from(rect.pos);
 }
