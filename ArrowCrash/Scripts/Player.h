@@ -14,7 +14,7 @@ private:
 
 public:
 	Player(int player_num ,const GameData& gameData);
-	Player() = default;
+	~Player() = default;
 
 	void update();
 	void draw() const;

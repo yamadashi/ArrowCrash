@@ -1,11 +1,32 @@
 #include "Game.h"
 
 
+void Game::init() {
+	setData();
+	for (int i = 0; i < m_data->numOfPlayer; i++) {
+		players.emplace_back(i, data);
+	}
+}
+
+void Game::update() {
+	//if (Input::MouseL.clicked) changeScene(SceneName::Title);
+	for (auto& player : players) {
+		player.update();
+	}
+}
+
+void Game::draw() const {
+	//PutText(L"Game").at(Window::Center());
+	for (auto& player : players) {
+		player.draw();
+	}
+}
+
+
+
 //マージンとかUI(次に落ちてくるやつの表示窓とか何Pなのかとか)はまだ考えてない
 void Game::setData() {
 
-	// フィールドの横/縦の比
-	float aspactRatio = constants::col_len / constants::row_len;
 	auto&& window = Window::Size();
 
 	//泥臭いのでなんかスマートな方法あればリファクタリングしたい
@@ -17,6 +38,7 @@ void Game::setData() {
 		
 		data.stdPositions.emplace_back((window.x - fieldWidth) / 2, 0);
 		break;
+
 	case 2:
 		data.cellSize = window.y / constants::row_len; // calculate cell size
 		int fieldWidth = data.cellSize*constants::col_len; // calculate field width
@@ -26,6 +48,7 @@ void Game::setData() {
 			data.stdPositions.emplace_back(regionWidth*i + (regionWidth - fieldWidth) / 2, 0);
 		}
 		break;
+
 	case 3:
 		//要工夫
 		//data.cellSize = (window.y / 2) / constants::row_len; // calculate cell size
@@ -34,6 +57,7 @@ void Game::setData() {
 		//
 		//data.stdPositions.emplace_back(regionWidth*i + (regionWidth - fieldWidth) / 2, 0);
 		break;
+
 	case 4:
 		data.cellSize = (window.y / 2) / constants::row_len; // calculate cell size
 		int fieldWidth = data.cellSize*constants::col_len; // calculate field width
@@ -45,6 +69,7 @@ void Game::setData() {
 			data.stdPositions.emplace_back(stdPos_x, stdPos_y);
 		}
 		break;
+
 	default:
 		break;
 	}
