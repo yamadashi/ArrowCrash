@@ -52,5 +52,4 @@ InvincibleBlock::InvincibleBlock(const Point& point_, const Point& pos, const in
 
 void InvincibleBlock::draw() const {
 	rect.draw(Palette::Gray);
-	PutText(point).from(rect.pos);
 }

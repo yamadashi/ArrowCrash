@@ -1,7 +1,7 @@
 #include "BlockGenerator.h"
 
 
-BlockGenerator::BlockGenerator(Field& field_, std::vector<std::shared_ptr<ArrowBlock>>& arrowBlocks_)
+BlockGenerator::BlockGenerator(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_)
 	:field(field_),
 	arrowBlocks(arrowBlocks_)
 {}

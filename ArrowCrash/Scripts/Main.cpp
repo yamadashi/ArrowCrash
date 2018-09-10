@@ -1,11 +1,14 @@
 ﻿
-# include <Siv3D.hpp>
+#include <Siv3D.hpp>
 #include "Title.h"
 #include "Game.h"
 
 void Main()
 {
-	//Window::Resize(1280, 960);
+	//最大解像度を取得
+	const auto maxSize = Graphics::GetFullScreenSize().back();
+	
+	Window::SetFullscreen(true, maxSize);
 
 	MySceneManager sceneManager;
 	sceneManager.add<Title>(SceneName::Title);
