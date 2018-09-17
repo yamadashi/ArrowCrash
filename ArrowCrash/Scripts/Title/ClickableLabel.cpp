@@ -1,16 +1,26 @@
 #include "Clickablelabel.h"
 
-ClickableLabel::ClickableLabel(String text_, Point centerPos, String font_handler_, const func& clickEvent) 
-	:Clickable(clickEvent, centerPos.movedBy(-FontAsset(font_handler_)(text_).region().size/2)),
+ClickableLabel::ClickableLabel(
+	const String& text_,
+	const Point& centerPos,
+	const String& fontHandler_,
+	const Color& textColor,
+	const func& clickEvent,
+	const func& mouseOverEvent,
+	const func& mouseOutEvent)
+
+	:Clickable(clickEvent, mouseOverEvent, mouseOutEvent,
+		centerPos.movedBy(-FontAsset(fontHandler_)(text_).region().size/2)),
 	text(text_),
-	font_handler(font_handler_)
+	fontHandler(fontHandler_),
+	color(textColor)
 {}
 
 
 bool ClickableLabel::contains(const Point& point) const {
-	return FontAsset(font_handler)(text).region(pos).contains(point);
+	return FontAsset(fontHandler)(text).region(pos).contains(point);
 }
 
 void ClickableLabel::draw() const {
-	FontAsset(font_handler)(text).draw(pos, Palette::Darkslategray);
+	FontAsset(fontHandler)(text).draw(pos, color);
 }

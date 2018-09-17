@@ -1,10 +1,18 @@
 #include "ClickablePanel.h"
 
 
-ClickablePanel::ClickablePanel(int width, int height, Point pos, String texture_handler_, const func& clickEvent)
-	:Clickable(clickEvent, pos),
+ClickablePanel::ClickablePanel(
+	const int width,
+	const int height,
+	const Point& pos,
+	const String& textureHandler_,
+	const func& clickEvent,
+	const func& mouseOverEvent,
+	const func& mouseOutEvent)
+
+	:Clickable(clickEvent, mouseOverEvent, mouseOutEvent, pos),
 	shape(width, height),
-	texture_handler(texture_handler_)
+	textureHandler(textureHandler_)
 {}
 
 bool ClickablePanel::contains(const Point& point) const {
@@ -12,6 +20,6 @@ bool ClickablePanel::contains(const Point& point) const {
 }
 
 void ClickablePanel::draw() const {
-	if (texture_handler != L"") shape(TextureAsset(texture_handler)).draw(pos);
+	if (textureHandler != L"") shape(TextureAsset(textureHandler)).draw(pos);
 	else shape.movedBy(pos).draw(Palette::Lawngreen);
 }

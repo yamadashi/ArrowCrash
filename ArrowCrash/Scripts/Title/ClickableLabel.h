@@ -6,11 +6,22 @@
 class ClickableLabel : public Clickable {
 private:
 	String text;
-	String font_handler;
+	String fontHandler;
+	Color color;
 
 public:
-	ClickableLabel(String text_, Point centerPos, String font_handler_, const func& clickEvent = [](Clickable&) {});
+	ClickableLabel(
+		const String& text_,
+		const Point& centerPos,
+		const String& font_handler_,
+		const Color& textColor = Palette::Darkslategray, //‰¼
+		const func& clickEvent = [](Clickable&) {},
+		const func& mouseOverEvent = [](Clickable&) {},
+		const func& mouseOutEvent = [](Clickable&) {});
 	~ClickableLabel() = default;
+
+	void setText(const String& txt) { text = txt; }
+	void setColor(const Color& clr) { color = clr; }
 	
 	bool contains(const Point& point) const override;
 	void draw() const override;

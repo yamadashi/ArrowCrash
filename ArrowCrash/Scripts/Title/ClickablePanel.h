@@ -5,11 +5,20 @@
 class ClickablePanel : public Clickable {
 private:
 	Rect shape;
-	String texture_handler;
+	String textureHandler;
 
 public:
-	ClickablePanel(int width, int height, Point pos, String texture_handler = L"", const func& clickEvent = [](Clickable&) {});
+	ClickablePanel(
+		const int width,
+		const int height,
+		const Point& pos,
+		const String& texture_handler = L"",
+		const func& clickEvent = [](Clickable&) {},
+		const func& mouseOverEvent = [](Clickable&) {},
+		const func& mouseOutEvent = [](Clickable&) {});
 	~ClickablePanel() = default;
+
+	void setTextureHandler(const String& handler) { textureHandler = handler; }
 
 	bool contains(const Point& point) const override;
 	void draw() const override;
