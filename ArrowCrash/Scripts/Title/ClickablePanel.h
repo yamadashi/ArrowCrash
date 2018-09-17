@@ -2,10 +2,19 @@
 #include "Clickable.h"
 #include <Siv3D.hpp>
 
+//‘O•ûéŒ¾
+class ClickablePanel;
+
+using func = std::function<void(ClickablePanel&)>;
+
+
 class ClickablePanel : public Clickable {
 private:
 	Rect shape;
 	String textureHandler;
+	std::function<void(ClickablePanel&)> clickEvent;
+	std::function<void(ClickablePanel&)> mouseOverEvent;
+	std::function<void(ClickablePanel&)> mouseOutEvent;
 
 public:
 	ClickablePanel(
@@ -19,6 +28,10 @@ public:
 	~ClickablePanel() = default;
 
 	void setTextureHandler(const String& handler) { textureHandler = handler; }
+
+	void onClick() override { clickEvent(*this); }
+	void onMouseOver() override { mouseOverEvent(*this); }
+	void onMouseOut() override { mouseOutEvent(*this); }
 
 	bool contains(const Point& point) const override;
 	void draw() const override;

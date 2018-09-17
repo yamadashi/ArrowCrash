@@ -5,15 +5,17 @@ ClickableLabel::ClickableLabel(
 	const Point& centerPos,
 	const String& fontHandler_,
 	const Color& textColor,
-	const func& clickEvent,
-	const func& mouseOverEvent,
-	const func& mouseOutEvent)
-
-	:Clickable(clickEvent, mouseOverEvent, mouseOutEvent,
-		centerPos.movedBy(-FontAsset(fontHandler_)(text_).region().size/2)),
+	const std::function<void(ClickableLabel&)>& clickEvent_,
+	const std::function<void(ClickableLabel&)>& mouseOverEvent_,
+	const std::function<void(ClickableLabel&)>& mouseOutEvent_
+)
+	:Clickable(centerPos.movedBy(-FontAsset(fontHandler_)(text_).region().size/2)),
 	text(text_),
 	fontHandler(fontHandler_),
-	color(textColor)
+	color(textColor),
+	clickEvent(clickEvent_),
+	mouseOverEvent(mouseOverEvent_),
+	mouseOutEvent(mouseOutEvent_)
 {}
 
 

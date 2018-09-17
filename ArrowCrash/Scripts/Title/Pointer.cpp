@@ -2,9 +2,9 @@
 
 
 const int Pointer::radius = 15;
-const double Pointer::accel = 1.0;
-const double Pointer::frictionCoeff = 0.25;
-const double Pointer::maxSpeed = 4.5;
+const double Pointer::accel = 2.0;
+const double Pointer::frictionCoeff = 1.0;
+const double Pointer::maxSpeed = 10.0;
 
 Pointer::Pointer(int player_num_)
 	:pos(Window::Center()),
@@ -53,6 +53,7 @@ void Pointer::update() {
 
 
 void Pointer::draw() const {
+	PutText(velocity).from(0, 0);
 	Circle(pos, radius).drawFrame(2.0, 0.5, color);
 	Circle(pos, radius / 5).draw(color);
 }
