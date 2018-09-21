@@ -2,8 +2,12 @@
 
 
 void Game::init() {
-	m_data->numOfPlayer = 1; //仮
-	setGameData();
+
+	m_data->numOfPlayer = 2; //仮
+	
+	initGameData();
+	initUIComponents();
+
 	for (int i = 0; i < m_data->numOfPlayer; i++) {
 		players.emplace_back(i, gameData);
 	}
@@ -16,57 +20,60 @@ void Game::update() {
 }
 
 void Game::draw() const {
+
 	for (auto& player : players) {
 		player.draw();
 	}
+
+	ui.draw();
 }
 
 
-
-//マージンとかUI(次に落ちてくるやつの表示窓とか何Pなのかとか)はまだ考えてない
-void Game::setGameData() {
+void Game::initGameData() {
 
 	auto&& window = Window::Size();
+	gameData.topUIMargin = window.y / 10;
+	gameData.topMargin = window.y / 30;
+	gameData.bottomMargin = window.y / 50;
 
 	//泥臭いのでなんかスマートな方法あればリファクタリングしたい
 	switch (m_data->numOfPlayer)
 	{
 	case 1: {
-			gameData.cellSize = window.y / constants::row_len; // calculate cell size
-			int fieldWidth = gameData.cellSize*constants::col_len; // calculate field width
-
-			gameData.stdPositions.emplace_back((window.x - fieldWidth) / 2, 0);
-			break;
+		auto&& region = Window::Size().movedBy(0, -(gameData.topUIMargin + gameData.topMargin + gameData.bottomMargin));
+		gameData.cellSize = region.y / constants::row_len; // calculate cell size
+		int fieldWidth = gameData.cellSize*constants::col_len; // calculate field width
+		
+		gameData.stdPositions.emplace_back((region.x - fieldWidth) / 2, gameData.topUIMargin+gameData.topMargin);
+		break;
 	}
 
 	case 2: {
-		gameData.cellSize = window.y / constants::row_len; // calculate cell size
+		auto&& region = Window::Size().movedBy(0, -(gameData.topUIMargin + gameData.topMargin + gameData.bottomMargin));
+		gameData.cellSize = region.y / constants::row_len; // calculate cell size
 		int fieldWidth = gameData.cellSize*constants::col_len; // calculate field width
-		int regionWidth = window.x / 2; //各プレイヤー領域の幅
+		int playerRegionWidth = region.x / 2; //各プレイヤー領域の幅
 
 		for (int i = 0; i < 2; i++) {
-			gameData.stdPositions.emplace_back(regionWidth*i + (regionWidth - fieldWidth) / 2, 0);
+			gameData.stdPositions.emplace_back(playerRegionWidth*i + (playerRegionWidth - fieldWidth) / 2, gameData.topUIMargin+gameData.topMargin);
 		}
 		break;
 	}
 
 	case 3:
 		//要工夫
-		//gameData.cellSize = (window.y / 2) / constants::row_len; // calculate cell size
-		//int fieldWidth = gameData.cellSize*constants::col_len; // calculate field width
-		//float regionWidth = ((float)window.x / 2); //1P,2Pの領域の幅
-		//
-		//gameData.stdPositions.emplace_back(regionWidth*i + (regionWidth - fieldWidth) / 2, 0);
+		
 		break;
 
 	case 4: {
-		gameData.cellSize = (window.y / 2) / constants::row_len; // calculate cell size
+		auto&& region = Window::Size().movedBy(0, -gameData.topUIMargin - (gameData.topMargin + gameData.bottomMargin)*2);
+		gameData.cellSize = (region.y / 2) / constants::row_len; // calculate cell size
 		int fieldWidth = gameData.cellSize*constants::col_len; // calculate field width
-		auto&& region = window / 2; //各プレイヤー領域
+		auto&& playerRegion = region / 2; //各プレイヤー領域
 
 		for (int i = 0; i < 4; i++) {
-			int stdPos_x = (i % 2)*region.x + (region.x - fieldWidth) / 2;
-			int stdPos_y = (i / 2)*region.y;
+			int stdPos_x = (i % 2)*playerRegion.x + (playerRegion.x - fieldWidth) / 2;
+			int stdPos_y = gameData.topUIMargin + (i / 2)*(playerRegion.y+gameData.bottomMargin) + (i/2+1)*gameData.topMargin;
 			gameData.stdPositions.emplace_back(stdPos_x, stdPos_y);
 		}
 		break;
@@ -74,5 +81,26 @@ void Game::setGameData() {
 
 	default:
 		break;
+	}
+}
+
+void Game::initUIComponents() {
+
+	auto&& window = Window::Size();
+	ui.topUIBorder.set({ 0, gameData.topUIMargin }, { window.x, gameData.topUIMargin });
+	if (m_data->numOfPlayer % 2 == 0) {
+		ui.playerBorder.at(0).set({ window.x / 2, gameData.topUIMargin }, { window.x / 2, window.y });
+	}
+	if (m_data->numOfPlayer == 4) {
+		double tmp_y = gameData.topUIMargin + (window.y - gameData.topUIMargin) / 2;
+		ui.playerBorder.at(1).set({ 0, tmp_y }, { window.x, tmp_y });
+	}
+}
+
+
+void UIComponents::draw() const {
+	topUIBorder.draw();
+	for (const auto& line : playerBorder) {
+		line.draw();
 	}
 }

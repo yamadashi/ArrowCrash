@@ -5,6 +5,13 @@
 #include "Player.h"
 
 
+struct UIComponents {
+	Line topUIBorder;
+	std::array<Line, 2> playerBorder;
+
+	void draw() const;
+};
+
 
 class Game : public Scene {
 private:
@@ -12,7 +19,10 @@ private:
 
 	std::vector<Player> players;
 
-	void setGameData();
+	UIComponents ui;
+
+	void initGameData();
+	void initUIComponents();
 
 public:
 	void init() override;
