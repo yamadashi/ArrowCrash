@@ -12,4 +12,7 @@ namespace constants {
 	const Color playerColor[4] {
 		Palette::Red, Palette::Blue, Palette::Yellow, Palette::Green
 	};
+
+	//次ブロックの表示数
+	const int numOfNextBlocks = 2;
 }

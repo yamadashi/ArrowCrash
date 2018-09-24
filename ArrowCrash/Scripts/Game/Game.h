@@ -5,21 +5,30 @@
 #include "Player.h"
 
 
-struct UIComponents {
-	Line topUIBorder;
-	std::array<Line, 2> playerBorder;
-
-	void draw() const;
-};
-
 
 class Game : public Scene {
 private:
 	GameData gameData;
+	bool pause;
 
 	std::vector<Player> players;
+	struct UIInfo {
+		int topUIHeight;
+		Size playerRegion;
+		Size fieldSize;
+		int fieldLeftMargin;
+		int fieldTopMargin;
+		int unitFrameSize;
+	} uiInfo;
 
-	UIComponents ui;
+	struct UIComponents {
+		Line topUIBorder;
+		std::vector<Line> playerBorders;
+		std::vector<Rect> stockFrames;
+		std::vector<std::vector<Rect>> nextUnitFrames;
+
+		void draw() const;
+	} uiComp;
 
 	void initGameData();
 	void initUIComponents();

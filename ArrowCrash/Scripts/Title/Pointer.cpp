@@ -53,7 +53,6 @@ void Pointer::update() {
 
 
 void Pointer::draw() const {
-	PutText(velocity).from(0, 0);
 	Circle(pos, radius).drawFrame(2.0, 0.5, color);
 	Circle(pos, radius / 5).draw(color);
 }

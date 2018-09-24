@@ -13,7 +13,7 @@ void Main()
 	const auto maxSize = Graphics::GetFullScreenSize().back();
 	
 	Window::SetFullscreen(true, maxSize);
-	Graphics::SetBackground(Palette::Blueviolet);
+	Graphics::SetBackground(Palette::Black);
 
 	MySceneManager sceneManager;
 	sceneManager.add<Title>(SceneName::Title);
