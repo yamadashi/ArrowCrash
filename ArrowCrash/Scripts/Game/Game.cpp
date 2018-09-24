@@ -39,8 +39,8 @@ void Game::initGameData() {
 	{
 	case 1: {
 		auto&& region = Window::Size().movedBy(0, -(gameData.topUIMargin + gameData.topMargin + gameData.bottomMargin));
-		gameData.cellSize = region.y / constants::row_len; // calculate cell size
-		int fieldWidth = gameData.cellSize*constants::col_len; // calculate field width
+		gameData.blockSize = region.y / constants::row_len; // calculate block size
+		int fieldWidth = gameData.blockSize*constants::col_len; // calculate field width
 		
 		gameData.stdPositions.emplace_back((region.x - fieldWidth) / 2, gameData.topUIMargin+gameData.topMargin);
 		break;
@@ -48,8 +48,8 @@ void Game::initGameData() {
 
 	case 2: {
 		auto&& region = Window::Size().movedBy(0, -(gameData.topUIMargin + gameData.topMargin + gameData.bottomMargin));
-		gameData.cellSize = region.y / constants::row_len; // calculate cell size
-		int fieldWidth = gameData.cellSize*constants::col_len; // calculate field width
+		gameData.blockSize = region.y / constants::row_len; // calculate block size
+		int fieldWidth = gameData.blockSize*constants::col_len; // calculate field width
 		int playerRegionWidth = region.x / 2; //各プレイヤー領域の幅
 
 		for (int i = 0; i < 2; i++) {
@@ -65,8 +65,8 @@ void Game::initGameData() {
 
 	case 4: {
 		auto&& region = Window::Size().movedBy(0, -gameData.topUIMargin - (gameData.topMargin + gameData.bottomMargin)*2);
-		gameData.cellSize = (region.y / 2) / constants::row_len; // calculate cell size
-		int fieldWidth = gameData.cellSize*constants::col_len; // calculate field width
+		gameData.blockSize = (region.y / 2) / constants::row_len; // calculate block size
+		int fieldWidth = gameData.blockSize*constants::col_len; // calculate field width
 		auto&& playerRegion = region / 2; //各プレイヤー領域
 
 		for (int i = 0; i < 4; i++) {

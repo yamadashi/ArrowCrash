@@ -3,10 +3,10 @@
 
 //Block
 
-Block::Block(const Point& point_, const Point& pos, const int cellSize)
+Block::Block(const Point& point_, const Point& pos, const int blockSize)
 	:destroyed(false),
 	point(point_),
-	rect(pos, cellSize),
+	rect(pos, blockSize),
 	settled(false)
 {}
 
@@ -14,8 +14,8 @@ Block::Block(const Point& point_, const Point& pos, const int cellSize)
 
 //NormalBlock
 
-NormalBlock::NormalBlock(const Point& point_, const Point& pos, const int cellSize)
-	:Block(point_, pos, cellSize)
+NormalBlock::NormalBlock(const Point& point_, const Point& pos, const int blockSize)
+	:Block(point_, pos, blockSize)
 {}
 
 void NormalBlock::draw() const {
@@ -26,8 +26,8 @@ void NormalBlock::draw() const {
 
 //ArrowBlock
 
-ArrowBlock::ArrowBlock(const Point& point_, const Point& pos, const int cellSize, ExplosionDirection dir, Explodable& field_)
-	:Block(point_, pos, cellSize),
+ArrowBlock::ArrowBlock(const Point& point_, const Point& pos, const int blockSize, ExplosionDirection dir, Explodable& field_)
+	:Block(point_, pos, blockSize),
 	direction(dir),
 	field(field_)
 {}
@@ -44,8 +44,8 @@ void ArrowBlock::draw() const {
 
 //InvincibleBlock
 
-InvincibleBlock::InvincibleBlock(const Point& point_, const Point& pos, const int cellSize)
-	:Block(point_, pos, cellSize)
+InvincibleBlock::InvincibleBlock(const Point& point_, const Point& pos, const int blockSize)
+	:Block(point_, pos, blockSize)
 {
 	setSettled(); //Ç‡Ç§ÇøÇÂÇ¡Ç∆ó«Ç¢ä¥Ç∂Ç…èëÇØÇªÇ§
 }

@@ -13,7 +13,7 @@ protected:
 	bool settled;
 
 public:
-	Block(const Point& point, const Point& pos, const int cellSize);
+	Block(const Point& point, const Point& pos, const int blockSize);
 	virtual ~Block() = default;
 
 	virtual void draw() const = 0;
@@ -28,7 +28,7 @@ private:
 
 
 public:
-	NormalBlock(const Point& point_, const Point& pos, const int cellSize);
+	NormalBlock(const Point& point_, const Point& pos, const int blockSize);
 	~NormalBlock() = default;
 
 	void draw() const override;
@@ -41,7 +41,7 @@ private:
 	Explodable& field;
 
 public:
-	ArrowBlock(const Point& point_, const Point& pos, const int cellSize, ExplosionDirection dir, Explodable& field_);
+	ArrowBlock(const Point& point_, const Point& pos, const int blockSize, ExplosionDirection dir, Explodable& field_);
 	~ArrowBlock() = default;
 	
 	void explode();
@@ -54,7 +54,7 @@ private:
 
 
 public:
-	InvincibleBlock(const Point& point_, const Point& pos, const int cellSize);
+	InvincibleBlock(const Point& point_, const Point& pos, const int blockSize);
 	~InvincibleBlock() = default;
 
 	void draw() const override;
