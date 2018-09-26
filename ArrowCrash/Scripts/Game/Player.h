@@ -1,6 +1,6 @@
 #pragma once
 #include "Field.h"
-#include "BlockGenerator.h"
+#include "BlockUnitManager.h"
 
 class Player {
 private:
@@ -10,7 +10,7 @@ private:
 	Field field;
 	// 一括で爆発するためフィールド上の全てのArrowBlockへの参照を持っておく
 	std::vector<std::weak_ptr<ArrowBlock>> arrowBlocks;
-	BlockGenerator generator;
+	BlockUnitManager mngr;
 
 public:
 	Player(int player_num ,const GameData& gameData);
