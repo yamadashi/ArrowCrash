@@ -3,23 +3,36 @@
 #include "Explodable.h"
 
 
+enum class RotateDirection {
+	Right, Left
+};
+
 class Block {
 private:
 	bool destroyed;
 
 protected:
-	const Rect rect;
-	const Point point;
+	Point stdPos;
+	Point point;
+	const int blockSize;
+	Rect rect;
 	bool settled;
 
 public:
-	Block(const Point& point, const Point& pos, const int blockSize);
+	Block(const Point& point, const Point& stdPos, const int blockSize);
 	virtual ~Block() = default;
 
 	virtual void draw() const = 0;
+
 	virtual void destroy() { destroyed = true; }
+	
+	const Point& getPoint() const { return point; }
+	void setPoint(const Point& point_);
+
 	bool isSettled() const { return settled; }
 	void setSettled() { settled = true; }
+
+	virtual void rotate(RotateDirection) {}
 };
 
 
@@ -37,15 +50,16 @@ public:
 
 class ArrowBlock : public Block {
 private:
-	const ExplosionDirection direction;
+	ExplosionDirection direction;
 	Explodable& field;
 
 public:
 	ArrowBlock(const Point& point_, const Point& pos, const int blockSize, ExplosionDirection dir, Explodable& field_);
 	~ArrowBlock() = default;
-	
-	void explode();
+
 	void draw() const override;
+	void explode();
+	void rotate(RotateDirection rot) override;
 };
 
 
