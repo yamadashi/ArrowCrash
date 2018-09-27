@@ -3,7 +3,7 @@
 
 
 enum class ExplosionDirection {
-	Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight
+	Up, UpRight, Right, DownRight, Down, DownLeft, Left, UpLeft
 };
 
 class Explodable {

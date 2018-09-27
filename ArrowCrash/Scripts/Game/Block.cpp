@@ -8,7 +8,7 @@ Block::Block(const Point& point_,const Point& stdPos_, const int blockSize_)
 	stdPos(stdPos_),
 	point(point_),
 	blockSize(blockSize_),
-	rect(stdPos.movedBy(point*blockSize), blockSize),
+	rect(stdPos.movedBy(Point(point.y, point.x)*blockSize), blockSize),
 	settled(false)
 {}
 
