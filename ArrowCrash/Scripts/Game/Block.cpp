@@ -3,12 +3,19 @@
 
 //Block
 
-Block::Block(const Point& point_, const Point& pos, const int blockSize)
+Block::Block(const Point& point_,const Point& stdPos_, const int blockSize_)
 	:destroyed(false),
+	stdPos(stdPos_),
 	point(point_),
-	rect(pos, blockSize),
+	blockSize(blockSize_),
+	rect(stdPos.movedBy(point*blockSize), blockSize),
 	settled(false)
 {}
+
+void Block::setPoint(const Point& point_) {
+	point.set(point_);
+	rect.setPos(stdPos.movedBy(point*blockSize));
+}
 
 
 
@@ -34,6 +41,11 @@ ArrowBlock::ArrowBlock(const Point& point_, const Point& pos, const int blockSiz
 
 void ArrowBlock::explode() {
 	field.explode(point, direction);
+}
+
+void ArrowBlock::rotate(RotateDirection rot) {
+	//ñÓàÛÇÃå¸Ç´ÇïœçX
+	direction = ExplosionDirection((8 + ((int)direction + (rot == RotateDirection::Right ? 2 : -2))) % 8);
 }
 
 void ArrowBlock::draw() const {
