@@ -25,6 +25,7 @@ public:
 	virtual void draw() const = 0;
 
 	virtual void destroy() { destroyed = true; }
+	bool isDestroyed() const { return destroyed; }
 	
 	const Point& getPoint() const { return point; }
 	void setPoint(const Point& point_);
@@ -41,7 +42,7 @@ private:
 
 
 public:
-	NormalBlock(const Point& point_, const Point& pos, const int blockSize);
+	NormalBlock(const Point& point_, const Point& stdPos, const int blockSize);
 	~NormalBlock() = default;
 
 	void draw() const override;
@@ -54,12 +55,13 @@ private:
 	Explodable& field;
 
 public:
-	ArrowBlock(const Point& point_, const Point& pos, const int blockSize, ExplosionDirection dir, Explodable& field_);
+	ArrowBlock(const Point& point_, const Point& stdPos, const int blockSize, ExplosionDirection dir, Explodable& field_);
 	~ArrowBlock() = default;
 
 	void draw() const override;
 	void explode();
 	void rotate(RotateDirection rot) override;
+	ExplosionDirection getDirection() const { return direction; }
 };
 
 
@@ -68,7 +70,7 @@ private:
 
 
 public:
-	InvincibleBlock(const Point& point_, const Point& pos, const int blockSize);
+	InvincibleBlock(const Point& point_, const Point& stdPos, const int blockSize);
 	~InvincibleBlock() = default;
 
 	void draw() const override;
