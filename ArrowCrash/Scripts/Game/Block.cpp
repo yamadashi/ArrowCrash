@@ -3,18 +3,19 @@
 
 //Block
 
-Block::Block(const Point& point_,const Point& stdPos_, const int blockSize_)
+Block::Block(const Point& point_, const Point& stdPos_, const int blockSize_)
 	:destroyed(false),
 	stdPos(stdPos_),
 	point(point_),
 	blockSize(blockSize_),
-	rect(stdPos.movedBy(point*blockSize), blockSize),
+	rect(stdPos.movedBy(Point(point.y, point.x)*blockSize), blockSize),
 	settled(false)
-{}
+{
+}
 
 void Block::setPoint(const Point& point_) {
 	point.set(point_);
-	rect.setPos(stdPos.movedBy(point*blockSize));
+	rect.setPos(stdPos.movedBy(Point(point.y, point.x)*blockSize));
 }
 
 
@@ -49,7 +50,7 @@ void ArrowBlock::rotate(RotateDirection rot) {
 }
 
 void ArrowBlock::draw() const {
-	rect.draw(Palette::Red);
+	rect(TextureAsset(L"arrow")(50 * (int)direction, 0, 50, 50)).draw();
 }
 
 

@@ -4,20 +4,28 @@
 #include "../Constants.h"
 #include "GameData.h"
 
+
+
 using BlockGrid = std::vector<std::vector<std::shared_ptr<Block>>>;
 
 class Field : public Explodable {
 private:
-	const Point stdPos; //äÓèÄì_
 	BlockGrid blocks;
+	const Point stdPos; //äÓèÄì_
 
+	bool contains(const Point& point) const;
 
 public:
 	Field(const Point& stdPos_, int blockSize);
 	~Field() = default;
 
-	void explode(const Point& point, ExplosionDirection direction) override;
-	void setBlockAt(std::shared_ptr<Block>& block, int row, int col);
+	void explode(const Point& start, ExplosionDirection direction) override;
+	void setBlockAt(std::shared_ptr<Block> block, const Point& point);
+	std::shared_ptr<Block> getAt(const Point& point) const {
+		return contains(point) ?
+			blocks[point.x][point.y] : nullptr;
+	}
 
+	void update();
 	void draw() const;
 };
