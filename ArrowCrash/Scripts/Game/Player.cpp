@@ -26,14 +26,16 @@ void Player::update() {
 void Player::draw() const {
 	field->draw();
 	mngr.draw();
+	PutText(arrowBlocks.size()).from(gameData.stdPositions[number]);
 }
 
 void Player::explode() {
-	for (auto&& arrow : arrowBlocks) {
+	for (auto arrow : arrowBlocks) {
 		const auto& ptr = arrow.lock();
 		if (ptr->isSettled())
 			field->explode(ptr->getPoint(), ptr->getDirection());
 	}
-	//‚¿‚å‚Á‚Æ‹C‚¿ˆ«‚¢‚Ì‚Å‘‚«Š·‚¦‚½‚¢
-	std::remove_if(arrowBlocks.begin(), arrowBlocks.end(), [](const std::weak_ptr<ArrowBlock>& ref) { return ref.lock()->isSettled(); });
+	//‚¿‚å‚Á‚Æ‹C‚¿ˆ«‚¢
+	auto&& itr = std::remove_if(arrowBlocks.begin(), arrowBlocks.end(), [](const std::weak_ptr<ArrowBlock>& ref) { return ref.lock()->isDestroyed(); });
+	arrowBlocks.erase(itr, arrowBlocks.end());
 }

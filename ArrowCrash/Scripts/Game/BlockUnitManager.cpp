@@ -30,5 +30,4 @@ void BlockUnitManager::update() {
 
 void BlockUnitManager::draw() const {
 	currentBlock->draw();
-	PutText(nextUnits.size()).from(stdPos);
 }
