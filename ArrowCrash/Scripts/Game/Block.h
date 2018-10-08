@@ -7,6 +7,8 @@ enum class RotateDirection {
 	Right, Left
 };
 
+
+
 class Block {
 private:
 	bool destroyed;
