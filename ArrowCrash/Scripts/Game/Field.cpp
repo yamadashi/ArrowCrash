@@ -56,6 +56,14 @@ void Field::update() {
 	}
 }
 
+void Field::update() {
+	for (auto&& arr : blocks) {
+		for (auto&& block : arr) {
+			if (block && block->isDestroyed()) block.reset();
+		}
+	}
+}
+
 void Field::draw() const {
 	for (const auto& arr : blocks) {
 		for (const auto& block : arr) {

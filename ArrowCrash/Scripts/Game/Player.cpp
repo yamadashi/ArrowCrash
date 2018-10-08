@@ -35,7 +35,7 @@ void Player::explode() {
 		if (ptr->isSettled())
 			field->explode(ptr->getPoint(), ptr->getDirection());
 	}
-	//‚¿‚å‚Á‚Æ‹C‚¿ˆ«‚¢
+	//ã¡ã‚‡ã£ã¨æ°—æŒã¡æ‚ªã„
 	auto&& itr = std::remove_if(arrowBlocks->begin(), arrowBlocks->end(), [](const std::weak_ptr<ArrowBlock>& ref) { return ref.lock()->isDestroyed(); });
 	arrowBlocks->erase(itr, arrowBlocks->end());
 }

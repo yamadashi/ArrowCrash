@@ -11,7 +11,7 @@ using BlockGrid = std::vector<std::vector<std::shared_ptr<Block>>>;
 class Field : public Explodable {
 private:
 	BlockGrid blocks;
-	const Point stdPos; //��_
+	const Point stdPos; //Šî€“_
 
 	bool contains(const Point& point) const;
 
