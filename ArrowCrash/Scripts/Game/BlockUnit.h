@@ -59,7 +59,7 @@ using namespace std;
 
 class BlockUnit {
 private:
-	std::array<std::array<std::shared_ptr<Block>, 4>, 4> geometory;
+	std::array<std::array<std::shared_ptr<Block>, 4>, 4> geometry;
 
 	Field& field;
 	Point point;
@@ -67,7 +67,6 @@ private:
 	bool settled;
 	Stopwatch timer;
 	const int blockSize;
-	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 	const Point stdPos; //フィールド基準点
 	const double arrowProbability;
 

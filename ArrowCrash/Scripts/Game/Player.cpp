@@ -3,17 +3,29 @@
 Player::Player(int player_num, const GameData& gameData_)
 	:number(player_num),
 	gameData(gameData_),
-	arrowBlocks(),
+	counter(0),
 	field(new Field(gameData.stdPositions.at(number), gameData.blockSize)),
 	mngr(*field, arrowBlocks, gameData.stdPositions.at(number), gameData.blockSize)
 {}
 
-void Player::update() {
+void Player::update() {	
 
 	if (Input::KeyUp.clicked) mngr.getCurrentUnit().fallImmediately();
-	else if (Input::KeyLeft.clicked) mngr.getCurrentUnit().move(MoveDirection::Left);
-	else if (Input::KeyRight.clicked) mngr.getCurrentUnit().move(MoveDirection::Right);
-	else if (Input::KeyDown.clicked) mngr.getCurrentUnit().move(MoveDirection::Down);
+	else if (Input::KeyLeft.pressed) {
+		counter++;
+		if (counter % 10 == 1)	mngr.getCurrentUnit().move(MoveDirection::Left);
+	}
+	else if (Input::KeyLeft.released) counter = 0;
+	else if (Input::KeyRight.pressed) {
+		counter++;
+		if (counter % 10 == 1)	mngr.getCurrentUnit().move(MoveDirection::Right);
+	}
+	else if (Input::KeyRight.released) counter = 0;	
+	else if (Input::KeyDown.pressed){
+		counter++;
+		if (counter % 8 == 1)	mngr.getCurrentUnit().move(MoveDirection::Down);
+	}
+	else if (Input::KeyDown.released) counter = 0;
 	else if (Input::KeyA.clicked) mngr.getCurrentUnit().rotate(RotateDirection::Left);
 	else if (Input::KeyD.clicked) mngr.getCurrentUnit().rotate(RotateDirection::Right);
 

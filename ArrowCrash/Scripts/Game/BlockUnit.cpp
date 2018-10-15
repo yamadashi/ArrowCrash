@@ -1,12 +1,11 @@
 #include "BlockUnit.h"
 
-BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockSize_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, Field& field_)
+BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockSize_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks, Field& field_)
 	:point(point_),
 	field(field_),
 	settled(false),
 	timer(true),
 	blockSize(blockSize_),
-	arrowBlocks(arrowBlocks_),
 	stdPos(stdPos_),
 	arrowProbability(0.15)
 {
@@ -20,15 +19,14 @@ BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockS
 		for (int j = 0; j < 4; j++) {
 			if (pattern[i][j]) {
 				if (arrowOrder-- == 0) {
-					auto ptr = std::make_shared<ArrowBlock>(point.movedBy(i, j), stdPos, blockSize, (ExplosionDirection)Random<int>(0, 7), field);
-					geometory[i][j] = ptr;
-					arrowBlocks.emplace_back(ptr);
+					geometry[i][j] = std::make_shared<ArrowBlock>(point.movedBy(i, j), stdPos, blockSize, (ExplosionDirection)Random<int>(0, 7), field);
+					//arrowBlocks.emplace_back(geometry[i][j]);
 				}
 				else
-					geometory[i][j] = std::make_shared<NormalBlock>(point.movedBy(i, j), stdPos, blockSize);
+					geometry[i][j] = std::make_shared<NormalBlock>(point.movedBy(i, j), stdPos, blockSize);
 			}
 			else {
-				geometory[i][j] = nullptr;
+				geometry[i][j] = nullptr;
 			}
 		}
 	}
@@ -40,7 +38,7 @@ BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockS
 bool BlockUnit::checkCollision(const Point& point_) const {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			if (field.getAt(point_.movedBy(i, j)) && geometory[i][j])
+			if (field.getAt(point_.movedBy(i, j)) && geometry[i][j])
 				return true;
 		}
 	}
@@ -57,7 +55,7 @@ void BlockUnit::predict() {
 
 void BlockUnit::settle() {
 
-	for (auto&& arr : geometory) {
+	for (auto&& arr : geometry) {
 		for (auto&& block : arr) {
 			if (block) {
 				block->setSettled();
@@ -91,8 +89,8 @@ void BlockUnit::draw() const {
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			if (geometory[i][j]) {
-				geometory[i][j]->draw();
+			if (geometry[i][j]) {
+				geometry[i][j]->draw();
 				Rect(predictedPos.movedBy(j*blockSize, i*blockSize), blockSize).drawFrame(blockSize / 10, 0.0);
 			}
 		}
@@ -105,8 +103,8 @@ void BlockUnit::fallImmediately() {
 	point.set(predictedPoint);
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			if (geometory[i][j])
-				geometory[i][j]->setPoint(point.movedBy(i, j));
+			if (geometry[i][j])
+				geometry[i][j]->setPoint(point.movedBy(i, j));
 		}
 	}
 	settle();
@@ -132,8 +130,8 @@ void BlockUnit::move(MoveDirection mov) {
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			if (geometory[i][j])
-				geometory[i][j]->setPoint(point.movedBy(i, j));
+			if (geometry[i][j])
+				geometry[i][j]->setPoint(point.movedBy(i, j));
 		}
 	}
 
@@ -141,33 +139,33 @@ void BlockUnit::move(MoveDirection mov) {
 
 void BlockUnit::rotate(RotateDirection rot) {
 
-	auto prev = geometory;
+	auto prev = geometry;
 	
 	if (rot == RotateDirection::Right) {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				geometory[j][3 - i] = prev[i][j];
+				geometry[j][3 - i] = prev[i][j];
 			}
 		}
 	}
 	else {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				geometory[3 - j][i] = prev[i][j];
+				geometry[3 - j][i] = prev[i][j];
 			}
 		}
 	}
 
 	if (checkCollision(point)) {
-		geometory = prev;
+		geometry = prev;
 		return;
 	}
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			if (geometory[i][j]) {
-				geometory[i][j]->setPoint(point.movedBy(i, j));
-				geometory[i][j]->rotate(rot);
+			if (geometry[i][j]) {
+				geometry[i][j]->setPoint(point.movedBy(i, j));
+				geometry[i][j]->rotate(rot);
 			}
 		}
 	}
