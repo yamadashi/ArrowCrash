@@ -75,5 +75,5 @@ public:
 	~InvincibleBlock() = default;
 
 	void draw() const override;
-	void destroy() override {} //���ȂȂ�
+	void destroy() override {} //Ž€‚È‚È‚¢
 };
