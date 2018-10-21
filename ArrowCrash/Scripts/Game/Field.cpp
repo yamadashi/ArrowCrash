@@ -44,8 +44,8 @@ void Field::explode(const Point& start, ExplosionDirection direction) {
 	} while (contains(point.moveBy(vec)));
 }
 
-void Field::setBlockAt(std::shared_ptr<Block>& block, int row, int col) {
-	blocks.at(row).at(col) = block;
+void Field::setBlockAt(std::shared_ptr<Block> block, const Point& point) {
+	blocks.at(point.x).at(point.y) = block;
 }
 
 void Field::update() {
@@ -59,7 +59,7 @@ void Field::update() {
 void Field::draw() const {
 	for (const auto& arr : blocks) {
 		for (const auto& block : arr) {
-			if (block != nullptr) block->draw();
+			if (block) block->draw();
 		}
 	}
 }

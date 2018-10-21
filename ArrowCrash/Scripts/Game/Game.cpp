@@ -22,9 +22,12 @@ void Game::update() {
 	}
 
 	if (Input::KeyP.clicked) pause = true;
+	if (Input::KeyEnter.clicked) changeScene(SceneName::Result);
 	for (auto& player : players) {
 		player.update();
 	}
+
+	ymds::EventManager::get().update();
 }
 
 void Game::draw() const {
@@ -40,6 +43,8 @@ void Game::draw() const {
 		white.draw();
 		PutText(L"press R to return Title").at(Window::Center());
 	}
+
+	ymds::EventManager::get().draw();
 }
 
 

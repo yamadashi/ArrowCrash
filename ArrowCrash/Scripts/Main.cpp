@@ -2,7 +2,8 @@
 #include <Siv3D.hpp>
 #include "Title/Title.h"
 #include "Game/Game.h"
-#include "ymdsLib/FileRegisterer.h"
+#include "Result/Result.h"
+#include "ymdsLib/FileRegisterer/FileRegisterer.h"
 
 void Main()
 {
@@ -18,6 +19,7 @@ void Main()
 	MySceneManager sceneManager;
 	sceneManager.add<Title>(SceneName::Title);
 	sceneManager.add<Game>(SceneName::Game);
+	sceneManager.add<Result>(SceneName::Result);
 
 	while (System::Update())
 	{

@@ -1,11 +1,13 @@
 #pragma once
 #include <Siv3D.hpp>
 #include "Explodable.h"
+#include "../ymdsLib/Effect/EffectGenerator.h"
 
 
 enum class RotateDirection {
 	Right, Left
 };
+
 
 class Block {
 private:
@@ -24,14 +26,13 @@ public:
 
 	virtual void draw() const = 0;
 
-	virtual void destroy() { destroyed = true; }
 	bool isDestroyed() const { return destroyed; }
-	
 	const Point& getPoint() const { return point; }
 	void setPoint(const Point& point_);
-
 	bool isSettled() const { return settled; }
 	void setSettled() { settled = true; }
+
+	virtual void destroy();
 
 	virtual void rotate(RotateDirection) {}
 };
@@ -44,7 +45,7 @@ private:
 public:
 	NormalBlock(const Point& point_, const Point& stdPos, const int blockSize);
 	~NormalBlock() = default;
-
+	
 	void draw() const override;
 };
 
