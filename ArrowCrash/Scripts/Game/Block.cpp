@@ -18,6 +18,10 @@ void Block::setPoint(const Point& point_) {
 	rect.setPos(stdPos.movedBy(Point(point.y, point.x)*blockSize));
 }
 
+void Block::destroy() {
+	ymds::EffectGenerator::addLinkedImage(L"explosion", 500, rect.pos, double(blockSize)/500, 0.1);
+	destroyed = true;
+}
 
 
 //NormalBlock

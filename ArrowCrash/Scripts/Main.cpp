@@ -3,7 +3,7 @@
 #include "Title/Title.h"
 #include "Game/Game.h"
 #include "Result/Result.h"
-#include "ymdsLib/FileRegisterer.h"
+#include "ymdsLib/FileRegisterer/FileRegisterer.h"
 
 void Main()
 {

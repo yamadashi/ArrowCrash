@@ -26,6 +26,8 @@ void Game::update() {
 	for (auto& player : players) {
 		player.update();
 	}
+
+	ymds::EventManager::get().update();
 }
 
 void Game::draw() const {
@@ -41,6 +43,8 @@ void Game::draw() const {
 		white.draw();
 		PutText(L"press R to return Title").at(Window::Center());
 	}
+
+	ymds::EventManager::get().draw();
 }
 
 
