@@ -1,5 +1,6 @@
 #pragma once
 #include "BlockUnit.h"
+#include "Item.h"
 #include <queue>
 
 class BlockUnitManager {
@@ -13,7 +14,7 @@ private:
 	std::queue<std::shared_ptr<BlockUnit>> nextUnits;
 	std::shared_ptr<BlockUnit> currentBlock;
 	std::shared_ptr<BlockUnit> stock;
-	
+	std::shared_ptr<Item> Item;
 	void generate();
 
 public:
@@ -21,5 +22,6 @@ public:
 	~BlockUnitManager() = default;
 	void update();
 	void draw() const;
+	void generateItem();
 	BlockUnit& getCurrentUnit() { return *currentBlock; }
 };

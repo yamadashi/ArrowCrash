@@ -18,6 +18,9 @@ void BlockUnitManager::generate() {
 	nextUnits.emplace(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, blockSize, arrowBlocks, field));
 }
 
+void BlockUnitManager::generateItem() {
+}
+
 void BlockUnitManager::update() {
 	currentBlock->update();
 	if (currentBlock->isSettled()) {

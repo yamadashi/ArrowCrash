@@ -30,6 +30,7 @@ void Player::update() {
 	else if (Input::KeyD.clicked) mngr.getCurrentUnit().rotate(RotateDirection::Right);
 
 	if (Input::KeySpace.clicked) explode();
+	if (Input::KeyEnter.clicked) mngr.generateItem();
 
 	field->update();
 	mngr.update();
