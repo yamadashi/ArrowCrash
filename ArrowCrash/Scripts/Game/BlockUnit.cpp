@@ -100,6 +100,18 @@ void BlockUnit::draw() const {
 
 }
 
+void BlockUnit::draw(const Point& pos, double scale) const {
+	
+	const int scaledSize = blockSize * scale;
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (geometry[i][j]) {
+				geometry[i][j]->draw(pos.movedBy(scaledSize*Point(j,i)), scale);
+			}
+		}
+	}
+}
 
 void BlockUnit::fallImmediately() {
 	point.set(predictedPoint);

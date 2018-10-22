@@ -5,7 +5,7 @@ Player::Player(int player_num, const GameData& gameData_)
 	gameData(gameData_),
 	arrowBlocks(new std::vector<std::weak_ptr<ArrowBlock>>()),
 	field(new Field(gameData.stdPositions.at(number), gameData.blockSize)),
-	mngr(*field, *arrowBlocks, gameData.stdPositions.at(number), gameData.blockSize)
+	mngr(*field, *arrowBlocks, gameData, number)
 {}
 
 void Player::update() {
@@ -26,7 +26,6 @@ void Player::update() {
 void Player::draw() const {
 	field->draw();
 	mngr.draw();
-	PutText(arrowBlocks->size()).from(gameData.stdPositions[number]);
 }
 
 void Player::explode() {

@@ -10,16 +10,20 @@ private:
 	const Point stdPos;
 	const int blockSize;
 
-	std::queue<std::shared_ptr<BlockUnit>> nextUnits;
-	std::shared_ptr<BlockUnit> currentBlock;
+	//•`‰æ—p
+	std::vector<Point> nextUnitFramePos;
+	Point stockFramePos;
+
+	std::list<std::shared_ptr<BlockUnit>> nextUnits; //queue
+	std::shared_ptr<BlockUnit> currentUnit;
 	std::shared_ptr<BlockUnit> stock;
 	
 	void generate();
 
 public:
-	BlockUnitManager(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, const Point& stdPos_, const int blockSize_);
+	BlockUnitManager(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, const GameData& gameData, int player_num);
 	~BlockUnitManager() = default;
 	void update();
 	void draw() const;
-	BlockUnit& getCurrentUnit() { return *currentBlock; }
+	BlockUnit& getCurrentUnit() { return *currentUnit; }
 };
