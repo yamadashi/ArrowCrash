@@ -25,6 +25,7 @@ public:
 	virtual ~Block() = default;
 
 	virtual void draw() const = 0;
+	virtual void draw(const Point& pos, double scale) const = 0;
 
 	bool isDestroyed() const { return destroyed; }
 	const Point& getPoint() const { return point; }
@@ -47,6 +48,7 @@ public:
 	~NormalBlock() = default;
 	
 	void draw() const override;
+	void draw(const Point& pos, double scale) const;
 };
 
 
@@ -60,6 +62,7 @@ public:
 	~ArrowBlock() = default;
 
 	void draw() const override;
+	void draw(const Point& pos, double scale) const;
 	void explode();
 	void rotate(RotateDirection rot) override;
 	ExplosionDirection getDirection() const { return direction; }
@@ -75,5 +78,6 @@ public:
 	~InvincibleBlock() = default;
 
 	void draw() const override;
+	void draw(const Point& pos, double scale) const {}
 	void destroy() override {} //Ž€‚È‚È‚¢
 };

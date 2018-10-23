@@ -81,6 +81,7 @@ public:
 
 	void update();
 	void draw() const;
+	void draw(const Point& pos, double scale) const;
 	void fallImmediately();
 	void move(MoveDirection);
 	void rotate(RotateDirection);

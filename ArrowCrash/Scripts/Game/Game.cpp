@@ -117,8 +117,11 @@ void Game::initUIComponents() {
 				uiInfo.unitFrameSize,
 				uiInfo.unitFrameSize
 				);
+			gameData.stockFramePos.emplace_back(uiComp.stockFrames.at(i).pos); //gameDataの方にも反映
+
 			//次ユニット枠(順番は適当)
 			uiComp.nextUnitFrames.emplace_back();
+			gameData.nextUnitFramePos.emplace_back(); //gameDataの方にも反映
 			for (int j = 0; j < constants::numOfNextBlocks; j++) {
 				uiComp.nextUnitFrames.at(i).emplace_back(
 					uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin + uiInfo.fieldSize.x + unitFrameInterval,
@@ -126,6 +129,7 @@ void Game::initUIComponents() {
 					uiInfo.unitFrameSize,
 					uiInfo.unitFrameSize
 				);
+				gameData.nextUnitFramePos.at(i).emplace_back(uiComp.nextUnitFrames.at(i).at(j).pos); //gameDataの方にも反映
 			}
 		}
 		break;
@@ -141,8 +145,11 @@ void Game::initUIComponents() {
 				uiInfo.unitFrameSize,
 				uiInfo.unitFrameSize
 			);
+			gameData.stockFramePos.emplace_back(uiComp.stockFrames.at(i).pos); //gameDataの方にも反映
+
 			//次ユニット枠(順番は適当)
 			uiComp.nextUnitFrames.emplace_back();
+			gameData.nextUnitFramePos.emplace_back();
 			for (int j = 0; j < constants::numOfNextBlocks; j++) {
 				uiComp.nextUnitFrames.at(i).emplace_back(
 					uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin + uiInfo.fieldSize.x - uiInfo.unitFrameSize,
@@ -150,6 +157,7 @@ void Game::initUIComponents() {
 					uiInfo.unitFrameSize,
 					uiInfo.unitFrameSize
 				);
+				gameData.nextUnitFramePos.at(i).emplace_back(uiComp.nextUnitFrames.at(i).at(j).pos); //gameDataの方にも反映
 			}
 		}
 		break;

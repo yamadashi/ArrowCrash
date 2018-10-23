@@ -19,7 +19,8 @@ void Block::setPoint(const Point& point_) {
 }
 
 void Block::destroy() {
-	ymds::EffectGenerator::addLinkedImage(L"explosion", 500, rect.pos, double(blockSize)/500, 0.1);
+	const int explosionCellSize = TextureAsset(L"explosion").height;
+	ymds::EffectGenerator::addLinkedImage(L"explosion", explosionCellSize, rect.pos, double(blockSize)/explosionCellSize, 0.2);
 	destroyed = true;
 }
 
@@ -34,6 +35,10 @@ void NormalBlock::draw() const {
 	rect.draw(Palette::Green);
 }
 
+
+void NormalBlock::draw(const Point& pos, double scale) const {
+	rect.scaled(scale).setPos(pos).draw(Palette::Green);
+}
 
 
 //ArrowBlock
@@ -56,6 +61,10 @@ void ArrowBlock::rotate(RotateDirection rot) {
 
 void ArrowBlock::draw() const {
 	rect(TextureAsset(L"arrow")(50 * (int)direction, 0, 50, 50)).draw();
+}
+
+void ArrowBlock::draw(const Point& pos, double scale) const {
+	rect.scaled(scale).setPos(pos)(TextureAsset(L"arrow")(50 * (int)direction, 0, 50, 50)).draw();
 }
 
 
