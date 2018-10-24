@@ -16,6 +16,7 @@ void Player::update() {
 	else if (Input::KeyDown.clicked) mngr.getCurrentUnit().move(MoveDirection::Down);
 	else if (Input::KeyA.clicked) mngr.getCurrentUnit().rotate(RotateDirection::Left);
 	else if (Input::KeyD.clicked) mngr.getCurrentUnit().rotate(RotateDirection::Right);
+	else if (Input::KeyS.clicked) mngr.exchangeStock();
 
 	if (Input::KeySpace.clicked) explode();
 
