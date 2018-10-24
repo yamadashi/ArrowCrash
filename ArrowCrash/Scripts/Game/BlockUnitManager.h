@@ -26,4 +26,5 @@ public:
 	void update();
 	void draw() const;
 	BlockUnit& getCurrentUnit() { return *currentUnit; }
+	void exchangeStock();
 };

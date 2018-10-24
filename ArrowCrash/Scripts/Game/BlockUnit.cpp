@@ -7,14 +7,14 @@ BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockS
 	timer(true),
 	blockSize(blockSize_),
 	stdPos(stdPos_),
-	arrowProbability(0.25),
+	arrowProbability(0.80),
 	arrowBlocks(arrowBlocks_)
 {
 	auto& pattern = unitPatterns[Random<int>(0, 6)];
 	
 	//ArrowBlock¶¬(•ª‚©‚èh‚­‚Ä‚²‚ß‚ñ‚â‚Å)
 	int arrowOrder;
-	arrowOrder = Random() < arrowProbability ? Random<int>(0, countNumOfBlock(pattern) - 1) : -1;
+	arrowOrder = Random() < arrowProbability ? Random<int>(0, countNumOfBlock(pattern) - 1) : -1; //-1‚Í–³Œø’l
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {

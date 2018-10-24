@@ -33,10 +33,23 @@ void BlockUnitManager::update() {
 void BlockUnitManager::draw() const {
 	currentUnit->draw();
 
-	//vector(nextUnitsFrameInfo)—p
-	int counter = 0;
+	int counter = 0; //vector(nextUnitsFrameInfo)—p
 	for (auto&& unit : nextUnits) {
 		unit->draw(nextUnitFramePos.at(counter++), 1.0);
 	}
 	if (stock) stock->draw(stockFramePos, 1.0);
+}
+
+void BlockUnitManager::exchangeStock() {
+	if (stock) {
+		currentUnit.swap(stock);
+		currentUnit->predict();
+	}
+	else {
+		stock = std::move(currentUnit);
+		currentUnit = nextUnits.front();
+		nextUnits.pop_front();
+		generate();
+		currentUnit->predict();
+	}
 }
