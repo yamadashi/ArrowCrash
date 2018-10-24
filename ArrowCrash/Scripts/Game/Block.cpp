@@ -32,12 +32,12 @@ NormalBlock::NormalBlock(const Point& point_, const Point& pos, const int blockS
 {}
 
 void NormalBlock::draw() const {
-	rect.draw(Palette::Green);
+	rect(TextureAsset(L"block")).draw();
 }
 
 
 void NormalBlock::draw(const Point& pos, double scale) const {
-	rect.scaled(scale).setPos(pos).draw(Palette::Green);
+	rect.scaled(scale).setPos(pos)(TextureAsset(L"block")).draw();
 }
 
 
