@@ -9,6 +9,7 @@ private:
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 	const Point stdPos;
 	const int blockSize;
+	bool hasExchanged; //ストック交換フラグ
 
 	//描画用
 	std::vector<Point> nextUnitFramePos;

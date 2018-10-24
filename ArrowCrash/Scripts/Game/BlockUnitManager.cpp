@@ -6,6 +6,7 @@ BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<Arro
 	arrowBlocks(arrowBlocks_),
 	stdPos(gameData.stdPositions.at(player_num)),
 	blockSize(gameData.blockSize),
+	hasExchanged(false),
 	nextUnitFramePos(gameData.nextUnitFramePos.at(player_num)),
 	stockFramePos(gameData.stockFramePos.at(player_num)),
 	currentUnit(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, blockSize, arrowBlocks, field)),
@@ -27,6 +28,7 @@ void BlockUnitManager::update() {
 		nextUnits.pop_front();
 		generate();
 		currentUnit->predict();
+		hasExchanged = false;
 	}
 }
 
@@ -41,14 +43,21 @@ void BlockUnitManager::draw() const {
 }
 
 void BlockUnitManager::exchangeStock() {
+
+	if (hasExchanged) return;
+	
+	hasExchanged = true;
+
 	if (stock) {
 		currentUnit.swap(stock);
+		currentUnit->resetPoint();
 		currentUnit->predict();
 	}
 	else {
 		stock = std::move(currentUnit);
 		currentUnit = nextUnits.front();
 		nextUnits.pop_front();
+
 		generate();
 		currentUnit->predict();
 	}
