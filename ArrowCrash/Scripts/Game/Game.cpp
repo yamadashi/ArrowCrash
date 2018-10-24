@@ -22,9 +22,12 @@ void Game::update() {
 	}
 
 	if (Input::KeyP.clicked) pause = true;
+	if (Input::KeyEnter.clicked) changeScene(SceneName::Result);
 	for (auto& player : players) {
 		player.update();
 	}
+
+	ymds::EventManager::get().update();
 }
 
 void Game::draw() const {
@@ -40,6 +43,8 @@ void Game::draw() const {
 		white.draw();
 		PutText(L"press R to return Title").at(Window::Center());
 	}
+
+	ymds::EventManager::get().draw();
 }
 
 
@@ -112,8 +117,11 @@ void Game::initUIComponents() {
 				uiInfo.unitFrameSize,
 				uiInfo.unitFrameSize
 				);
+			gameData.stockFramePos.emplace_back(uiComp.stockFrames.at(i).pos); //gameData‚Ì•û‚É‚à”½‰f
+
 			//Ÿƒ†ƒjƒbƒg˜g(‡”Ô‚Í“K“–)
 			uiComp.nextUnitFrames.emplace_back();
+			gameData.nextUnitFramePos.emplace_back(); //gameData‚Ì•û‚É‚à”½‰f
 			for (int j = 0; j < constants::numOfNextBlocks; j++) {
 				uiComp.nextUnitFrames.at(i).emplace_back(
 					uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin + uiInfo.fieldSize.x + unitFrameInterval,
@@ -121,6 +129,7 @@ void Game::initUIComponents() {
 					uiInfo.unitFrameSize,
 					uiInfo.unitFrameSize
 				);
+				gameData.nextUnitFramePos.at(i).emplace_back(uiComp.nextUnitFrames.at(i).at(j).pos); //gameData‚Ì•û‚É‚à”½‰f
 			}
 		}
 		break;
@@ -136,8 +145,11 @@ void Game::initUIComponents() {
 				uiInfo.unitFrameSize,
 				uiInfo.unitFrameSize
 			);
+			gameData.stockFramePos.emplace_back(uiComp.stockFrames.at(i).pos); //gameData‚Ì•û‚É‚à”½‰f
+
 			//Ÿƒ†ƒjƒbƒg˜g(‡”Ô‚Í“K“–)
 			uiComp.nextUnitFrames.emplace_back();
+			gameData.nextUnitFramePos.emplace_back();
 			for (int j = 0; j < constants::numOfNextBlocks; j++) {
 				uiComp.nextUnitFrames.at(i).emplace_back(
 					uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin + uiInfo.fieldSize.x - uiInfo.unitFrameSize,
@@ -145,6 +157,7 @@ void Game::initUIComponents() {
 					uiInfo.unitFrameSize,
 					uiInfo.unitFrameSize
 				);
+				gameData.nextUnitFramePos.at(i).emplace_back(uiComp.nextUnitFrames.at(i).at(j).pos); //gameData‚Ì•û‚É‚à”½‰f
 			}
 		}
 		break;

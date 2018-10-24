@@ -69,6 +69,7 @@ private:
 	const int blockSize;
 	const Point stdPos; //フィールド基準点
 	const double arrowProbability;
+	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 
 	bool checkCollision(const Point& point_) const;
 	void settle();
@@ -80,6 +81,7 @@ public:
 
 	void update();
 	void draw() const;
+	void draw(const Point& pos, double scale) const;
 	void fallImmediately();
 	void move(MoveDirection);
 	void rotate(RotateDirection);

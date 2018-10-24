@@ -23,9 +23,9 @@ const std::vector<FilePath>& ymds::FileRegisterer::getPaths(const FilePath dir_n
 
 ymds::FileRegisterer& ymds::TextureRegisterer::fileRegister(const FilePath& directory, const bool scanLowerHierarchy) {
 
-	const auto& filePaths = getPaths(directory, scanLowerHierarchy);
+	const auto& paths = getPaths(directory, scanLowerHierarchy);
 
-	for (const auto& elm : filePaths) {
+	for (const auto& elm : paths) {
 		String&& extension = FileSystem::Extension(elm);
 		if (extension == L"png" || extension == L"jpeg" || extension == L"jpg")
 			TextureAsset::Register(FileSystem::BaseName(elm), elm, TextureDesc::Mipped);
@@ -36,9 +36,9 @@ ymds::FileRegisterer& ymds::TextureRegisterer::fileRegister(const FilePath& dire
 
 ymds::FileRegisterer& ymds::SoundRegisterer::fileRegister(const FilePath& directory, const bool scanLowerHierarchy) {
 
-	const auto& filePaths = getPaths(directory, scanLowerHierarchy);
+	const auto& paths = getPaths(directory, scanLowerHierarchy);
 
-	for (const auto& elm : filePaths) {
+	for (const auto& elm : paths) {
 		String&& extension = FileSystem::Extension(elm);
 		if (extension == L"mp3" || extension == L"wav")
 			SoundAsset::Register(FileSystem::BaseName(elm), elm);
@@ -49,9 +49,9 @@ ymds::FileRegisterer& ymds::SoundRegisterer::fileRegister(const FilePath& direct
 
 ymds::FileRegisterer& ymds::AssetRegisterer::fileRegister(const FilePath& directory, const bool scanLowerHierarchy) {
 
-	const auto& filePaths = getPaths(directory, scanLowerHierarchy);
+	const auto& paths = getPaths(directory, scanLowerHierarchy);
 
-	for (const auto& elm : filePaths) {
+	for (const auto& elm : paths) {
 		String&& extension = FileSystem::Extension(elm);
 		if (extension == L"png" || extension == L"jpeg" || extension == L"jpg") 
 			TextureAsset::Register(FileSystem::BaseName(elm), elm, TextureDesc::Mipped);
