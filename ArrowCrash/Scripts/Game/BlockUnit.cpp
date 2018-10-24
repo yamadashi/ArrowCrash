@@ -1,8 +1,9 @@
 #include "BlockUnit.h"
 
 BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockSize_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, Field& field_)
-	:point(point_),
-	field(field_),
+	:field(field_),
+	point(point_),
+	predictedPoint(point_),
 	settled(false),
 	timer(true),
 	blockSize(blockSize_),
@@ -45,14 +46,6 @@ bool BlockUnit::checkCollision(const Point& point_) const {
 		}
 	}
 	return false;
-}
-
-void BlockUnit::predict() {
-	predictedPoint.set(point);
-	while (!checkCollision(predictedPoint)) {
-		predictedPoint.moveBy(1, 0);
-	}
-	predictedPoint.moveBy(-1, 0); //ここダサい
 }
 
 void BlockUnit::settle() {
@@ -185,4 +178,16 @@ void BlockUnit::rotate(RotateDirection rot) {
 	}
 	predict();
 
+}
+
+void BlockUnit::predict() {
+	predictedPoint.set(point);
+	while (!checkCollision(predictedPoint)) {
+		predictedPoint.moveBy(1, 0);
+	}
+	predictedPoint.moveBy(-1, 0); //ここダサい
+}
+
+void BlockUnit::resetPoint() {
+	point.set(0, constants::col_len / 2 - 2);
 }

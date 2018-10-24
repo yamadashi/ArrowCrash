@@ -87,4 +87,5 @@ public:
 	void rotate(RotateDirection);
 	bool isSettled() const { return settled; }
 	void predict();
+	void resetPoint();
 };
