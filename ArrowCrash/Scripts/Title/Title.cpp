@@ -6,12 +6,16 @@ Title::Title()
 	pointers(),
 	targets(),
 	scene(TitleScene::TOP),
-	transition(false)
+	transition(false),
+	maxSpeed(Window::Width()/25),
+	speed(maxSpeed),
+	deceleration((double)maxSpeed/60),
+	selectViewPos({ Window::Width(), 0 })
 {
-	//GamepadManager‚Ì—LŒø‰»
+	//GamepadManagerã®æœ‰åŠ¹åŒ–
 	ymds::GamepadManager::get().activate();
 
-	//pointer‚ğì‚é
+	//pointerã‚’ä½œã‚‹
 	for (int i = 0; i < 4; i++) {
 		pointers.emplace_back(new Pointer(i));
 	}
@@ -21,17 +25,17 @@ Title::Title()
 	const int labelHeight = FontAsset(font_handler).height;
 
 	targets.emplace_back(new ClickableLabel(L"ArrowCrash", Window::Center().movedBy(0, -140), font_handler, Palette::Orange));
-	targets.emplace_back(new ClickableLabel(L"‚Í‚¶‚ß‚é", Window::Center(), font_handler, Palette::Darkslategray,
+	targets.emplace_back(new ClickableLabel(L"ã¯ã˜ã‚ã‚‹", Window::Center(), font_handler, Palette::Darkslategray,
 		[this](ClickableLabel&) { transition = true; },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
 	)),
-	targets.emplace_back(new ClickableLabel(L"‚¹‚Â‚ß‚¢", Window::Center().movedBy(0, labelHeight + labelInterval), font_handler, Palette::Darkslategray,
+	targets.emplace_back(new ClickableLabel(L"ã›ã¤ã‚ã„", Window::Center().movedBy(0, labelHeight + labelInterval), font_handler, Palette::Darkslategray,
 		[this](ClickableLabel&) { transition = true; },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
 	));
-	targets.emplace_back(new ClickableLabel(L"‚¨‚í‚é", Window::Center().movedBy(0, 2 * (labelHeight + labelInterval)), font_handler, Palette::Darkslategray,
+	targets.emplace_back(new ClickableLabel(L"ãŠã‚ã‚‹", Window::Center().movedBy(0, 2 * (labelHeight + labelInterval)), font_handler, Palette::Darkslategray,
 		[this](ClickableLabel&) { System::Exit(); },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
@@ -45,22 +49,22 @@ Title::Title()
 	const int backButtonMargin = Window::Height() / 54;
 	const int backButtonSize = Window::Height() / 5;
 	
-	targets.emplace_back(new ClickablePanel(panelSize, panelSize, Point(Window::Width() + panelLeft, panelOver), L"2PlayerPanel",
+	targets.emplace_back(new ClickablePanel(panelSize, panelSize, selectViewPos.movedBy(panelLeft, panelOver), L"2PlayerPanel",
 		[this](ClickablePanel&) { m_data->numOfPlayer = 2; changeScene(SceneName::Game); },
 		[](ClickablePanel& panel) { panel.setTextureHandler(L"2PlayerPanel_"); },
 		[](ClickablePanel& panel) { panel.setTextureHandler(L"2PlayerPanel"); }
 	));
-	targets.emplace_back(new ClickablePanel(panelSize, panelSize, Point(Window::Width() + panelLeft + panelSize + panelInterval, panelOver), L"3PlayerPanel",
+	targets.emplace_back(new ClickablePanel(panelSize, panelSize, selectViewPos.movedBy(panelLeft + panelSize + panelInterval, panelOver), L"3PlayerPanel",
 		[this](ClickablePanel&) { m_data->numOfPlayer = 3; changeScene(SceneName::Game); },
 		[](ClickablePanel& panel) { panel.setTextureHandler(L"3PlayerPanel_"); },
 		[](ClickablePanel& panel) { panel.setTextureHandler(L"3PlayerPanel"); }
 	));
-	targets.emplace_back(new ClickablePanel(panelSize, panelSize, Point(Window::Width() + panelLeft + panelSize * 2 + panelInterval * 2, panelOver), L"4PlayerPanel",
+	targets.emplace_back(new ClickablePanel(panelSize, panelSize, selectViewPos.movedBy(panelLeft + panelSize * 2 + panelInterval * 2, panelOver), L"4PlayerPanel",
 		[this](ClickablePanel&) { m_data->numOfPlayer = 4; changeScene(SceneName::Game); },
 		[](ClickablePanel& panel) { panel.setTextureHandler(L"4PlayerPanel_"); },
 		[](ClickablePanel& panel) { panel.setTextureHandler(L"4PlayerPanel"); }
 	));
-	targets.emplace_back(new ClickablePanel(backButtonSize, backButtonSize, Point(Window::Width() + backButtonMargin, backButtonMargin), L"back",
+	targets.emplace_back(new ClickablePanel(backButtonSize, backButtonSize, selectViewPos.movedBy(backButtonMargin, backButtonMargin), L"back",
 		[this](ClickablePanel&) { transition = true; }
 	));
 
@@ -88,12 +92,32 @@ void Title::update() {
 		clickDetector.update(); 
 	}
 	else {
-		const int dir = scene == TitleScene::TOP ? -1 : 1;
+		//é€Ÿåº¦åˆ¶å¾¡
+		speed -= deceleration;
+
+		//ç§»å‹•
+		int direction = scene == TitleScene::TOP ? -1 : 1;
 		for (auto&& target : targets) {
-			target->moveBy({ dir*Window::Width(), 0 });
+			target->moveBy({ direction*speed, 0 });
 		}
-		transition = false;
-		scene = (TitleScene)(((int)scene +1)%2);
+		selectViewPos.moveBy({ direction*speed, 0 });
+
+		if (scene == TitleScene::TOP) {
+			if (selectViewPos.x <= 0) {
+				selectViewPos.x = 0;
+				speed = maxSpeed;
+				transition = false;
+				scene = TitleScene::SELECT;
+			}
+		}
+		else {
+			if (selectViewPos.x >= Window::Width()) {
+				selectViewPos.x = Window::Width();
+				speed = maxSpeed;
+				transition = false;
+				scene = TitleScene::TOP;
+			}
+		}
 	}
 }
 

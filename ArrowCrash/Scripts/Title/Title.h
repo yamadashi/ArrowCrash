@@ -5,16 +5,19 @@
 #include "ClickablePanel.h"
 #include "ClickDetector.h"
 
-enum class TitleScene { TOP, SELECT };
-
 class Title : public Scene {
 private:
 	ClickDetector clickDetector;
 	std::vector<std::shared_ptr<Pointer>> pointers;
 	std::vector<std::shared_ptr<Clickable>> targets;
 
-	TitleScene scene;
+	enum class TitleScene { TOP, SELECT } scene;
 	bool transition;
+
+	const int maxSpeed;
+	double speed;
+	const double deceleration;
+	Point selectViewPos;
 
 public:
 	Title();
