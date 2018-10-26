@@ -4,27 +4,27 @@
 void ClickDetector::update() {
 
 	for (auto&& target : targets) {
+		Clickable& tgt = *target.lock();
+		tgt.mouseOverCount = 0;
+
 		for (const auto& pointer : pointers) {
-			Clickable& tgt = *target.lock();
 			Pointer& ptr = *pointer.lock();
 
 			if (tgt.contains(ptr.getPos()))
 			{
 				//マウスオーバー処理
-				if (!tgt.mouseOver) {
-					tgt.mouseOver = true;
-					tgt.onMouseOver();
-				}
+				tgt.mouseOverCount++;
+				if (!tgt.mouseOver) tgt.onMouseOver();
+
 				//クリック処理
 				if (ptr.isClicked()) {
 					tgt.onClick();
 					break;
 				}
-			} 
-			else if (tgt.mouseOver) {
-				tgt.mouseOver = false;
-				tgt.onMouseOut();
 			}
 		}
+		if (tgt.mouseOver && tgt.mouseOverCount == 0) tgt.onMouseOut();
+
+		tgt.mouseOver = tgt.mouseOverCount > 0;
 	}
 }

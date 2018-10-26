@@ -3,10 +3,19 @@
 Title::Title()
 	:Scene(),
 	clickDetector(),
-	pointer(new Pointer(0)),
+	pointers(),
+	targets(),
 	scene(TitleScene::TOP),
 	transition(false)
 {
+	//GamepadManager‚Ì—LŒø‰»
+	ymds::GamePadManager::get().activate();
+
+	//pointer‚ğì‚é
+	for (int i = 0; i < 4; i++) {
+		pointers.emplace_back(new Pointer(i));
+	}
+
 	const String font_handler = L"kokumincho30";
 	const int labelInterval = Window::Height() / 36;
 	const int labelHeight = FontAsset(font_handler).height;
@@ -55,16 +64,25 @@ Title::Title()
 		[this](ClickablePanel&) { transition = true; }
 	));
 
+
 	for (auto& target : targets) {
 		clickDetector.addTarget(target);
 	}
-	clickDetector.addPointer(pointer);
+	for (auto& pointer : pointers) {
+		clickDetector.addPointer(pointer);
+	}
 
 }
 
+Title::~Title() {
+	ymds::GamePadManager::get().inactivate();
+}
 
 void Title::update() {
-	pointer->update();
+	
+	ymds::GamePadManager::get().update();
+	
+	for (auto& pointer : pointers) pointer->update();
 
 	if (!transition) {
 		clickDetector.update(); 
@@ -80,9 +98,8 @@ void Title::update() {
 }
 
 void Title::draw() const {
-	//if (scene == TitleScene::TOP) TextureAsset(L"title").draw();
 
 	for (const auto& target : targets) target->draw();
 
-	pointer->draw();
+	for (const auto& pointer : pointers) pointer->draw();
 }
