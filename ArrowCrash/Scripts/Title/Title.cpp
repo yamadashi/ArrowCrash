@@ -9,7 +9,7 @@ Title::Title()
 	transition(false)
 {
 	//GamepadManager‚Ì—LŒø‰»
-	ymds::GamePadManager::get().activate();
+	ymds::GamepadManager::get().activate();
 
 	//pointer‚ğì‚é
 	for (int i = 0; i < 4; i++) {
@@ -75,12 +75,12 @@ Title::Title()
 }
 
 Title::~Title() {
-	ymds::GamePadManager::get().inactivate();
+	ymds::GamepadManager::get().inactivate();
 }
 
 void Title::update() {
 	
-	ymds::GamePadManager::get().update();
+	ymds::GamepadManager::get().update();
 	
 	for (auto& pointer : pointers) pointer->update();
 

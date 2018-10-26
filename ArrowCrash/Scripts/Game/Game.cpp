@@ -1,8 +1,14 @@
 #include "Game.h"
 
 
+Game::~Game() {
+	ymds::GamepadManager::get().inactivate();
+}
+
 void Game::init() {
 	
+	ymds::GamepadManager::get().activate();
+
 	initGameData();
 	initUIComponents();
 
@@ -15,13 +21,22 @@ void Game::init() {
 
 void Game::update() {
 
+	ymds::GamepadManager::get().update();
+
+	auto startClicked = []() {
+		return ymds::GamepadManager::get().any([](ymds::Gamepad& gamepad) { return gamepad.clicked(ymds::GamepadIn::START); });
+	};
+
 	if (pause) {
-		if (Input::KeyP.clicked) pause = false;
-		else if (Input::KeyR.clicked) changeScene(SceneName::Title);
+		//if (startClicked())
+		if (Input::KeyP.clicked)
+			pause = false;
 		return;
 	}
 
-	if (Input::KeyP.clicked) pause = true;
+	//if (startClicked())
+		if (Input::KeyP.clicked)
+		pause = true;
 	if (Input::KeyEnter.clicked) changeScene(SceneName::Result);
 	for (auto& player : players) {
 		player.update();
@@ -38,10 +53,9 @@ void Game::draw() const {
 
 	uiComp.draw();
 
-	static const Texture white(Image(Window::Size(), Color(Palette::White, 150)));
 	if (pause) {
+		static const Texture white(Image(Window::Size(), Color(Palette::White, 150)));
 		white.draw();
-		PutText(L"press R to return Title").at(Window::Center());
 	}
 
 	ymds::EventManager::get().draw();

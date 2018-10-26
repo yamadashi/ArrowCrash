@@ -20,6 +20,20 @@ void Player::update() {
 
 	if (Input::KeySpace.clicked) explode();
 
+	/*auto& gamepad = ymds::GamepadManager::get().getGamepad(number);
+
+	if (gamepad.clicked(ymds::GamepadIn::UP)) mngr.getCurrentUnit().fallImmediately();
+	else if (gamepad.clicked(ymds::GamepadIn::LEFT)) mngr.getCurrentUnit().move(MoveDirection::Left);
+	else if (gamepad.clicked(ymds::GamepadIn::RIGHT)) mngr.getCurrentUnit().move(MoveDirection::Right);
+	else if (gamepad.clicked(ymds::GamepadIn::DOWN)) mngr.getCurrentUnit().move(MoveDirection::Down);
+	else if (gamepad.clicked(ymds::GamepadIn::THREE)) mngr.getCurrentUnit().rotate(RotateDirection::Left);
+	else if (gamepad.clicked(ymds::GamepadIn::TWO)) mngr.getCurrentUnit().rotate(RotateDirection::Right);
+	
+	if (gamepad.clicked(ymds::GamepadIn::L1)) mngr.exchangeStock();
+
+	if (gamepad.clicked(ymds::GamepadIn::R1)) explode();*/
+	
+
 	field->update();
 	mngr.update();
 }

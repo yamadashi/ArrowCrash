@@ -34,6 +34,7 @@ private:
 	void initUIComponents();
 
 public:
+	~Game();
 	void init() override;
 
 	void update() override;
