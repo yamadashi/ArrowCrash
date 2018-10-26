@@ -4,9 +4,8 @@ Player::Player(int player_num, const GameData& gameData_)
 	:number(player_num),
 	gameData(gameData_),
 	arrowBlocks(new std::vector<std::weak_ptr<ArrowBlock>>()),
-	field(new Field(gameData.stdPositions.at(number), gameData.blockSize)),
-	mngr(*field, *arrowBlocks, gameData, number),
-	timer(0)
+	field(new Field(gameData.stdPositions.at(number), gameData.blockSize, *arrowBlocks)),
+	mngr(*field, *arrowBlocks, gameData, number)
 {}
 
 void Player::update() {
@@ -15,22 +14,7 @@ void Player::update() {
 	else if (Input::KeyLeft.clicked) mngr.getCurrentUnit().move(MoveDirection::Left);
 	else if (Input::KeyRight.clicked) mngr.getCurrentUnit().move(MoveDirection::Right);
 	else if (Input::KeyDown.clicked) mngr.getCurrentUnit().move(MoveDirection::Down);
-	if (Input::KeyLeft.pressed) {
-		timer++;
-		if (timer % 8 == 0) mngr.getCurrentUnit().move(MoveDirection::Left);
-	}
-	if (Input::KeyLeft.released) timer = 0;
-	if (Input::KeyRight.pressed) {
-		timer++;
-		if (timer % 8 == 0) mngr.getCurrentUnit().move(MoveDirection::Right);
-	}
-	if (Input::KeyRight.released) timer = 0;
-	if (Input::KeyDown.pressed) {
-		timer++;
-		if (timer % 6 == 0)mngr.getCurrentUnit().move(MoveDirection::Down);
-	}
-	if (Input::KeyDown.released) timer = 0;
-	if (Input::KeyA.clicked) mngr.getCurrentUnit().rotate(RotateDirection::Left);
+	else if (Input::KeyA.clicked) mngr.getCurrentUnit().rotate(RotateDirection::Left);
 	else if (Input::KeyD.clicked) mngr.getCurrentUnit().rotate(RotateDirection::Right);
 	else if (Input::KeyS.clicked) mngr.exchangeStock();
 
