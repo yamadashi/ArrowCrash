@@ -34,6 +34,13 @@ BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockS
 		}
 	}
 	predict();
+	//フィールド上部まで積まれている
+	if (predictedPoint.x < 0) {
+		field.reset();
+		resetPoint();
+		timer.restart();
+		predict();
+	}
 }
 
 
@@ -181,7 +188,7 @@ void BlockUnit::rotate(RotateDirection rot) {
 }
 
 void BlockUnit::predict() {
-	predictedPoint.set(point);
+	predictedPoint.set(point.movedBy(-4, 0));
 	while (!checkCollision(predictedPoint)) {
 		predictedPoint.moveBy(1, 0);
 	}

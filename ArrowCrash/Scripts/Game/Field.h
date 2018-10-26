@@ -12,11 +12,12 @@ class Field : public Explodable {
 private:
 	BlockGrid blocks;
 	const Point stdPos; //Šî€“_
+	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 
 	bool contains(const Point& point) const;
 
 public:
-	Field(const Point& stdPos_, int blockSize);
+	Field(const Point& stdPos_, int blockSize, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks);
 	~Field() = default;
 
 	void explode(const Point& start, ExplosionDirection direction) override;
@@ -25,6 +26,7 @@ public:
 		return contains(point) ?
 			blocks[point.x][point.y] : nullptr;
 	}
+	void reset();
 
 	void update();
 	void draw() const;

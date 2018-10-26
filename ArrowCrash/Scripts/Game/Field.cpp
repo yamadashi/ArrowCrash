@@ -1,8 +1,9 @@
 #include "Field.h"
 
-Field::Field(const Point& stdPos_, int blockSize)
+Field::Field(const Point& stdPos_, int blockSize, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_)
 	:Explodable(),
-	stdPos(stdPos_)
+	stdPos(stdPos_),
+	arrowBlocks(arrowBlocks_)
 {
 	for (int i = 0; i < constants::row_len; i++) {
 		blocks.emplace_back();
@@ -46,6 +47,25 @@ void Field::explode(const Point& start, ExplosionDirection direction) {
 
 void Field::setBlockAt(std::shared_ptr<Block> block, const Point& point) {
 	blocks.at(point.x).at(point.y) = block;
+}
+
+void Field::reset() {
+
+	//arrowBlocksÇÃÇ§ÇøsettledÇ»Ç‡ÇÃÇçÌèú
+	auto&& itr = std::remove_if(arrowBlocks.begin(), arrowBlocks.end(), [](std::weak_ptr<ArrowBlock> blk) { return blk.lock()->isSettled(); });
+	arrowBlocks.erase(itr, arrowBlocks.end());
+
+	for (auto&& arr : blocks) {
+		for (auto&& blk : arr) {
+			if (blk) blk->destroy();
+		}
+	}
+	//É_ÉTÇ¢Ç©ÇÁÇ»ÇÒÇ∆Ç©ÇµÇΩÇ¢
+	for (auto&& arr : blocks) {
+		for (auto&& block : arr) {
+			if (block && block->isDestroyed()) block.reset();
+		}
+	}
 }
 
 void Field::update() {
