@@ -17,11 +17,20 @@ void Game::init() {
 	for (int i = 0; i < m_data->numOfPlayer; i++) {
 		players.emplace_back(i, gameData);
 	}
+
+	m_data->scores.clear();
+	for (int i = 0; i < m_data->numOfPlayer; i++)
+		m_data->scores.emplace_back();
 }
 
 void Game::update() {
 
-	if (timer.s() > time_limit) changeScene(SceneName::Result);
+	if (timer.s() > time_limit) {
+		for (int i = 0; i < players.size(); i++) {
+			m_data->scores.at(i) = players.at(i).getScore();
+		}
+		changeScene(SceneName::Result);
+	}
 
 	if (pause) {
 		if (Input::KeyP.clicked) pause = false;
@@ -54,7 +63,7 @@ void Game::draw() const {
 
 	ymds::EventManager::get().draw();
 
-	PutText(timer.s()).at(Window::Center().x, 20);
+	PutText(time_limit - timer.s()).at(Window::Center().x, 20);
 }
 
 

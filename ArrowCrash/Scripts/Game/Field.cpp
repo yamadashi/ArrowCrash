@@ -24,7 +24,7 @@ bool Field::contains(const Point& point) const {
 		point.y >= 0 && point.y < constants::col_len;
 }
 
-void Field::explode(const Point& start, ExplosionDirection direction) {
+int Field::explode(const Point& start, ExplosionDirection direction) {
 
 	//”š”­•ûŒü‚ðŒvŽZ
 	Point vec(0, 0);
@@ -38,11 +38,16 @@ void Field::explode(const Point& start, ExplosionDirection direction) {
 
 	Point point(start);
 	
+	int numOfDestroyed = 0;
+
 	do {
-		if (auto&& blk = blocks.at(point.x).at(point.y)) {
+		if (auto& blk = blocks.at(point.x).at(point.y)) {
 			blk->destroy();
+			numOfDestroyed++;
 		}
 	} while (contains(point.moveBy(vec)));
+
+	return numOfDestroyed;
 }
 
 void Field::setBlockAt(std::shared_ptr<Block> block, const Point& point) {

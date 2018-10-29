@@ -8,5 +8,5 @@ enum class ExplosionDirection {
 
 class Explodable {
 public:
-	virtual void explode(const Point& point, ExplosionDirection direction) = 0;
+	virtual int explode(const Point& point, ExplosionDirection direction) = 0;
 };
