@@ -8,7 +8,7 @@
 class Title : public Scene {
 private:
 	ClickDetector clickDetector;
-	std::shared_ptr<Pointer> pointer;
+	std::vector<std::shared_ptr<Pointer>> pointers;
 	std::vector<std::shared_ptr<Clickable>> targets;
 
 	enum class TitleScene { TOP, SELECT } scene;
@@ -24,7 +24,7 @@ private:
 
 public:
 	Title();
-	~Title() = default;
+	~Title();
 
 	void update();
 

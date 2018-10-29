@@ -7,12 +7,14 @@ protected:
 	Point pos;
 
 public:
+	int mouseOverCount;
 	bool mouseOver;
 
 	Clickable() = default;
 	Clickable(const Point& pos_)
 		:pos(pos_),
-		mouseOver(false)
+		mouseOver(false),
+		mouseOverCount(0)
 	{}
 	virtual ~Clickable() = default;
 

@@ -15,10 +15,18 @@ BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<Arro
 	for (int i = 0; i < 2; i++) {
 		generate();
 	}
+	currentUnit->predict();
 }
 
 void BlockUnitManager::generate() {
 	nextUnits.emplace_back(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, blockSize, arrowBlocks, field));
+}
+
+void BlockUnitManager::resetField() {
+	field.reset();
+	currentUnit->resetPoint();
+	currentUnit->restartTimer();
+	currentUnit->predict();
 }
 
 void BlockUnitManager::update() {
@@ -27,6 +35,12 @@ void BlockUnitManager::update() {
 		currentUnit = nextUnits.front();
 		nextUnits.pop_front();
 		generate();
+
+		if (currentUnit->checkStackedFully()) //気持ち悪い文法...
+		{
+			resetField();
+		}
+
 		currentUnit->predict();
 		hasExchanged = false;
 	}
@@ -51,12 +65,23 @@ void BlockUnitManager::exchangeStock() {
 	if (stock) {
 		currentUnit.swap(stock);
 		currentUnit->resetPoint();
+
+		if (currentUnit->checkStackedFully()) //気持ち悪い文法...
+		{
+			resetField();
+		}
+
 		currentUnit->predict();
 	}
 	else {
 		stock = std::move(currentUnit);
 		currentUnit = nextUnits.front();
 		nextUnits.pop_front();
+
+		if (currentUnit->checkStackedFully()) //気持ち悪い文法...
+		{
+			resetField();
+		}
 
 		generate();
 		currentUnit->predict();
