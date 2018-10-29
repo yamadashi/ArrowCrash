@@ -9,8 +9,13 @@ Title::Title()
 	maxSpeed(Window::Width()/25),
 	speed(maxSpeed),
 	deceleration((double)maxSpeed/60),
-	selectViewPos({ Window::Width(), 0 })
+	selectViewPos({ Window::Width(), 0 }),
+	backgroundPos(),
+	backScrollSpeed(5)
 {
+	backgroundPos[0].set(0, 0);
+	backgroundPos[1].set(Window::Width(), 0);
+
 
 	const String font_handler = L"kokumincho30";
 	const int labelInterval = Window::Height() / 36;
@@ -69,6 +74,15 @@ Title::Title()
 
 
 void Title::update() {
+
+	//îwåi
+	for (int i = 0; i < backgroundPos.size(); i++) {
+		if (backgroundPos[i].x < -Window::Width()) {
+			backgroundPos[i].x = backgroundPos[(i + 1) % 2].x + Window::Width();
+		}
+		backgroundPos[i].moveBy(-backScrollSpeed, 0);
+	}
+
 	pointer->update();
 
 	if (!transition) {
@@ -105,7 +119,9 @@ void Title::update() {
 }
 
 void Title::draw() const {
-	//if (scene == TitleScene::TOP) TextureAsset(L"title").draw();
+	for (auto& pos : backgroundPos) {
+		TextureAsset(L"background").resize(Window::Size()).draw(pos);
+	}
 
 	for (const auto& target : targets) target->draw();
 
