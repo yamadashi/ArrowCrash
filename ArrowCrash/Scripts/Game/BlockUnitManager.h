@@ -20,6 +20,7 @@ private:
 	std::shared_ptr<BlockUnit> stock;
 	
 	void generate();
+	void resetField();
 
 public:
 	BlockUnitManager(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, const GameData& gameData, int player_num);
