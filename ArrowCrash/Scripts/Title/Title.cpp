@@ -3,7 +3,8 @@
 Title::Title()
 	:Scene(),
 	clickDetector(),
-	pointer(new Pointer(0)),
+	pointers(),
+	targets(),
 	scene(TitleScene::TOP),
 	transition(false),
 	maxSpeed(Window::Width()/25),
@@ -11,23 +12,31 @@ Title::Title()
 	deceleration((double)maxSpeed/60),
 	selectViewPos({ Window::Width(), 0 })
 {
+	//GamepadManagerã®æœ‰åŠ¹åŒ–
+	ymds::GamepadManager::get().activate();
+
+	//pointerã‚’ä½œã‚‹
+	for (int i = 0; i < 4; i++) {
+		pointers.emplace_back(new Pointer(i));
+	}
 
 	const String font_handler = L"kokumincho";
 	const int labelInterval = Window::Height() / 36;
 	const int labelHeight = FontAsset(font_handler).height;
 
 	targets.emplace_back(new ClickableLabel(L"ArrowCrash", Window::Center().movedBy(0, -140), font_handler, Palette::Orange));
-	targets.emplace_back(new ClickableLabel(L"‚Í‚¶‚ß‚é", Window::Center(), font_handler, Palette::Darkslategray,
+	targets.emplace_back(new ClickableLabel(L"ã¯ã˜ã‚ã‚‹", Window::Center(), font_handler, Palette::Darkslategray,
 		[this](ClickableLabel&) { transition = true; },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
 	)),
-	targets.emplace_back(new ClickableLabel(L"‚¹‚Â‚ß‚¢", Window::Center().movedBy(0, labelHeight + labelInterval), font_handler, Palette::Darkslategray,
+
+	targets.emplace_back(new ClickableLabel(L"ã›ã¤ã‚ã„", Window::Center().movedBy(0, labelHeight + labelInterval), font_handler, Palette::Darkslategray,
 		[this](ClickableLabel&) { changeScene(SceneName::Explain); },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
 	));
-	targets.emplace_back(new ClickableLabel(L"‚¨‚í‚é", Window::Center().movedBy(0, 2 * (labelHeight + labelInterval)), font_handler, Palette::Darkslategray,
+	targets.emplace_back(new ClickableLabel(L"ãŠã‚ã‚‹", Window::Center().movedBy(0, 2 * (labelHeight + labelInterval)), font_handler, Palette::Darkslategray,
 		[this](ClickableLabel&) { System::Exit(); },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
@@ -60,25 +69,34 @@ Title::Title()
 		[this](ClickablePanel&) { transition = true; }
 	));
 
+
 	for (auto& target : targets) {
 		clickDetector.addTarget(target);
 	}
-	clickDetector.addPointer(pointer);
+	for (auto& pointer : pointers) {
+		clickDetector.addPointer(pointer);
+	}
 
 }
 
+Title::~Title() {
+	ymds::GamepadManager::get().inactivate();
+}
 
 void Title::update() {
-	pointer->update();
+	
+	ymds::GamepadManager::get().update();
+	
+	for (auto& pointer : pointers) pointer->update();
 
 	if (!transition) {
 		clickDetector.update(); 
 	}
 	else {
-		//‘¬“x§Œä
+		//é€Ÿåº¦åˆ¶å¾¡
 		speed -= deceleration;
 
-		//ˆÚ“®
+		//ç§»å‹•
 		int direction = scene == TitleScene::TOP ? -1 : 1;
 		for (auto&& target : targets) {
 			target->moveBy({ direction*speed, 0 });
@@ -105,9 +123,8 @@ void Title::update() {
 }
 
 void Title::draw() const {
-	//if (scene == TitleScene::TOP) TextureAsset(L"title").draw();
 
 	for (const auto& target : targets) target->draw();
 
-	pointer->draw();
+	for (const auto& pointer : pointers) pointer->draw();
 }

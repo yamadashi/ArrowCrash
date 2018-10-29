@@ -6,6 +6,7 @@
 //シーンを跨いで必要な情報
 struct SharedData {
 	int numOfPlayer; //プレイヤー数
+	std::vector<int> scores; //各プレイヤーのスコア
 };
 
 
