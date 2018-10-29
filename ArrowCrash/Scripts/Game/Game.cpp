@@ -1,12 +1,18 @@
 #include "Game.h"
 
 
+Game::Game()
+	:gameData(),
+	pause(false),
+	timer(true),
+	time_limit(60),
+	players()
+{}
+
 void Game::init() {
-	
+
 	initGameData();
 	initUIComponents();
-
-	pause = false;
 
 	for (int i = 0; i < m_data->numOfPlayer; i++) {
 		players.emplace_back(i, gameData);
@@ -14,6 +20,8 @@ void Game::init() {
 }
 
 void Game::update() {
+
+	if (timer.s() > time_limit) changeScene(SceneName::Result);
 
 	if (pause) {
 		if (Input::KeyP.clicked) pause = false;
@@ -45,6 +53,8 @@ void Game::draw() const {
 	}
 
 	ymds::EventManager::get().draw();
+
+	PutText(timer.s()).at(Window::Center().x, 20);
 }
 
 
