@@ -1,5 +1,6 @@
 #pragma once
 #include "BlockUnitManager.h"
+#include "../ymdsLib/GamePad/GamepadManager.h"
 
 class Player {
 private:

@@ -88,4 +88,6 @@ public:
 	bool isSettled() const { return settled; }
 	void predict();
 	void resetPoint();
+	bool checkStackedFully();
+	void restartTimer() { timer.restart(); }
 };

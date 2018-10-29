@@ -33,14 +33,6 @@ BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockS
 			}
 		}
 	}
-	predict();
-	//フィールド上部まで積まれている
-	if (predictedPoint.x < 0) {
-		field.reset();
-		resetPoint();
-		timer.restart();
-		predict();
-	}
 }
 
 
@@ -188,7 +180,7 @@ void BlockUnit::rotate(RotateDirection rot) {
 }
 
 void BlockUnit::predict() {
-	predictedPoint.set(point.movedBy(-4, 0));
+	predictedPoint.set(point);
 	while (!checkCollision(predictedPoint)) {
 		predictedPoint.moveBy(1, 0);
 	}
@@ -197,4 +189,15 @@ void BlockUnit::predict() {
 
 void BlockUnit::resetPoint() {
 	point.set(0, constants::col_len / 2 - 2);
+}
+
+bool BlockUnit::checkStackedFully() {
+	Point point_(point.movedBy(-4, 0));
+	while (!checkCollision(point_)) {
+		point_.moveBy(1, 0);
+	}
+	point_.moveBy(-1, 0); //ここダサい
+
+	if (point_.x < 0) return true;
+	return false;
 }

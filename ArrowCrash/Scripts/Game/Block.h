@@ -77,6 +77,6 @@ public:
 	~InvincibleBlock() = default;
 
 	void draw() const override;
-	void draw(const Point& pos, double scale) const {}
+	void draw(const Point&, double) const {}
 	void destroy() override {} //Ž€‚È‚È‚¢
 };

@@ -1,13 +1,14 @@
 #pragma once
 #include <Siv3D.hpp>
 #include "../Constants.h"
+#include "../ymdsLib/GamePad/GamepadManager.h"
 
 
 class Pointer {
 private:
 	Vec2 pos;
 	Vec2 velocity;
-	int player_num; //Žg‚í‚È‚¢‚©‚à
+	int player_num;
 	const Color color;
 
 	static const int radius;
