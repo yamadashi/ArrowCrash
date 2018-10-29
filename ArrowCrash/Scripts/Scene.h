@@ -11,6 +11,7 @@ struct SharedData {
 
 enum class SceneName {
 	Title,
+	Explain,
 	Game,
 	Result
 };

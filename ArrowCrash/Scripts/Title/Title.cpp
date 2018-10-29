@@ -12,7 +12,7 @@ Title::Title()
 	selectViewPos({ Window::Width(), 0 })
 {
 
-	const String font_handler = L"kokumincho30";
+	const String font_handler = L"kokumincho";
 	const int labelInterval = Window::Height() / 36;
 	const int labelHeight = FontAsset(font_handler).height;
 
@@ -23,7 +23,7 @@ Title::Title()
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
 	)),
 	targets.emplace_back(new ClickableLabel(L"‚¹‚Â‚ß‚¢", Window::Center().movedBy(0, labelHeight + labelInterval), font_handler, Palette::Darkslategray,
-		[this](ClickableLabel&) { transition = true; },
+		[this](ClickableLabel&) { changeScene(SceneName::Explain); },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
 	));
