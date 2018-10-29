@@ -10,8 +10,13 @@ Title::Title()
 	maxSpeed(Window::Width()/25),
 	speed(maxSpeed),
 	deceleration((double)maxSpeed/60),
-	selectViewPos({ Window::Width(), 0 })
+	selectViewPos({ Window::Width(), 0 }),
+	backgroundPos(),
+	backScrollSpeed(5)
 {
+	backgroundPos[0].set(0, 0);
+	backgroundPos[1].set(Window::Width(), 0);
+
 	//GamepadManagerの有効化
 	ymds::GamepadManager::get().activate();
 
@@ -84,6 +89,14 @@ Title::~Title() {
 }
 
 void Title::update() {
+  
+	//背景
+	for (int i = 0; i < backgroundPos.size(); i++) {
+		if (backgroundPos[i].x < -Window::Width()) {
+			backgroundPos[i].x = backgroundPos[(i + 1) % 2].x + Window::Width();
+		}
+		backgroundPos[i].moveBy(-backScrollSpeed, 0);
+	}
 	
 	ymds::GamepadManager::get().update();
 	
@@ -123,6 +136,9 @@ void Title::update() {
 }
 
 void Title::draw() const {
+	for (auto& pos : backgroundPos) {
+		TextureAsset(L"background").resize(Window::Size()).draw(pos);
+	}
 
 	for (const auto& target : targets) target->draw();
 
