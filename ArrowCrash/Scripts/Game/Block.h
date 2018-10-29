@@ -63,9 +63,8 @@ public:
 
 	void draw() const override;
 	void draw(const Point& pos, double scale) const;
-	void explode();
+	int explode(); //破壊したブロックの数を返す
 	void rotate(RotateDirection rot) override;
-	ExplosionDirection getDirection() const { return direction; }
 };
 
 

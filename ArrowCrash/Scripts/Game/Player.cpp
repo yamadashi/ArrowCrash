@@ -3,6 +3,7 @@
 Player::Player(int player_num, const GameData& gameData_)
 	:number(player_num),
 	gameData(gameData_),
+	score(0),
 	arrowBlocks(new std::vector<std::weak_ptr<ArrowBlock>>()),
 	field(new Field(gameData.stdPositions.at(number), gameData.blockSize, *arrowBlocks)),
 	mngr(*field, *arrowBlocks, gameData, number)
@@ -44,12 +45,15 @@ void Player::draw() const {
 }
 
 void Player::explode() {
+	int numOfDestroyed = 0;
 	for (auto arrow : *arrowBlocks) {
 		const auto& ptr = arrow.lock();
 		if (ptr->isSettled())
-			field->explode(ptr->getPoint(), ptr->getDirection());
+			numOfDestroyed += ptr->explode();
 	}
 	//ちょっと気持ち悪い
 	auto&& itr = std::remove_if(arrowBlocks->begin(), arrowBlocks->end(), [](const std::weak_ptr<ArrowBlock>& ref) { return ref.lock()->isDestroyed(); });
 	arrowBlocks->erase(itr, arrowBlocks->end());
+
+	score += numOfDestroyed;
 }

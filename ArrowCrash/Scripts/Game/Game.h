@@ -10,6 +10,8 @@ class Game : public Scene {
 private:
 	GameData gameData;
 	bool pause;
+	Stopwatch timer;
+	const int time_limit; //�b
 
 	std::vector<Player> players;
 	struct UIInfo {
@@ -34,10 +36,9 @@ private:
 	void initUIComponents();
 
 public:
+	Game();
 	~Game();
 	void init() override;
-
 	void update() override;
-
 	void draw() const override;
 };
