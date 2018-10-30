@@ -19,7 +19,7 @@ void Title::init() {
 	backgroundPos[0].set(0, 0);
 	backgroundPos[1].set(Window::Width(), 0);
 
-	//GamepadManagerの有効化
+	//GamepadManagerの有効�?
 	ymds::GamepadManager::get().activate();
 
 	//pointerを作る
@@ -32,17 +32,17 @@ void Title::init() {
 	const int labelHeight = FontAsset(font_handler).height;
 
 	targets.emplace_back(new ClickableLabel(L"ArrowCrash", Window::Center().movedBy(0, -140), font_handler, Palette::Orange));
-	targets.emplace_back(new ClickableLabel(L"はじめる", Window::Center(), font_handler, Palette::Darkslategray,
+	targets.emplace_back(new ClickableLabel(L"�͂��߂�", Window::Center(), font_handler, Palette::Darkslategray,
 		[this](ClickableLabel&) { transition = true; },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
 	));
-	targets.emplace_back(new ClickableLabel(L"せつめい", Window::Center().movedBy(0, labelHeight + labelInterval), font_handler, Palette::Darkslategray,
+	targets.emplace_back(new ClickableLabel(L"���߂�", Window::Center().movedBy(0, labelHeight + labelInterval), font_handler, Palette::Darkslategray,
 		[this](ClickableLabel&) { changeScene(SceneName::Explain); },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
 	));
-	targets.emplace_back(new ClickableLabel(L"おわる", Window::Center().movedBy(0, 2 * (labelHeight + labelInterval)), font_handler, Palette::Darkslategray,
+	targets.emplace_back(new ClickableLabel(L"�����", Window::Center().movedBy(0, 2 * (labelHeight + labelInterval)), font_handler, Palette::Darkslategray,
 		[this](ClickableLabel&) { System::Exit(); },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
@@ -110,7 +110,7 @@ void Title::update() {
 		//速度制御
 		speed -= deceleration;
 
-		//移動
+		//移�?
 		int direction = scene == TitleScene::TOP ? -1 : 1;
 		for (auto&& target : targets) {
 			target->moveBy({ direction*speed, 0 });
