@@ -13,11 +13,13 @@ Title::Title()
 	selectViewPos({ Window::Width(), 0 }),
 	backgroundPos(),
 	backScrollSpeed(5)
-{
+{}
+
+void Title::init() {
 	backgroundPos[0].set(0, 0);
 	backgroundPos[1].set(Window::Width(), 0);
 
-	//GamepadManagerの有効化
+	//GamepadManagerの有効�?
 	ymds::GamepadManager::get().activate();
 
 	//pointerを作る
@@ -30,18 +32,17 @@ Title::Title()
 	const int labelHeight = FontAsset(font_handler).height;
 
 	targets.emplace_back(new ClickableLabel(L"ArrowCrash", Window::Center().movedBy(0, -140), font_handler, Palette::Orange));
-	targets.emplace_back(new ClickableLabel(L"はじめる", Window::Center(), font_handler, Palette::Darkslategray,
+	targets.emplace_back(new ClickableLabel(L"�͂��߂�", Window::Center(), font_handler, Palette::Darkslategray,
 		[this](ClickableLabel&) { transition = true; },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
-	)),
-
-	targets.emplace_back(new ClickableLabel(L"せつめい", Window::Center().movedBy(0, labelHeight + labelInterval), font_handler, Palette::Darkslategray,
+	));
+	targets.emplace_back(new ClickableLabel(L"���߂�", Window::Center().movedBy(0, labelHeight + labelInterval), font_handler, Palette::Darkslategray,
 		[this](ClickableLabel&) { changeScene(SceneName::Explain); },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
 	));
-	targets.emplace_back(new ClickableLabel(L"おわる", Window::Center().movedBy(0, 2 * (labelHeight + labelInterval)), font_handler, Palette::Darkslategray,
+	targets.emplace_back(new ClickableLabel(L"�����", Window::Center().movedBy(0, 2 * (labelHeight + labelInterval)), font_handler, Palette::Darkslategray,
 		[this](ClickableLabel&) { System::Exit(); },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
@@ -54,7 +55,7 @@ Title::Title()
 	const int panelOver = (Window::Height() - panelSize) / 2;
 	const int backButtonMargin = Window::Height() / 54;
 	const int backButtonSize = Window::Height() / 5;
-	
+
 	targets.emplace_back(new ClickablePanel(panelSize, panelSize, selectViewPos.movedBy(panelLeft, panelOver), L"2PlayerPanel",
 		[this](ClickablePanel&) { m_data->numOfPlayer = 2; changeScene(SceneName::Game); },
 		[](ClickablePanel& panel) { panel.setTextureHandler(L"2PlayerPanel_"); },
@@ -109,7 +110,7 @@ void Title::update() {
 		//速度制御
 		speed -= deceleration;
 
-		//移動
+		//移�?
 		int direction = scene == TitleScene::TOP ? -1 : 1;
 		for (auto&& target : targets) {
 			target->moveBy({ direction*speed, 0 });
