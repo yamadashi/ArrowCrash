@@ -13,7 +13,9 @@ Title::Title()
 	selectViewPos({ Window::Width(), 0 }),
 	backgroundPos(),
 	backScrollSpeed(5)
-{
+{}
+
+void Title::init() {
 	backgroundPos[0].set(0, 0);
 	backgroundPos[1].set(Window::Width(), 0);
 
@@ -34,8 +36,7 @@ Title::Title()
 		[this](ClickableLabel&) { transition = true; },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
-	)),
-
+	));
 	targets.emplace_back(new ClickableLabel(L"せつめい", Window::Center().movedBy(0, labelHeight + labelInterval), font_handler, Palette::Darkslategray,
 		[this](ClickableLabel&) { changeScene(SceneName::Explain); },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
@@ -54,7 +55,7 @@ Title::Title()
 	const int panelOver = (Window::Height() - panelSize) / 2;
 	const int backButtonMargin = Window::Height() / 54;
 	const int backButtonSize = Window::Height() / 5;
-	
+
 	targets.emplace_back(new ClickablePanel(panelSize, panelSize, selectViewPos.movedBy(panelLeft, panelOver), L"2PlayerPanel",
 		[this](ClickablePanel&) { m_data->numOfPlayer = 2; changeScene(SceneName::Game); },
 		[](ClickablePanel& panel) { panel.setTextureHandler(L"2PlayerPanel_"); },
