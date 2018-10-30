@@ -19,10 +19,10 @@ void Title::init() {
 	backgroundPos[0].set(0, 0);
 	backgroundPos[1].set(Window::Width(), 0);
 
-	//GamepadManagerã®æœ‰åŠ¹åŒ?
+	//GamepadManager
 	ymds::GamepadManager::get().activate();
 
-	//pointerã‚’ä½œã‚‹
+	//pointer
 	for (int i = 0; i < 4; i++) {
 		pointers.emplace_back(new Pointer(i));
 	}
@@ -91,7 +91,7 @@ Title::~Title() {
 
 void Title::update() {
   
-	//èƒŒæ™¯
+	//”wŒi
 	for (int i = 0; i < backgroundPos.size(); i++) {
 		if (backgroundPos[i].x < -Window::Width()) {
 			backgroundPos[i].x = backgroundPos[(i + 1) % 2].x + Window::Width();
@@ -107,10 +107,10 @@ void Title::update() {
 		clickDetector.update(); 
 	}
 	else {
-		//é€Ÿåº¦åˆ¶å¾¡
+		//‰Á‘¬
 		speed -= deceleration;
 
-		//ç§»å‹?
+		//‘JˆÚ
 		int direction = scene == TitleScene::TOP ? -1 : 1;
 		for (auto&& target : targets) {
 			target->moveBy({ direction*speed, 0 });
