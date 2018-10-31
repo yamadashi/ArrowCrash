@@ -31,6 +31,7 @@ void Game::init() {
 
 void Game::update() {
 
+	//制限時間
 	if (timer.s() > time_limit) {
 		for (int i = 0; i < players.size(); i++) {
 			m_data->scores.at(i) = players.at(i).getScore();
@@ -45,6 +46,7 @@ void Game::update() {
 		return ymds::GamepadManager::get().any([](ymds::Gamepad& gamepad) { return gamepad.clicked(ymds::GamepadIn::START); });
 	};
 
+	//ポーズ解除
 	if (pause) {
 		//if (startClicked())
 		if (Input::KeyP.clicked)
@@ -53,9 +55,9 @@ void Game::update() {
 	}
 
 	//if (startClicked())
-	if (Input::KeyP.clicked)
-		pause = true;
+	if (Input::KeyP.clicked) pause = true;
 	if (Input::KeyEnter.clicked) changeScene(SceneName::Result);
+
 	for (auto& player : players) {
 		player.update();
 	}
