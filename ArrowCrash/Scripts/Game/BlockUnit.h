@@ -47,14 +47,6 @@ constexpr bool unitPatterns[7][4][4] = {
 	},
 };
 
-//enum class UnitType {
-//	I,T,Z,S,O,L,J
-//};
-
-enum class MoveDirection {
-	Left, Right, Down
-};
-
 using namespace std;
 
 class BlockUnit {
@@ -68,8 +60,10 @@ private:
 	Stopwatch timer;
 	const int blockSize;
 	const Point stdPos; //フィールド基準点
-	const double arrowProbability;
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
+
+	const UnitType type;
+	static const double arrowProbability;
 
 	bool checkCollision(const Point& point_) const;
 	void settle();

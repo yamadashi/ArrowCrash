@@ -2,12 +2,7 @@
 #include <Siv3D.hpp>
 #include "Explodable.h"
 #include "../ymdsLib/Effect/EffectGenerator.h"
-
-
-enum class RotateDirection {
-	Right, Left
-};
-
+#include "../Enum.h"
 
 class Block {
 private:
@@ -41,10 +36,10 @@ public:
 
 class NormalBlock : public Block {
 private:
-
+	UnitType type;
 
 public:
-	NormalBlock(const Point& point_, const Point& stdPos, const int blockSize);
+	NormalBlock(const Point& point_, const Point& stdPos, const int blockSize, UnitType type);
 	~NormalBlock() = default;
 	
 	void draw() const override;

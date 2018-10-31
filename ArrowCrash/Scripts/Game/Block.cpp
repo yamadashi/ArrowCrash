@@ -27,17 +27,18 @@ void Block::destroy() {
 
 //NormalBlock
 
-NormalBlock::NormalBlock(const Point& point_, const Point& pos, const int blockSize)
-	:Block(point_, pos, blockSize)
+NormalBlock::NormalBlock(const Point& point_, const Point& pos, const int blockSize, UnitType type_)
+	:Block(point_, pos, blockSize),
+	type(type_)
 {}
 
 void NormalBlock::draw() const {
-	rect(TextureAsset(L"block")).draw();
+	rect(TextureAsset(L"block")(64 * (int)type, 0, 64, 64)).draw();
 }
 
 
 void NormalBlock::draw(const Point& pos, double scale) const {
-	rect.scaled(scale).setPos(pos)(TextureAsset(L"block")).draw();
+	rect.scaled(scale).setPos(pos)(TextureAsset(L"block")(64 * (int)type, 0, 64, 64)).draw();
 }
 
 

@@ -27,22 +27,31 @@ void Title::init() {
 		pointers.emplace_back(new Pointer(i));
 	}
 
+
+	Size titleTextureSize = TextureAsset(L"title").size;
+	double scale = (Window::Height() / 3.0) / titleTextureSize.y;
+	Size scaledTitleSize(titleTextureSize.x * scale, titleTextureSize.y * scale);
+	Point titleOffset(0, -Window::Height() / 6);
+	
+	targets.emplace_back(new ClickablePanel(L"title", Window::Center().movedBy(-scaledTitleSize / 2).movedBy(titleOffset), scaledTitleSize));
+
+
 	const String font_handler = L"kokumincho";
 	const int labelInterval = Window::Height() / 36;
 	const int labelHeight = FontAsset(font_handler).height;
+	const int labelOffset = Window::Height() / 10;
 
-	targets.emplace_back(new ClickableLabel(L"ArrowCrash", Window::Center().movedBy(0, -140), font_handler, Palette::Orange));
-	targets.emplace_back(new ClickableLabel(L"‚Í‚¶‚ß‚é", Window::Center(), font_handler, Palette::Darkslategray,
+	targets.emplace_back(new ClickableLabel(L"‚Í‚¶‚ß‚é", font_handler, Window::Center().movedBy(0, labelOffset), Palette::Darkslategray,
 		[this](ClickableLabel&) { transition = true; },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
 	));
-	targets.emplace_back(new ClickableLabel(L"‚¹‚Â‚ß‚¢", Window::Center().movedBy(0, labelHeight + labelInterval), font_handler, Palette::Darkslategray,
+	targets.emplace_back(new ClickableLabel(L"‚¹‚Â‚ß‚¢", font_handler, Window::Center().movedBy(0, labelOffset + labelHeight + labelInterval), Palette::Darkslategray,
 		[this](ClickableLabel&) { changeScene(SceneName::Explain); },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
 	));
-	targets.emplace_back(new ClickableLabel(L"‚¨‚í‚é", Window::Center().movedBy(0, 2 * (labelHeight + labelInterval)), font_handler, Palette::Darkslategray,
+	targets.emplace_back(new ClickableLabel(L"‚¨‚í‚é", font_handler, Window::Center().movedBy(0, labelOffset + 2 * (labelHeight + labelInterval)), Palette::Darkslategray,
 		[this](ClickableLabel&) { System::Exit(); },
 		[](ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
@@ -56,22 +65,22 @@ void Title::init() {
 	const int backButtonMargin = Window::Height() / 54;
 	const int backButtonSize = Window::Height() / 5;
 
-	targets.emplace_back(new ClickablePanel(panelSize, panelSize, selectViewPos.movedBy(panelLeft, panelOver), L"2PlayerPanel",
+	targets.emplace_back(new ClickablePanel(L"2PlayerPanel", selectViewPos.movedBy(panelLeft, panelOver), Size(panelSize, panelSize),
 		[this](ClickablePanel&) { m_data->numOfPlayer = 2; changeScene(SceneName::Game); },
 		[](ClickablePanel& panel) { panel.setTextureHandler(L"2PlayerPanel_"); },
 		[](ClickablePanel& panel) { panel.setTextureHandler(L"2PlayerPanel"); }
 	));
-	targets.emplace_back(new ClickablePanel(panelSize, panelSize, selectViewPos.movedBy(panelLeft + panelSize + panelInterval, panelOver), L"3PlayerPanel",
+	targets.emplace_back(new ClickablePanel(L"3PlayerPanel", selectViewPos.movedBy(panelLeft + panelSize + panelInterval, panelOver), Size(panelSize, panelSize),
 		[this](ClickablePanel&) { m_data->numOfPlayer = 3; changeScene(SceneName::Game); },
 		[](ClickablePanel& panel) { panel.setTextureHandler(L"3PlayerPanel_"); },
 		[](ClickablePanel& panel) { panel.setTextureHandler(L"3PlayerPanel"); }
 	));
-	targets.emplace_back(new ClickablePanel(panelSize, panelSize, selectViewPos.movedBy(panelLeft + panelSize * 2 + panelInterval * 2, panelOver), L"4PlayerPanel",
+	targets.emplace_back(new ClickablePanel(L"4PlayerPanel", selectViewPos.movedBy(panelLeft + panelSize * 2 + panelInterval * 2, panelOver), Size(panelSize, panelSize),
 		[this](ClickablePanel&) { m_data->numOfPlayer = 4; changeScene(SceneName::Game); },
 		[](ClickablePanel& panel) { panel.setTextureHandler(L"4PlayerPanel_"); },
 		[](ClickablePanel& panel) { panel.setTextureHandler(L"4PlayerPanel"); }
 	));
-	targets.emplace_back(new ClickablePanel(backButtonSize, backButtonSize, selectViewPos.movedBy(backButtonMargin, backButtonMargin), L"back",
+	targets.emplace_back(new ClickablePanel(L"back", selectViewPos.movedBy(backButtonMargin, backButtonMargin), Size(backButtonSize, backButtonSize),
 		[this](ClickablePanel&) { transition = true; }
 	));
 

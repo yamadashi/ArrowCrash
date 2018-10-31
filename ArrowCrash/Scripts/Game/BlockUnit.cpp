@@ -8,10 +8,10 @@ BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockS
 	timer(true),
 	blockSize(blockSize_),
 	stdPos(stdPos_),
-	arrowProbability(0.80),
-	arrowBlocks(arrowBlocks_)
+	arrowBlocks(arrowBlocks_),
+	type(static_cast<UnitType>(Random<int>(0, 6)))
 {
-	auto& pattern = unitPatterns[Random<int>(0, 6)];
+	auto& pattern = unitPatterns[(int)type];
 	
 	//ArrowBlockê∂ê¨(ï™Ç©ÇËêhÇ≠ÇƒÇ≤ÇﬂÇÒÇ‚Ç≈)
 	int arrowOrder;
@@ -26,7 +26,7 @@ BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockS
 					arrowBlocks.emplace_back(ptr);
 				}
 				else
-					geometry[i][j] = std::make_shared<NormalBlock>(point.movedBy(i, j), stdPos, blockSize);
+					geometry[i][j] = std::make_shared<NormalBlock>(point.movedBy(i, j), stdPos, blockSize, type);
 			}
 			else {
 				geometry[i][j] = nullptr;
@@ -35,6 +35,7 @@ BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockS
 	}
 }
 
+const double BlockUnit::arrowProbability = 0.80;
 
 
 bool BlockUnit::checkCollision(const Point& point_) const {
