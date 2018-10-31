@@ -12,8 +12,8 @@ private:
 	bool hasExchanged; //ストック交換フラグ
 
 	//描画用
-	std::vector<Point> nextUnitFramePos;
-	Point stockFramePos;
+	std::vector<Rect>& nextUnitFrames;
+	Rect& stockFrame;
 
 	std::list<std::shared_ptr<BlockUnit>> nextUnits; //queue
 	std::shared_ptr<BlockUnit> currentUnit;
@@ -23,7 +23,7 @@ private:
 	void resetField();
 
 public:
-	BlockUnitManager(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, const GameData& gameData, int player_num);
+	BlockUnitManager(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, GameData& gameData, int player_num);
 	~BlockUnitManager() = default;
 	void update();
 	void draw() const;

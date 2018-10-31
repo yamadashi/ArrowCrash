@@ -5,7 +5,7 @@
 class Player {
 private:
 	const int number; //プレイヤー番号
-	const GameData& gameData;
+	GameData& gameData;
 	int score;
 
 	// 一括で爆発するためフィールド上の全てのArrowBlockへの参照を持っておく
@@ -14,7 +14,7 @@ private:
 	BlockUnitManager mngr;
 
 public:
-	Player(int player_num ,const GameData& gameData);
+	Player(int player_num, GameData& gameData);
 	~Player() = default;
 
 	void update();
