@@ -11,12 +11,11 @@ private:
 protected:
 	Point stdPos;
 	Point point;
-	const int blockSize;
 	Rect rect;
 	bool settled;
 
 public:
-	Block(const Point& point, const Point& stdPos, const int blockSize);
+	Block(const Point& point, const Point& stdPos);
 	virtual ~Block() = default;
 
 	virtual void draw() const = 0;
@@ -30,7 +29,9 @@ public:
 
 	virtual void destroy();
 
-	virtual void rotate(RotateDirection) {}
+	virtual void rotate(RotateDirection) = 0;
+
+	static int blockSize;
 };
 
 
@@ -39,11 +40,12 @@ private:
 	UnitType type;
 
 public:
-	NormalBlock(const Point& point_, const Point& stdPos, const int blockSize, UnitType type);
+	NormalBlock(const Point& point_, const Point& stdPos, UnitType type);
 	~NormalBlock() = default;
 	
 	void draw() const override;
 	void draw(const Point& pos, double scale) const;
+	void rotate(RotateDirection) override {}
 };
 
 
@@ -53,7 +55,7 @@ private:
 	Explodable& field;
 
 public:
-	ArrowBlock(const Point& point_, const Point& stdPos, const int blockSize, ExplosionDirection dir, Explodable& field_);
+	ArrowBlock(const Point& point_, const Point& stdPos, ExplosionDirection dir, Explodable& field_);
 	~ArrowBlock() = default;
 
 	void draw() const override;
@@ -68,10 +70,11 @@ private:
 
 
 public:
-	InvincibleBlock(const Point& point_, const Point& stdPos, const int blockSize);
+	InvincibleBlock(const Point& point_, const Point& stdPos);
 	~InvincibleBlock() = default;
 
 	void draw() const override;
 	void draw(const Point&, double) const {}
-	void destroy() override {} //Ž€‚È‚È‚¢
+	void destroy() override {} //死なない
+	void rotate(RotateDirection) override {}
 };

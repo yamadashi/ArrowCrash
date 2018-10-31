@@ -17,7 +17,7 @@ private:
 	bool contains(const Point& point) const;
 
 public:
-	Field(const Point& stdPos_, int blockSize, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks);
+	Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks);
 	~Field() = default;
 
 	int explode(const Point& start, ExplosionDirection direction) override; //破壊したブロックの数を返す

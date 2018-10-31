@@ -3,15 +3,16 @@
 
 //Block
 
-Block::Block(const Point& point_, const Point& stdPos_, const int blockSize_)
+Block::Block(const Point& point_, const Point& stdPos_)
 	:destroyed(false),
 	stdPos(stdPos_),
 	point(point_),
-	blockSize(blockSize_),
 	rect(stdPos.movedBy(Point(point.y, point.x)*blockSize), blockSize),
 	settled(false)
 {
 }
+
+int Block::blockSize = 0;
 
 void Block::setPoint(const Point& point_) {
 	point.set(point_);
@@ -27,8 +28,8 @@ void Block::destroy() {
 
 //NormalBlock
 
-NormalBlock::NormalBlock(const Point& point_, const Point& pos, const int blockSize, UnitType type_)
-	:Block(point_, pos, blockSize),
+NormalBlock::NormalBlock(const Point& point_, const Point& pos, UnitType type_)
+	:Block(point_, pos),
 	type(type_)
 {}
 
@@ -44,8 +45,8 @@ void NormalBlock::draw(const Point& pos, double scale) const {
 
 //ArrowBlock
 
-ArrowBlock::ArrowBlock(const Point& point_, const Point& pos, const int blockSize, ExplosionDirection dir, Explodable& field_)
-	:Block(point_, pos, blockSize),
+ArrowBlock::ArrowBlock(const Point& point_, const Point& pos, ExplosionDirection dir, Explodable& field_)
+	:Block(point_, pos),
 	direction(dir),
 	field(field_)
 {}
@@ -72,8 +73,8 @@ void ArrowBlock::draw(const Point& pos, double scale) const {
 
 //InvincibleBlock
 
-InvincibleBlock::InvincibleBlock(const Point& point_, const Point& pos, const int blockSize)
-	:Block(point_, pos, blockSize)
+InvincibleBlock::InvincibleBlock(const Point& point_, const Point& pos)
+	:Block(point_, pos)
 {
 	setSettled(); //Ç‡Ç§ÇøÇÂÇ¡Ç∆ó«Ç¢ä¥Ç∂Ç…èëÇØÇªÇ§
 }

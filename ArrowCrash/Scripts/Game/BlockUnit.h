@@ -58,7 +58,6 @@ private:
 	Point predictedPoint;
 	bool settled;
 	Stopwatch timer;
-	const int blockSize;
 	const Point stdPos; //フィールド基準点
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 
@@ -70,7 +69,7 @@ private:
 	int countNumOfBlock(const bool pattern[4][4]) const;
 
 public:
-	BlockUnit(const Point& point_, const Point& stdPos_, const int blockSize_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks, Field& field_);
+	BlockUnit(const Point& point_, const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks, Field& field_);
 	~BlockUnit() = default;
 
 	void update();

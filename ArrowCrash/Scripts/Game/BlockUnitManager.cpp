@@ -5,11 +5,10 @@ BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<Arro
 	:field(field_),
 	arrowBlocks(arrowBlocks_),
 	stdPos(gameData.stdPositions.at(player_num)),
-	blockSize(gameData.blockSize),
 	hasExchanged(false),
 	nextUnitFramePos(gameData.nextUnitFramePos.at(player_num)),
 	stockFramePos(gameData.stockFramePos.at(player_num)),
-	currentUnit(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, blockSize, arrowBlocks, field)),
+	currentUnit(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, arrowBlocks, field)),
 	stock(nullptr)
 {
 	for (int i = 0; i < 2; i++) {
@@ -19,7 +18,7 @@ BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<Arro
 }
 
 void BlockUnitManager::generate() {
-	nextUnits.emplace_back(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, blockSize, arrowBlocks, field));
+	nextUnits.emplace_back(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, arrowBlocks, field));
 }
 
 void BlockUnitManager::resetField() {

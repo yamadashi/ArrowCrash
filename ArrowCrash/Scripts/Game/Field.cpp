@@ -1,6 +1,6 @@
 #include "Field.h"
 
-Field::Field(const Point& stdPos_, int blockSize, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_)
+Field::Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_)
 	:Explodable(),
 	stdPos(stdPos_),
 	arrowBlocks(arrowBlocks_)
@@ -9,9 +9,7 @@ Field::Field(const Point& stdPos_, int blockSize, std::vector<std::weak_ptr<Arro
 		blocks.emplace_back();
 		for (int j = 0; j < constants::col_len; j++) {
 			if (i == constants::row_len - 1 || j == 0 || j == constants::col_len - 1) {
-				blocks[i].emplace_back(new InvincibleBlock(
-					{ i, j }, stdPos, blockSize
-				));
+				blocks[i].emplace_back(new InvincibleBlock({ i, j }, stdPos));
 			}
 			else
 				blocks[i].emplace_back(nullptr);
