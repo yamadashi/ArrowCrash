@@ -3,7 +3,8 @@
 Field::Field(const Point& stdPos_, int blockSize, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_)
 	:Explodable(),
 	stdPos(stdPos_),
-	arrowBlocks(arrowBlocks_)
+	arrowBlocks(arrowBlocks_),
+	shouldCheckLine(false)
 {
 	for (int i = 0; i < constants::row_len; i++) {
 		blocks.emplace_back();
@@ -22,6 +23,48 @@ Field::Field(const Point& stdPos_, int blockSize, std::vector<std::weak_ptr<Arro
 bool Field::contains(const Point& point) const {
 	return point.x >= 0 && point.x < constants::row_len &&
 		point.y >= 0 && point.y < constants::col_len;
+}
+
+void Field::closeLine() {
+
+	std::array<int, constants::row_len - 1> table; //Šes‚Å‚Ç‚ê‚¾‚¯‹l‚ß‚é‚©‚ð‹L˜^‚·‚éƒe[ƒuƒ‹
+	
+	int counter = 0;
+
+	//‹l‚ß‚és”‚ÌŒvŽZ
+	for (int i = blocks.size() - 2; i > 0 ; i--) {
+
+		bool empty = true;
+		for (int j = 1; j < constants::col_len - 1; j++) {
+			if (blocks[i][j]) {
+				empty = false;
+				break;
+			}
+		}
+
+		if (empty) {
+			table[i] = 0; //‹ó‚ÌsŽ©‘Ì‚Í‹l‚ß‚È‚­‚Ä‚æ‚¢
+			counter++;
+		}
+
+		table[i - 1] = counter;
+	}
+
+	//‹l‚ß‚é
+	for (int i = constants::row_len - 2; i > 0; i--) {
+		if (table[i - 1] != 0) {
+			for (int j = 1; j <= constants::col_len - 2; j++) {
+				if (blocks[i - 1][j]) {
+					auto& upper = blocks[i - 1][j];
+					upper->setPoint(upper->getPoint().movedBy(1, 0));
+					blocks[i][j] = upper;
+					upper.reset();
+				}
+			}
+		}
+	}
+
+	shouldCheckLine = false;
 }
 
 int Field::explode(const Point& start, ExplosionDirection direction) {
@@ -79,6 +122,8 @@ void Field::update() {
 			if (block && block->isDestroyed()) block.reset();
 		}
 	}
+
+	if (shouldCheckLine) closeLine();
 }
 
 void Field::draw() const {

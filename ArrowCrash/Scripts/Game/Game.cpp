@@ -53,9 +53,9 @@ void Game::update() {
 	}
 
 	//if (startClicked())
-	if (Input::KeyP.clicked)
-		pause = true;
+	if (Input::KeyP.clicked) pause = true;
 	if (Input::KeyEnter.clicked) changeScene(SceneName::Result);
+
 	for (auto& player : players) {
 		player.update();
 	}
