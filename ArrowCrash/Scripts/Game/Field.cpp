@@ -116,6 +116,31 @@ void Field::reset() {
 	}
 }
 
+void Field::riseFloor(int num) {
+
+	for (int i = 0; i < constants::row_len - 1; i++) {
+		for (int j = 1; j < constants::col_len - 1; j++) {
+			if (blocks[i][j]) {
+				if (i < num) {
+					reset();
+					return;
+				}
+
+				blocks[i - num][j] = blocks[i][j];
+				blocks[i - num][j]->setPoint(blocks[i][j]->getPoint().movedBy(-num, 0));
+				blocks[i][j].reset();
+			}
+		}
+	}
+
+	for (int i = 0; i < num; i++) {
+		for (int j = 1; j < constants::col_len - 1; j++) {
+			Point point(constants::row_len - 1 - num, j);
+			blocks[point.x][point.y].reset(new NormalBlock(point, stdPos));
+		}
+	}
+}
+
 void Field::update() {
 	for (auto&& arr : blocks) {
 		for (auto&& block : arr) {

@@ -11,6 +11,7 @@ Game::Game()
 
 Game::~Game() {
 	ymds::GamepadManager::get().inactivate();
+	BlockUnitManager::clearManagerPtr();
 }
 
 void Game::init() {

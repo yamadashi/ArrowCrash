@@ -28,6 +28,7 @@ public:
 			blocks[point.x][point.y] : nullptr;
 	}
 	void reset();
+	void riseFloor(int rising);
 
 	void update();
 	void draw() const;

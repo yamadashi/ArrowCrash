@@ -7,6 +7,7 @@ BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<Arro
 	stdPos(gameData.stdPositions.at(player_num)),
 	blockSize(gameData.blockSize),
 	hasExchanged(false),
+	ojamaBuffer(0),
 	nextUnitFramePos(gameData.nextUnitFramePos.at(player_num)),
 	stockFramePos(gameData.stockFramePos.at(player_num)),
 	currentUnit(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, blockSize, arrowBlocks, field)),
@@ -16,7 +17,10 @@ BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<Arro
 		generate();
 	}
 	currentUnit->predict();
+	managers.push_back(this);
 }
+
+std::vector<BlockUnitManager*> BlockUnitManager::managers;
 
 void BlockUnitManager::generate() {
 	nextUnits.emplace_back(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, blockSize, arrowBlocks, field));
@@ -32,6 +36,9 @@ void BlockUnitManager::resetField() {
 void BlockUnitManager::update() {
 	currentUnit->update();
 	if (currentUnit->isSettled()) {
+
+		if (ojamaBuffer > 0) field.riseFloor(ojamaBuffer);
+
 		currentUnit = nextUnits.front();
 		nextUnits.pop_front();
 		generate();
@@ -85,5 +92,14 @@ void BlockUnitManager::exchangeStock() {
 
 		generate();
 		currentUnit->predict();
+	}
+}
+
+void BlockUnitManager::bother(int numOfDestroyed) {
+	int rising = numOfDestroyed / 5;
+	for (auto mngr : managers) {
+		if (mngr != this) {
+			mngr->ojamaBuffer += rising;
+		}
 	}
 }

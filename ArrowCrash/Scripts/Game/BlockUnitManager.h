@@ -10,6 +10,9 @@ private:
 	const Point stdPos;
 	const int blockSize;
 	bool hasExchanged; //ストック交換フラグ
+	int ojamaBuffer;
+
+	static std::vector<BlockUnitManager*> managers;
 
 	//描画用
 	std::vector<Point> nextUnitFramePos;
@@ -29,4 +32,7 @@ public:
 	void draw() const;
 	BlockUnit& getCurrentUnit() { return *currentUnit; }
 	void exchangeStock();
+	void bother(int numOfDestroyed);
+
+	static void clearManagerPtr() { managers.clear(); }
 };
