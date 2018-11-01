@@ -47,14 +47,6 @@ constexpr bool unitPatterns[7][4][4] = {
 	},
 };
 
-//enum class UnitType {
-//	I,T,Z,S,O,L,J
-//};
-
-enum class MoveDirection {
-	Left, Right, Down
-};
-
 using namespace std;
 
 class BlockUnit {
@@ -66,17 +58,18 @@ private:
 	Point predictedPoint;
 	bool settled;
 	Stopwatch timer;
-	const int blockSize;
 	const Point stdPos; //フィールド基準点
-	const double arrowProbability;
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
+
+	const UnitType type;
+	static const double arrowProbability;
 
 	bool checkCollision(const Point& point_) const;
 	void settle();
 	int countNumOfBlock(const bool pattern[4][4]) const;
 
 public:
-	BlockUnit(const Point& point_, const Point& stdPos_, const int blockSize_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks, Field& field_);
+	BlockUnit(const Point& point_, const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks, Field& field_);
 	~BlockUnit() = default;
 
 	void update();

@@ -15,8 +15,8 @@ private:
 public:
 	ClickableLabel(
 		const String& text_,
-		const Point& centerPos,
 		const String& font_handler_,
+		const Point& centerPos,
 		const Color& textColor = Palette::Darkslategray,
 		const std::function<void(ClickableLabel&)>& clickEvent = [](ClickableLabel&) {},
 		const std::function<void(ClickableLabel&)>& mouseOverEvent = [](ClickableLabel&) {},

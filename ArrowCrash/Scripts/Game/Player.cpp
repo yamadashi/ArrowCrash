@@ -5,7 +5,7 @@ Player::Player(int player_num, const GameData& gameData_)
 	gameData(gameData_),
 	score(0),
 	arrowBlocks(new std::vector<std::weak_ptr<ArrowBlock>>()),
-	field(new Field(gameData.stdPositions.at(number), gameData.blockSize, *arrowBlocks)),
+	field(new Field(gameData.stdPositions.at(number), *arrowBlocks)),
 	mngr(*field, *arrowBlocks, gameData, number)
 {}
 

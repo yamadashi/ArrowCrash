@@ -1,17 +1,16 @@
 #include "BlockUnit.h"
 
-BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockSize_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, Field& field_)
+BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, Field& field_)
 	:field(field_),
 	point(point_),
 	predictedPoint(point_),
 	settled(false),
 	timer(true),
-	blockSize(blockSize_),
 	stdPos(stdPos_),
-	arrowProbability(0.80),
-	arrowBlocks(arrowBlocks_)
+	arrowBlocks(arrowBlocks_),
+	type(static_cast<UnitType>(Random<int>(0, 6)))
 {
-	auto& pattern = unitPatterns[Random<int>(0, 6)];
+	auto& pattern = unitPatterns[(int)type];
 	
 	//ArrowBlockê∂ê¨(ï™Ç©ÇËêhÇ≠ÇƒÇ≤ÇﬂÇÒÇ‚Ç≈)
 	int arrowOrder;
@@ -21,12 +20,12 @@ BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockS
 		for (int j = 0; j < 4; j++) {
 			if (pattern[i][j]) {
 				if (arrowOrder-- == 0) {
-					auto ptr = std::make_shared<ArrowBlock>(point.movedBy(i, j), stdPos, blockSize, (ExplosionDirection)Random<int>(0, 7), field);
+					auto ptr = std::make_shared<ArrowBlock>(point.movedBy(i, j), stdPos, (ExplosionDirection)Random<int>(0, 7), field);
 					geometry[i][j] = ptr;
 					arrowBlocks.emplace_back(ptr);
 				}
 				else
-					geometry[i][j] = std::make_shared<NormalBlock>(point.movedBy(i, j), stdPos, blockSize);
+					geometry[i][j] = std::make_shared<NormalBlock>(point.movedBy(i, j), stdPos, type);
 			}
 			else {
 				geometry[i][j] = nullptr;
@@ -35,6 +34,7 @@ BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockS
 	}
 }
 
+const double BlockUnit::arrowProbability = 0.80;
 
 
 bool BlockUnit::checkCollision(const Point& point_) const {
@@ -79,13 +79,13 @@ void BlockUnit::update() {
 
 void BlockUnit::draw() const {
 
-	const Point predictedPos(stdPos.movedBy(predictedPoint.y * blockSize, predictedPoint.x * blockSize));
+	const Point predictedPos(stdPos.movedBy(predictedPoint.y * Block::blockSize, predictedPoint.x * Block::blockSize));
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			if (geometry[i][j]) {
 				geometry[i][j]->draw();
-				Rect(predictedPos.movedBy(j*blockSize, i*blockSize), blockSize).drawFrame(blockSize / 10, 0.0);
+				Rect(predictedPos.movedBy(j*Block::blockSize, i*Block::blockSize), Block::blockSize).drawFrame(Block::blockSize / 10, 0.0);
 			}
 		}
 	}
@@ -94,7 +94,7 @@ void BlockUnit::draw() const {
 
 void BlockUnit::draw(const Point& pos, double scale) const {
 	
-	const int scaledSize = blockSize * scale;
+	const int scaledSize = Block::blockSize * scale;
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {

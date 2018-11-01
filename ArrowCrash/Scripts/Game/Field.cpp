@@ -1,18 +1,18 @@
 #include "Field.h"
 
-Field::Field(const Point& stdPos_, int blockSize, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_)
+Field::Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_)
 	:Explodable(),
 	stdPos(stdPos_),
 	arrowBlocks(arrowBlocks_),
+	backgroundPos(stdPos.movedBy(Block::blockSize, 0)),
+	backgroundSize(Size(constants::col_len - 2, constants::row_len - 1)*Block::blockSize)
 	shouldCheckLine(false)
 {
 	for (int i = 0; i < constants::row_len; i++) {
 		blocks.emplace_back();
 		for (int j = 0; j < constants::col_len; j++) {
 			if (i == constants::row_len - 1 || j == 0 || j == constants::col_len - 1) {
-				blocks[i].emplace_back(new InvincibleBlock(
-					{ i, j }, stdPos, blockSize
-				));
+				blocks[i].emplace_back(new InvincibleBlock({ i, j }, stdPos));
 			}
 			else
 				blocks[i].emplace_back(nullptr);
@@ -27,11 +27,11 @@ bool Field::contains(const Point& point) const {
 
 void Field::closeLine() {
 
-	std::array<int, constants::row_len - 1> table; //Šes‚Å‚Ç‚ê‚¾‚¯‹l‚ß‚é‚©‚ğ‹L˜^‚·‚éƒe[ƒuƒ‹
+	std::array<int, constants::row_len - 1> table; //å„è¡Œã§ã©ã‚Œã ã‘è©°ã‚ã‚‹ã‹ã‚’è¨˜éŒ²ã™ã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«
 	
 	int counter = 0;
 
-	//‹l‚ß‚és”‚ÌŒvZ
+	//è©°ã‚ã‚‹è¡Œæ•°ã®è¨ˆç®—
 	for (int i = blocks.size() - 2; i > 0 ; i--) {
 
 		bool empty = true;
@@ -43,14 +43,14 @@ void Field::closeLine() {
 		}
 
 		if (empty) {
-			table[i] = 0; //‹ó‚Ìs©‘Ì‚Í‹l‚ß‚È‚­‚Ä‚æ‚¢
+			table[i] = 0; //ç©ºã®è¡Œè‡ªä½“ã¯è©°ã‚ãªãã¦ã‚ˆã„
 			counter++;
 		}
 
 		table[i - 1] = counter;
 	}
 
-	//‹l‚ß‚é
+	//è©°ã‚ã‚‹
 	for (int i = constants::row_len - 2; i > 0; i--) {
 		if (table[i - 1] != 0) {
 			for (int j = 1; j <= constants::col_len - 2; j++) {
@@ -69,13 +69,13 @@ void Field::closeLine() {
 
 int Field::explode(const Point& start, ExplosionDirection direction) {
 
-	//”š”­•ûŒü‚ğŒvZ
+	//çˆ†ç™ºæ–¹å‘ã‚’è¨ˆç®—
 	Point vec(0, 0);
 	int tmp = (int)direction;
 
-	//s•ûŒü(x•ûŒü)
+	//è¡Œæ–¹å‘(xæ–¹å‘)
 	if (tmp % 4 != 0) vec.y = tmp / 4 == 0 ? 1 : -1;
-	//—ñ•ûŒü(y•ûŒü)
+	//åˆ—æ–¹å‘(yæ–¹å‘)
 	tmp = (tmp + 1) % 8;
 	if (tmp % 4 != 3) vec.x = tmp / 4 == 0 ? -1 : 1;
 
@@ -99,7 +99,7 @@ void Field::setBlockAt(std::shared_ptr<Block> block, const Point& point) {
 
 void Field::reset() {
 
-	//arrowBlocks‚Ì‚¤‚¿settled‚È‚à‚Ì‚ğíœ
+	//arrowBlocksã®ã†ã¡settledãªã‚‚ã®ã‚’å‰Šé™¤
 	auto&& itr = std::remove_if(arrowBlocks.begin(), arrowBlocks.end(), [](std::weak_ptr<ArrowBlock> blk) { return blk.lock()->isSettled(); });
 	arrowBlocks.erase(itr, arrowBlocks.end());
 
@@ -108,7 +108,7 @@ void Field::reset() {
 			if (blk) blk->destroy();
 		}
 	}
-	//ƒ_ƒT‚¢‚©‚ç‚È‚ñ‚Æ‚©‚µ‚½‚¢
+	//ãƒ€ã‚µã„ã‹ã‚‰ãªã‚“ã¨ã‹ã—ãŸã„
 	for (auto&& arr : blocks) {
 		for (auto&& block : arr) {
 			if (block && block->isDestroyed()) block.reset();
@@ -127,6 +127,8 @@ void Field::update() {
 }
 
 void Field::draw() const {
+	TextureAsset(L"field_background").resize(backgroundSize).draw(backgroundPos);
+
 	for (const auto& arr : blocks) {
 		for (const auto& block : arr) {
 			if (block) block->draw();
