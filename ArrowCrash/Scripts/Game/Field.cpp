@@ -3,7 +3,9 @@
 Field::Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_)
 	:Explodable(),
 	stdPos(stdPos_),
-	arrowBlocks(arrowBlocks_)
+	arrowBlocks(arrowBlocks_),
+	backgroundPos(stdPos.movedBy(Block::blockSize, 0)),
+	backgroundSize(Size(constants::col_len - 2, constants::row_len - 1)*Block::blockSize)
 {
 	for (int i = 0; i < constants::row_len; i++) {
 		blocks.emplace_back();
@@ -80,6 +82,8 @@ void Field::update() {
 }
 
 void Field::draw() const {
+	TextureAsset(L"field_background").resize(backgroundSize).draw(backgroundPos);
+
 	for (const auto& arr : blocks) {
 		for (const auto& block : arr) {
 			if (block) block->draw();

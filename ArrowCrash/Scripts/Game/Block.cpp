@@ -79,6 +79,4 @@ InvincibleBlock::InvincibleBlock(const Point& point_, const Point& pos)
 	setSettled(); //Ç‡Ç§ÇøÇÂÇ¡Ç∆ó«Ç¢ä¥Ç∂Ç…èëÇØÇªÇ§
 }
 
-void InvincibleBlock::draw() const {
-	rect.draw(Palette::Gray);
-}
+void InvincibleBlock::draw() const {}
