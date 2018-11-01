@@ -35,7 +35,6 @@ void NormalBlock::draw() const {
 	rect(TextureAsset(L"block")).draw();
 }
 
-
 void NormalBlock::draw(const Point& pos, double scale) const {
 	rect.scaled(scale).setPos(pos)(TextureAsset(L"block")).draw();
 }
@@ -67,6 +66,37 @@ void ArrowBlock::draw(const Point& pos, double scale) const {
 	rect.scaled(scale).setPos(pos)(TextureAsset(L"arrow")(50 * (int)direction, 0, 50, 50)).draw();
 }
 
+
+
+//ItemBlock
+
+ItemCondition ItemBlock::condition = ItemCondition::NotExist;
+
+ItemBlock::ItemBlock(const Point& point_, const Point& stdPos, const int blockSize, const PartPlace Part_)
+	:Block(point_, stdPos, blockSize),
+	Part(Part_)
+{}
+
+void ItemBlock::draw() const {
+	switch (Part) {
+	case PartPlace::UpLeft:
+	case PartPlace::UpRight:
+	case PartPlace::DownLeft:
+	case PartPlace::DownRight: rect(TextureAsset(L"block")).draw(); break;
+	default: break;
+	}
+}
+
+void ItemBlock::draw(const Point& pos, double scale) const {
+	rect.scaled(scale).setPos(pos)(TextureAsset(L"block")).draw();
+}
+
+void ItemBlock::destroy() {
+	const int explosionCellSize = TextureAsset(L"explosion").height;
+	ymds::EffectGenerator::addLinkedImage(L"explosion", explosionCellSize, rect.pos, double(blockSize) / explosionCellSize, 0.2);
+	destroyed = true;
+	condition = ItemCondition::Destroyed;
+}
 
 
 //InvincibleBlock

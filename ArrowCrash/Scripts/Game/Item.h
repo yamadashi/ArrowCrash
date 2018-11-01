@@ -1,55 +1,28 @@
 #pragma once
 #include <Siv3D.hpp>
 #include "Field.h"
-#include "Block.h"
+#include "Blockunit.h"
 
 using namespace std;
 
-class Item{
-
-	private:
-		
-
-	protected:
-		
+class ItemUnit : public Unit {
+	private:	
 		bool destroyed;
-		std::array<std::array<std::shared_ptr<Block>, 2>, 2> geometry;
-
-		Field& field;
-		Point point;
-		Stopwatch timer;
-		const int blockSize;
-		Point stdPos;
-		Rect rect;
-		bool settled;
-		bool checkCollision(const Point& point_) const;
-		void settle();
 
 	public:
-		Item(const Point& point, const Point& stdPos, const int blockSize, Field& field_);
-		virtual ~Item() = default;
+		ItemUnit(const Point& point, const Point& stdPos, const int blockSize, Field& field_);
+		virtual ~ItemUnit() = default;
 
-		void update();
-
-		virtual void draw() const = 0;
-
+		void update() override;
+		void draw() const override;
 		virtual void destroy() { destroyed = true; }
 		bool isDestroyed() const { return destroyed; }
-
-		const Point& getPoint() const { return point; }
-		void setPoint(const Point& point_);
-
-		bool isSettled() const { return settled; }
-		void setSettled() { settled = true; }
 };
-
+/*
 //âÒì]ã÷é~
-class ForbidRotating : public Item {
-private:
-
-
+class ForbidRotating : public ItemUnit {
 public:
-	ForbidRotating(const Point& point_, const Point& stdPos, const int blockSize, Field& field_);
+	ForbidRotating(const Point& point_, const Point& stdPos, const int blockSize, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks, Field& field_);
 	~ForbidRotating() = default;
 
 	void draw() const override;
@@ -57,11 +30,9 @@ public:
 
 
 //óéâ∫ë¨ìxè„è∏
-class IncreaseFallVelocity : public Item {
-private:
-	
+class IncreaseFallVelocity : public ItemUnit {
 public:
-	IncreaseFallVelocity(const Point& point_, const Point& stdPos, const int blockSize, Field& field_);
+	IncreaseFallVelocity(const Point& point_, const Point& stdPos, const int blockSize, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks, Field& field_);
 	~IncreaseFallVelocity() = default;
 
 	void draw() const override;
@@ -69,13 +40,10 @@ public:
 
 
 //Ç®é◊ñÇñ≥å¯
-class InvalidateInterruption : public Item {
-private:
-
-
+class InvalidateInterruption : public ItemUnit {
 public:
-	InvalidateInterruption(const Point& point_, const Point& stdPos, const int blockSize, Field& field_);
+	InvalidateInterruption(const Point& point_, const Point& stdPos, const int blockSize, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks, Field& field_);
 	~InvalidateInterruption() = default;
 
 	void draw() const override;
-};
+};*/

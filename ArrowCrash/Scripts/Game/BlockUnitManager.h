@@ -1,5 +1,6 @@
 #pragma once
 #include "BlockUnit.h"
+#include "Item.h"
 #include <queue>
 
 class BlockUnitManager {
@@ -15,17 +16,19 @@ private:
 	std::vector<Point> nextUnitFramePos;
 	Point stockFramePos;
 
-	std::list<std::shared_ptr<BlockUnit>> nextUnits; //queue
-	std::shared_ptr<BlockUnit> currentUnit;
-	std::shared_ptr<BlockUnit> stock;
+	std::list<std::shared_ptr<Unit>> nextUnits; //queue
+	std::shared_ptr<Unit> currentUnit;
+	std::shared_ptr<Unit> stock;
 	
 	void generate();
+
+	std::shared_ptr<Unit> Item;
 
 public:
 	BlockUnitManager(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, const GameData& gameData, int player_num);
 	~BlockUnitManager() = default;
 	void update();
 	void draw() const;
-	BlockUnit& getCurrentUnit() { return *currentUnit; }
+	Unit& getCurrentUnit() { return *currentUnit; }
 	void exchangeStock();
 };

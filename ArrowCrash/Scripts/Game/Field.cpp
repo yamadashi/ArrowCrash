@@ -43,6 +43,11 @@ void Field::explode(const Point& start, ExplosionDirection direction) {
 			blk->destroy();
 		}
 	} while (contains(point.moveBy(vec)));
+
+	if(ItemBlock::CheckItem()==ItemCondition::Destroyed){
+		//ItemBlock‘Síœ
+		ItemBlock::DeleteItem();
+	}
 }
 
 void Field::setBlockAt(std::shared_ptr<Block> block, const Point& point) {

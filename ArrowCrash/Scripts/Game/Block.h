@@ -11,9 +11,9 @@ enum class RotateDirection {
 
 class Block {
 private:
-	bool destroyed;
 
 protected:
+	bool destroyed;
 	Point stdPos;
 	Point point;
 	const int blockSize;
@@ -66,6 +66,32 @@ public:
 	void explode();
 	void rotate(RotateDirection rot) override;
 	ExplosionDirection getDirection() const { return direction; }
+};
+
+
+enum class PartPlace {
+	UpRight, DownRight, DownLeft, UpLeft
+};
+
+enum class ItemCondition {
+	Exist, Destroyed, NotExist
+};
+
+class ItemBlock : public Block {
+private:
+	const PartPlace Part;
+	static ItemCondition condition;
+
+public:
+	ItemBlock(const Point& point_, const Point& stdPos, const int blockSize, const PartPlace Part);
+	~ItemBlock() = default;
+	
+	void draw() const override;
+	void draw(const Point& pos, double scale) const;
+	static const ItemCondition CheckItem() { return condition; }
+	static void DeleteItem() { condition = ItemCondition::NotExist; }
+	static void Generate() { condition = ItemCondition::Exist; }
+	void destroy() override;
 };
 
 

@@ -23,18 +23,27 @@ void BlockUnitManager::generate() {
 
 void BlockUnitManager::update() {
 	currentUnit->update();
+	if (Item != nullptr) Item->update();
 	if (currentUnit->isSettled()) {
-		currentUnit = nextUnits.front();
-		nextUnits.pop_front();
-		generate();
-		currentUnit->predict();
+
+		if (ItemBlock::CheckItem() == ItemCondition::NotExist) {
+			Item = std::shared_ptr<Unit>(new ItemUnit(Point(0, Random<int>(0, constants::col_len - 4)), stdPos, blockSize, field));
+			currentUnit = Item;
+			ItemBlock::Generate();
+		}
+		else {
+			currentUnit = nextUnits.front();
+			nextUnits.pop_front();
+			generate();
+			currentUnit->predict();
+		}
 		hasExchanged = false;
 	}
 }
 
 void BlockUnitManager::draw() const {
 	currentUnit->draw();
-
+	if (Item != nullptr) Item->draw();
 	int counter = 0; //vector(nextUnitsFrameInfo)—p
 	for (auto&& unit : nextUnits) {
 		unit->draw(nextUnitFramePos.at(counter++), 1.0);
