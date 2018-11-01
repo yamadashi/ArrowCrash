@@ -14,11 +14,14 @@ private:
 	const Point stdPos; //基準点
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 
+	const Point backgroundPos;
+	const Size backgroundSize;
+
 	bool contains(const Point& point) const;
 	void closeLine(); //行詰め
 
 public:
-	Field(const Point& stdPos_, int blockSize, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks);
+	Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks);
 	~Field() = default;
 
 	int explode(const Point& start, ExplosionDirection direction) override; //破壊したブロックの数を返す

@@ -108,12 +108,13 @@ void Game::initGameData() {
 	}
 
 	//ブロックのサイズ
-	gameData.blockSize = fieldWidth / constants::col_len;
+	int blockSize = fieldWidth / constants::col_len;
+	Block::blockSize = blockSize;
 	//ユニットフレーム(ストック、次ブロック枠)のサイズ
-	uiInfo.unitFrameSize = gameData.blockSize * 4;
+	uiInfo.unitFrameSize = blockSize * 4;
 	//フィールドのサイズ
 	uiInfo.fieldSize.x = fieldWidth;
-	uiInfo.fieldSize.y = gameData.blockSize * constants::row_len;
+	uiInfo.fieldSize.y = blockSize * constants::row_len;
 	//フィールド左側のマージン
 	uiInfo.fieldLeftMargin = (uiInfo.playerRegion.x - uiInfo.fieldSize.x) / 2;
 	//フィールド上側のマージン
@@ -146,7 +147,7 @@ void Game::initUIComponents() {
 	case 2:
 		for (int i = 0; i < numOfPlayer; i++) {
 			//ユニットフレームの間隔
-			const int unitFrameInterval = gameData.blockSize / 2;
+			const int unitFrameInterval = Block::blockSize / 2;
 			//ストック枠
 			uiComp.stockFrames.emplace_back(
 				uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin - uiInfo.unitFrameSize - unitFrameInterval,
@@ -174,7 +175,7 @@ void Game::initUIComponents() {
 	case 4:
 		for (int i = 0; i < numOfPlayer; i++) {
 			//ユニットフレームの間隔
-			const int unitFrameInterval = gameData.blockSize * 2;
+			const int unitFrameInterval = Block::blockSize * 2;
 			//ストック枠
 			uiComp.stockFrames.emplace_back(
 				uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin,
