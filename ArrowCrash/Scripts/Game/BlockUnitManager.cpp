@@ -36,7 +36,7 @@ void BlockUnitManager::update() {
 		nextUnits.pop_front();
 		generate();
 
-		if (currentUnit->checkStackedFully()) //気持ち悪い文法...
+		if (currentUnit->cannotSettle())
 		{
 			resetField();
 		}
@@ -66,7 +66,7 @@ void BlockUnitManager::exchangeStock() {
 		currentUnit.swap(stock);
 		currentUnit->resetPoint();
 
-		if (currentUnit->checkStackedFully()) //気持ち悪い文法...
+		if (currentUnit->cannotSettle())
 		{
 			resetField();
 		}
@@ -78,7 +78,7 @@ void BlockUnitManager::exchangeStock() {
 		currentUnit = nextUnits.front();
 		nextUnits.pop_front();
 
-		if (currentUnit->checkStackedFully()) //気持ち悪い文法...
+		if (currentUnit->cannotSettle())
 		{
 			resetField();
 		}
