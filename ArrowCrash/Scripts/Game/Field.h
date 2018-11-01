@@ -11,13 +11,14 @@ using BlockGrid = std::vector<std::vector<std::shared_ptr<Block>>>;
 class Field : public Explodable {
 private:
 	BlockGrid blocks;
-	const Point stdPos; //Šî€“_
+	const Point stdPos; //基準点
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 
 	const Point backgroundPos;
 	const Size backgroundSize;
 
 	bool contains(const Point& point) const;
+	void closeLine(); //行詰め
 
 public:
 	Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks);
@@ -33,4 +34,6 @@ public:
 
 	void update();
 	void draw() const;
+
+	bool shouldCheckLine; //行詰めをチェックするかどうか
 };

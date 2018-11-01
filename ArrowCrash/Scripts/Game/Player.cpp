@@ -56,4 +56,6 @@ void Player::explode() {
 	arrowBlocks->erase(itr, arrowBlocks->end());
 
 	score += numOfDestroyed;
+
+	field->shouldCheckLine = true;
 }

@@ -6,6 +6,7 @@ Field::Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrow
 	arrowBlocks(arrowBlocks_),
 	backgroundPos(stdPos.movedBy(Block::blockSize, 0)),
 	backgroundSize(Size(constants::col_len - 2, constants::row_len - 1)*Block::blockSize)
+	shouldCheckLine(false)
 {
 	for (int i = 0; i < constants::row_len; i++) {
 		blocks.emplace_back();
@@ -24,15 +25,57 @@ bool Field::contains(const Point& point) const {
 		point.y >= 0 && point.y < constants::col_len;
 }
 
+void Field::closeLine() {
+
+	std::array<int, constants::row_len - 1> table; //å„è¡Œã§ã©ã‚Œã ã‘è©°ã‚ã‚‹ã‹ã‚’è¨˜éŒ²ã™ã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«
+	
+	int counter = 0;
+
+	//è©°ã‚ã‚‹è¡Œæ•°ã®è¨ˆç®—
+	for (int i = blocks.size() - 2; i > 0 ; i--) {
+
+		bool empty = true;
+		for (int j = 1; j < constants::col_len - 1; j++) {
+			if (blocks[i][j]) {
+				empty = false;
+				break;
+			}
+		}
+
+		if (empty) {
+			table[i] = 0; //ç©ºã®è¡Œè‡ªä½“ã¯è©°ã‚ãªãã¦ã‚ˆã„
+			counter++;
+		}
+
+		table[i - 1] = counter;
+	}
+
+	//è©°ã‚ã‚‹
+	for (int i = constants::row_len - 2; i > 0; i--) {
+		if (table[i - 1] != 0) {
+			for (int j = 1; j <= constants::col_len - 2; j++) {
+				if (blocks[i - 1][j]) {
+					auto& upper = blocks[i - 1][j];
+					upper->setPoint(upper->getPoint().movedBy(1, 0));
+					blocks[i][j] = upper;
+					upper.reset();
+				}
+			}
+		}
+	}
+
+	shouldCheckLine = false;
+}
+
 int Field::explode(const Point& start, ExplosionDirection direction) {
 
-	//”š”­•ûŒü‚ğŒvZ
+	//çˆ†ç™ºæ–¹å‘ã‚’è¨ˆç®—
 	Point vec(0, 0);
 	int tmp = (int)direction;
 
-	//s•ûŒü(x•ûŒü)
+	//è¡Œæ–¹å‘(xæ–¹å‘)
 	if (tmp % 4 != 0) vec.y = tmp / 4 == 0 ? 1 : -1;
-	//—ñ•ûŒü(y•ûŒü)
+	//åˆ—æ–¹å‘(yæ–¹å‘)
 	tmp = (tmp + 1) % 8;
 	if (tmp % 4 != 3) vec.x = tmp / 4 == 0 ? -1 : 1;
 
@@ -56,7 +99,7 @@ void Field::setBlockAt(std::shared_ptr<Block> block, const Point& point) {
 
 void Field::reset() {
 
-	//arrowBlocks‚Ì‚¤‚¿settled‚È‚à‚Ì‚ğíœ
+	//arrowBlocksã®ã†ã¡settledãªã‚‚ã®ã‚’å‰Šé™¤
 	auto&& itr = std::remove_if(arrowBlocks.begin(), arrowBlocks.end(), [](std::weak_ptr<ArrowBlock> blk) { return blk.lock()->isSettled(); });
 	arrowBlocks.erase(itr, arrowBlocks.end());
 
@@ -65,7 +108,7 @@ void Field::reset() {
 			if (blk) blk->destroy();
 		}
 	}
-	//ƒ_ƒT‚¢‚©‚ç‚È‚ñ‚Æ‚©‚µ‚½‚¢
+	//ãƒ€ã‚µã„ã‹ã‚‰ãªã‚“ã¨ã‹ã—ãŸã„
 	for (auto&& arr : blocks) {
 		for (auto&& block : arr) {
 			if (block && block->isDestroyed()) block.reset();
@@ -79,6 +122,8 @@ void Field::update() {
 			if (block && block->isDestroyed()) block.reset();
 		}
 	}
+
+	if (shouldCheckLine) closeLine();
 }
 
 void Field::draw() const {
