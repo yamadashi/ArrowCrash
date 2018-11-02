@@ -37,7 +37,6 @@ void NormalBlock::draw() const {
 	rect(TextureAsset(L"block")(64 * (int)type, 0, 64, 64)).draw();
 }
 
-
 void NormalBlock::draw(const Point& pos, double scale) const {
 	rect.scaled(scale).setPos(pos)(TextureAsset(L"block")(64 * (int)type, 0, 64, 64)).draw();
 }
@@ -69,6 +68,29 @@ void ArrowBlock::draw(const Point& pos, double scale) const {
 	rect.scaled(scale).setPos(pos)(TextureAsset(L"arrow")(64 * (int)direction, 0, 64, 64)).draw();
 }
 
+
+
+//ItemBlock
+
+ItemBlock::ItemBlock(const Point& point_, const Point& stdPos, const PartPlace Part_)
+	:Block(point_, stdPos),
+	Part(Part_)
+{}
+
+void ItemBlock::draw() const {
+	switch (Part) {
+	case PartPlace::UpLeft:
+	case PartPlace::UpRight:
+	case PartPlace::DownLeft:
+//	case PartPlace::DownRight: rect(TextureAsset(L"block")).draw(); break;
+	case PartPlace::DownRight: rect.draw(Color(135, 206, 250)); break;
+	default: break;
+	}
+}
+
+void ItemBlock::draw(const Point& pos, double scale) const {
+	rect.scaled(scale).setPos(pos)(TextureAsset(L"block")).draw();
+}
 
 
 //InvincibleBlock
