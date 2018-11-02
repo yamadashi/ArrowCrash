@@ -11,9 +11,9 @@ enum class RotateDirection {
 
 class Block {
 private:
-	bool destroyed;
 
 protected:
+	bool destroyed;
 	Point stdPos;
 	Point point;
 	const int blockSize;
@@ -33,6 +33,7 @@ public:
 	bool isSettled() const { return settled; }
 	void setSettled() { settled = true; }
 
+	virtual bool ItemCheck() { return false; }
 	virtual void destroy();
 
 	virtual void rotate(RotateDirection) {}
@@ -68,9 +69,26 @@ public:
 };
 
 
+enum class PartPlace {
+	UpRight, DownRight, DownLeft, UpLeft
+};
+
+class ItemBlock : public Block {
+private:
+	const PartPlace Part;
+
+public:
+	ItemBlock(const Point& point_, const Point& stdPos, const int blockSize, const PartPlace Part);
+	~ItemBlock() = default;
+
+	void draw() const override;
+	void draw(const Point& pos, double scale) const;
+	bool ItemCheck() override { return true; }
+};
+
+
 class InvincibleBlock : public Block {
 private:
-
 
 public:
 	InvincibleBlock(const Point& point_, const Point& stdPos, const int blockSize);

@@ -85,11 +85,22 @@ int Field::explode(const Point& start, ExplosionDirection direction) {
 
 	do {
 		if (auto& blk = blocks.at(point.x).at(point.y)) {
+			if (blk->ItemCheck()) {
+				//ItemBlock‘Síœ
+				for (auto&& arr : blocks) {
+					for (auto&& blk : arr) {
+						if (blk)
+							if (blk->ItemCheck())
+								blk->destroy();
+					}
+				}
+
+			}			
 			blk->destroy();
 			numOfDestroyed++;
 		}
 	} while (contains(point.moveBy(vec)));
-
+	
 	return numOfDestroyed;
 }
 
@@ -132,4 +143,15 @@ void Field::draw() const {
 			if (block) block->draw();
 		}
 	}
+}
+
+bool Field::CheckItemExistence() const{
+	for (auto&& arr : blocks) {
+		for (auto&& blk : arr) {
+			if (blk)
+				if (blk->ItemCheck())
+					return true;
+		}
+	}
+	return false;
 }
