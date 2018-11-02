@@ -9,7 +9,6 @@ private:
 	Field& field;
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 	const Point stdPos;
-	const int blockSize;
 	bool hasExchanged; //ストック交換フラグ
 	const int ItemPropability;
 

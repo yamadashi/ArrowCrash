@@ -47,14 +47,6 @@ constexpr bool unitPatterns[7][4][4] = {
 	},
 };
 
-//enum class UnitType {
-//	I,T,Z,S,O,L,J
-//};
-
-enum class MoveDirection {
-	Left, Right, Down
-};
-
 using namespace std;
 
 
@@ -67,25 +59,26 @@ protected:
 	Point predictedPoint;
 	bool settled;
 	Stopwatch timer;
-	const int blockSize;
 	const Point stdPos; //フィールド基準点
+
+	static const double arrowProbability;
 
 	bool checkCollision(const Point& point_) const;
 	void settle();
 	int countNumOfBlock(const bool pattern[4][4]) const;
 
 public:
-	Unit(const Point& point_, const Point& stdPos_, const int blockSize_, Field& field_);
-	virtual ~Unit() = default;
+	Unit(const Point& point_, const Point& stdPos_, Field& field_);
+	~Unit() = default;
 
-	virtual void update();
-	virtual void draw() const;
-	virtual void draw(const Point& pos, double scale) const;
-	virtual void fallImmediately() {}
-	virtual void move(MoveDirection) {}
-	virtual void rotate(RotateDirection) {}
+	virtual void update() = 0;
+	virtual void draw() const = 0;
+	virtual void draw(const Point& pos, double scale) const = 0;
+	void fallImmediately();
+	void move(MoveDirection);
+	void rotate(RotateDirection);
+	void predict();
 	bool isSettled() const { return settled; }
-	virtual void predict() {}
 	void resetPoint();
 	bool checkStackedFully();
 	void restartTimer() { timer.restart(); }
@@ -96,52 +89,13 @@ protected:
 	
 	const double arrowProbability;
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
+	const UnitType type;
 
 public:
-	BlockUnit(const Point& point_, const Point& stdPos_, const int blockSize_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks, Field& field_);
+	BlockUnit(const Point& point_, const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks, Field& field_);
 	virtual ~BlockUnit() = default;
 
-	void fallImmediately() override;
-	void move(MoveDirection) override;
-	void rotate(RotateDirection) override;
-	void predict() override;
+	void update() override;
+	void draw() const override;
+	void draw(const Point& pos, double scale) const override;
 };
-
-/*
-class BlockUnit {
-	protected:
-	std::array<std::array<std::shared_ptr<Block>, 4>, 4> geometry;
-
-	Field& field;
-	Point point;
-	Point predictedPoint;
-	bool settled;
-	Stopwatch timer;
-	const int blockSize;
-	const Point stdPos; //フィールド基準点
-	const double arrowProbability;
-	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
-
-	bool checkCollision(const Point& point_) const;
-	void settle();
-	int countNumOfBlock(const bool pattern[4][4]) const;
-
-public:
-	BlockUnit(const Point& point_, const Point& stdPos_, const int blockSize_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks, Field& field_);
-	virtual ~BlockUnit() = default;
-
-	void update();
-	void draw() const;
-	void draw(const Point& pos, double scale) const;
-	void fallImmediately();
-	void move(MoveDirection);
-	void rotate(RotateDirection);
-	bool isSettled() const { return settled; }
-	void predict();
-	void resetPoint();
-<<<<<<< HEAD
-	bool checkStackedFully();
-	void restartTimer() { timer.restart(); }
-};
-=======
-};*/

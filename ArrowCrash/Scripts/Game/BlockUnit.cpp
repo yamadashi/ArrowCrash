@@ -1,12 +1,12 @@
 #include "BlockUnit.h"
 
-Unit::Unit(const Point& point_, const Point& stdPos_, const int blockSize_, Field& field_)
+
+Unit::Unit(const Point& point_, const Point& stdPos_, Field& field_)
 	:field(field_),
 	point(point_),
 	predictedPoint(point_),
 	settled(false),
 	timer(true),
-	blockSize(blockSize_),
 	stdPos(stdPos_)
 {}
 
@@ -43,54 +43,6 @@ int Unit::countNumOfBlock(const bool pattern[4][4]) const {
 	return count;
 }
 
-
-void Unit::update() {
-	if (timer.ms() > 1500)
-	{
-			if (checkCollision(point.movedBy(1, 0))) {
-				settle();
-				return;
-			}
-			point.moveBy(1, 0);
-			timer.restart();
-
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 4; j++) {
-					if (geometry[i][j])
-						geometry[i][j]->setPoint(point.movedBy(i, j));
-				}
-			}
-	}
-}
-
-void Unit::draw() const {
-	
-	const Point predictedPos(stdPos.movedBy(predictedPoint.y * blockSize, predictedPoint.x * blockSize));
-
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			if (geometry[i][j]) {
-				geometry[i][j]->draw();
-				Rect(predictedPos.movedBy(j*blockSize, i*blockSize), blockSize).drawFrame(blockSize / 10, 0.0);
-			}
-		}
-	}
-
-}
-
-void Unit::draw(const Point& pos, double scale) const {
-	
-	const int scaledSize = blockSize * scale;
-
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			if (geometry[i][j]) {
-				geometry[i][j]->draw(pos.movedBy(scaledSize*Point(j,i)), scale);
-			}
-		}
-	}
-}
-
 void Unit::resetPoint() {
 	point.set(0, constants::col_len / 2 - 2);
 }
@@ -106,45 +58,7 @@ bool Unit::checkStackedFully() {
 	return false;
 }
 
-BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockSize_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, Field& field_)
-	:Unit( point_, stdPos_, blockSize_, field_),
-	arrowProbability(0.80),
-	arrowBlocks(arrowBlocks_)
-{
-	auto& pattern = unitPatterns[Random<int>(0, 6)];
-	
-	//ArrowBlock生成(分かり辛くてごめんやで)
-	int arrowOrder;
-	arrowOrder = Random() < arrowProbability ? Random<int>(0, countNumOfBlock(pattern) - 1) : -1; //-1は無効値
-
-
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			if (pattern[i][j]) {
-				if (arrowOrder-- == 0) {
-					auto ptr = std::make_shared<ArrowBlock>(point.movedBy(i, j), stdPos, blockSize, (ExplosionDirection)Random<int>(0, 7), field);
-					geometry[i][j] = ptr;
-					arrowBlocks.emplace_back(ptr);
-				}
-				else
-					geometry[i][j] = std::make_shared<NormalBlock>(point.movedBy(i, j), stdPos, blockSize);
-			}
-			else {
-				geometry[i][j] = nullptr;
-			}
-		}
-	}
-	predict();
-	//フィールド上部まで積まれている
-	if (predictedPoint.x < 0) {
-		field.reset();
-		resetPoint();
-		timer.restart();
-		predict();
-	}
-}
-
-void BlockUnit::fallImmediately() {
+void Unit::fallImmediately() {
 	point.set(predictedPoint);
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
@@ -155,7 +69,7 @@ void BlockUnit::fallImmediately() {
 	settle();
 }
 
-void BlockUnit::move(MoveDirection mov) {
+void Unit::move(MoveDirection mov) {
 
 	if (mov == MoveDirection::Down) {
 		if (checkCollision(point.movedBy(1, 0))) {
@@ -182,10 +96,10 @@ void BlockUnit::move(MoveDirection mov) {
 
 }
 
-void BlockUnit::rotate(RotateDirection rot) {
+void Unit::rotate(RotateDirection rot) {
 
 	auto prev = geometry;
-	
+
 	if (rot == RotateDirection::Right) {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
@@ -218,7 +132,7 @@ void BlockUnit::rotate(RotateDirection rot) {
 
 }
 
-void BlockUnit::predict() {
+void Unit::predict() {
 	predictedPoint.set(point.movedBy(-4, 0));
 	while (!checkCollision(predictedPoint)) {
 		predictedPoint.moveBy(1, 0);
@@ -226,19 +140,111 @@ void BlockUnit::predict() {
 	predictedPoint.moveBy(-1, 0); //ここダサい
 }
 
+
+
+BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, Field& field_)
+	:Unit( point_, stdPos_, field_),
+	arrowProbability(0.80),
+	arrowBlocks(arrowBlocks_),
+	type((UnitType)Random<int>(0, 6))
+{
+	auto& pattern = unitPatterns[Random<int>(0, 6)];
+	
+	//ArrowBlock生成(分かり辛くてごめんやで)
+	int arrowOrder;
+	arrowOrder = Random() < arrowProbability ? Random<int>(0, countNumOfBlock(pattern) - 1) : -1; //-1は無効値
+
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (pattern[i][j]) {
+				if (arrowOrder-- == 0) {
+					auto ptr = std::make_shared<ArrowBlock>(point.movedBy(i, j), stdPos, (ExplosionDirection)Random<int>(0, 7), field);
+					geometry[i][j] = ptr;
+					arrowBlocks.emplace_back(ptr);
+				}
+				else
+					geometry[i][j] = std::make_shared<NormalBlock>(point.movedBy(i, j), stdPos, type);
+			}
+			else {
+				geometry[i][j] = nullptr;
+			}
+		}
+	}
+	predict();
+	//フィールド上部まで積まれている
+	if (predictedPoint.x < 0) {
+		field.reset();
+		resetPoint();
+		timer.restart();
+		predict();
+	}
+}
+
+void BlockUnit::update() {
+	if (timer.ms() > 1500)
+	{
+		if (checkCollision(point.movedBy(1, 0))) {
+			settle();
+			return;
+		}
+		point.moveBy(1, 0);
+		timer.restart();
+
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (geometry[i][j])
+					geometry[i][j]->setPoint(point.movedBy(i, j));
+			}
+		}
+	}
+}
+
+void BlockUnit::draw() const {
+
+	const Point predictedPos(stdPos.movedBy(predictedPoint.y * Block::blockSize, predictedPoint.x * Block::blockSize));
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (geometry[i][j]) {
+				geometry[i][j]->draw();
+				Rect(predictedPos.movedBy(j*Block::blockSize, i*Block::blockSize), Block::blockSize).drawFrame(Block::blockSize / 10, 0.0);
+			}
+		}
+	}
+
+}
+
+void BlockUnit::draw(const Point& pos, double scale) const {
+
+	const int scaledSize = Block::blockSize * scale;
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (geometry[i][j]) {
+				geometry[i][j]->draw(pos.movedBy(scaledSize*Point(j, i)), scale);
+			}
+		}
+	}
+}
+
+
+
 /*
 BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockSize_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, Field& field_)
+=======
+BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, Field& field_)
+>>>>>>> develop
 	:field(field_),
 	point(point_),
 	predictedPoint(point_),
 	settled(false),
 	timer(true),
-	blockSize(blockSize_),
 	stdPos(stdPos_),
-	arrowProbability(0.80),
-	arrowBlocks(arrowBlocks_)
+	arrowBlocks(arrowBlocks_),
+	type(static_cast<UnitType>(Random<int>(0, 6)))
 {
-	auto& pattern = unitPatterns[Random<int>(0, 6)];
+	auto& pattern = unitPatterns[(int)type];
 	
 	//ArrowBlock生成(分かり辛くてごめんやで)
 	int arrowOrder;
@@ -248,12 +254,12 @@ BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockS
 		for (int j = 0; j < 4; j++) {
 			if (pattern[i][j]) {
 				if (arrowOrder-- == 0) {
-					auto ptr = std::make_shared<ArrowBlock>(point.movedBy(i, j), stdPos, blockSize, (ExplosionDirection)Random<int>(0, 7), field);
+					auto ptr = std::make_shared<ArrowBlock>(point.movedBy(i, j), stdPos, (ExplosionDirection)Random<int>(0, 7), field);
 					geometry[i][j] = ptr;
 					arrowBlocks.emplace_back(ptr);
 				}
 				else
-					geometry[i][j] = std::make_shared<NormalBlock>(point.movedBy(i, j), stdPos, blockSize);
+					geometry[i][j] = std::make_shared<NormalBlock>(point.movedBy(i, j), stdPos, type);
 			}
 			else {
 				geometry[i][j] = nullptr;
@@ -262,6 +268,7 @@ BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, const int blockS
 	}
 }
 
+const double BlockUnit::arrowProbability = 0.80;
 
 
 bool BlockUnit::checkCollision(const Point& point_) const {
@@ -304,33 +311,6 @@ void BlockUnit::update() {
 		move(MoveDirection::Down);
 }
 
-void BlockUnit::draw() const {
-
-	const Point predictedPos(stdPos.movedBy(predictedPoint.y * blockSize, predictedPoint.x * blockSize));
-
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			if (geometry[i][j]) {
-				geometry[i][j]->draw();
-				Rect(predictedPos.movedBy(j*blockSize, i*blockSize), blockSize).drawFrame(blockSize / 10, 0.0);
-			}
-		}
-	}
-
-}
-
-void BlockUnit::draw(const Point& pos, double scale) const {
-	
-	const int scaledSize = blockSize * scale;
-
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			if (geometry[i][j]) {
-				geometry[i][j]->draw(pos.movedBy(scaledSize*Point(j,i)), scale);
-			}
-		}
-	}
-}
 
 void BlockUnit::fallImmediately() {
 	point.set(predictedPoint);

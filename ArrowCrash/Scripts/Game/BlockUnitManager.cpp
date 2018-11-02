@@ -5,11 +5,10 @@ BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<Arro
 	:field(field_),
 	arrowBlocks(arrowBlocks_),
 	stdPos(gameData.stdPositions.at(player_num)),
-	blockSize(gameData.blockSize),
 	hasExchanged(false),
 	nextUnitFramePos(gameData.nextUnitFramePos.at(player_num)),
 	stockFramePos(gameData.stockFramePos.at(player_num)),
-	currentUnit(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, blockSize, arrowBlocks, field)),
+	currentUnit(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, arrowBlocks, field)),
 	stock(nullptr),
 	ItemPropability(10)//パーセント表記
 {
@@ -20,7 +19,7 @@ BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<Arro
 }
 
 void BlockUnitManager::generate() {
-	nextUnits.emplace_back(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, blockSize, arrowBlocks, field));
+	nextUnits.emplace_back(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, arrowBlocks, field));
 }
 
 void BlockUnitManager::resetField() {
@@ -36,7 +35,7 @@ void BlockUnitManager::update() {
 	if (currentUnit->isSettled()) {
 
 		if (!field.CheckItemExistence() && ItemPropability >= Random<int>(1, 100)) {
-			Item = std::shared_ptr<Unit>(new ItemUnit(Point(0, Random<int>(0, constants::col_len - 4)), stdPos, blockSize, field));
+			Item = std::shared_ptr<Unit>(new ItemUnit(Point(0, Random<int>(0, constants::col_len - 4)), stdPos, field));
 			currentUnit = Item;
 		}
 		else {

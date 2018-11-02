@@ -1,15 +1,15 @@
 #include "Item.h"
 
-ItemUnit::ItemUnit(const Point& point_, const Point& stdPos_, const int blockSize_, Field& field_)
-	:Unit(point_, stdPos_, blockSize_, field_),
+ItemUnit::ItemUnit(const Point& point_, const Point& stdPos_, Field& field_)
+	:Unit(point_, stdPos_, field_),
 	destroyed(false)
 {
 	auto& pattern = unitPatterns[4];
 
-	geometry[1][1] = std::make_shared<ItemBlock>(point.movedBy(1, 1), stdPos, blockSize, PartPlace::UpLeft);
-	geometry[1][2] = std::make_shared<ItemBlock>(point.movedBy(1, 2), stdPos, blockSize, PartPlace::UpRight);
-	geometry[2][1] = std::make_shared<ItemBlock>(point.movedBy(2, 1), stdPos, blockSize, PartPlace::DownLeft);
-	geometry[2][2] = std::make_shared<ItemBlock>(point.movedBy(2, 2), stdPos, blockSize, PartPlace::DownRight);
+	geometry[1][1] = std::make_shared<ItemBlock>(point.movedBy(1, 1), stdPos, PartPlace::UpLeft);
+	geometry[1][2] = std::make_shared<ItemBlock>(point.movedBy(1, 2), stdPos, PartPlace::UpRight);
+	geometry[2][1] = std::make_shared<ItemBlock>(point.movedBy(2, 1), stdPos, PartPlace::DownLeft);
+	geometry[2][2] = std::make_shared<ItemBlock>(point.movedBy(2, 2), stdPos, PartPlace::DownRight);
 }
 
 void ItemUnit::update() {
