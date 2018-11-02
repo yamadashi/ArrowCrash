@@ -16,35 +16,39 @@ public:
 	void update() override;
 	void draw() const override;
 	void draw(const Point& pos, double scale) const {}
-	virtual void destroy() { destroyed = true; }
+	virtual void activateEffect() {};
+	void fallImmediately() override {}
+	void move(MoveDirection) override {}
+	void rotate(RotateDirection) override {}
+	void destroy() { destroyed = true; }
 	bool isDestroyed() const { return destroyed; }
 };
 /*
 //âÒì]ã÷é~
 class ForbidRotating : public ItemUnit {
 public:
-	ForbidRotating(const Point& point_, const Point& stdPos, const int blockSize, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks, Field& field_);
+	ForbidRotating(const Point& point_, const Point& stdPos, Field& field_);
 	~ForbidRotating() = default;
 
-	void draw() const override;
+	void activateEffect() override {}
 };
 
 
 //óéâ∫ë¨ìxè„è∏
 class IncreaseFallVelocity : public ItemUnit {
 public:
-	IncreaseFallVelocity(const Point& point_, const Point& stdPos, const int blockSize, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks, Field& field_);
+	IncreaseFallVelocity(const Point& point_, const Point& stdPos, Field& field_);
 	~IncreaseFallVelocity() = default;
 
-	void draw() const override;
+	void activateEffect() override {}
 };
 
 
 //Ç®é◊ñÇñ≥å¯
 class InvalidateInterruption : public ItemUnit {
 public:
-	InvalidateInterruption(const Point& point_, const Point& stdPos, const int blockSize, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks, Field& field_);
+	InvalidateInterruption(const Point& point_, const Point& stdPos, Field& field_);
 	~InvalidateInterruption() = default;
 
-	void draw() const override;
+	void activateEffect() override {}
 };*/

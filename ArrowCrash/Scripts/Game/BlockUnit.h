@@ -74,9 +74,9 @@ public:
 	virtual void update() = 0;
 	virtual void draw() const = 0;
 	virtual void draw(const Point& pos, double scale) const = 0;
-	void fallImmediately();
-	void move(MoveDirection);
-	void rotate(RotateDirection);
+	virtual void fallImmediately();
+	virtual void move(MoveDirection);
+	virtual void rotate(RotateDirection);
 	void predict();
 	bool isSettled() const { return settled; }
 	void resetPoint();
