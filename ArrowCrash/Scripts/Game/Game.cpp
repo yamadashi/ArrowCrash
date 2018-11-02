@@ -47,8 +47,12 @@ void Game::update() {
   
 	ymds::GamepadManager::get().update();
 
-	auto startClicked = []() {
+	static auto startClicked = []() {
 		return ymds::GamepadManager::get().any([](ymds::Gamepad& gamepad) { return gamepad.clicked(ymds::GamepadIn::START); });
+	};
+
+	static auto selectClicked = []() {
+		return ymds::GamepadManager::get().any([](ymds::Gamepad& gamepad) { return gamepad.clicked(ymds::GamepadIn::SELECT); });
 	};
 
 	//ポーズ解除
@@ -62,6 +66,10 @@ void Game::update() {
 	if (startClicked())
 	//if (Input::KeyP.clicked)
 		pause = true;
+	if (selectClicked()) {
+		changeScene(SceneName::Result);
+	}
+
 	if (Input::KeyEnter.clicked) changeScene(SceneName::Result);
 
 	for (auto& player : players) {

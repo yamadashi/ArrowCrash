@@ -24,7 +24,7 @@ public:
 	~Field() = default;
 
 	int explode(const Point& start, ExplosionDirection direction) override; //破壊したブロックの数を返す
-	void setBlockAt(std::shared_ptr<Block> block, const Point& point);
+	void setBlockAt(std::shared_ptr<Block> block, const Point point);
 	std::shared_ptr<Block> getAt(const Point& point) const {
 		return contains(point) ?
 			blocks[point.x][point.y] : nullptr;

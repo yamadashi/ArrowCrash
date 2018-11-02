@@ -6,7 +6,7 @@ void Explain::init() {
 
 void Explain::update() {
 	//if (Input::KeyEnter.clicked) changeScene(SceneName::Title);
-	if (ymds::GamepadManager::get().any([](ymds::Gamepad gamepad) { return gamepad.clicked(ymds::GamepadIn::TWO); }))
+	if (ymds::GamepadManager::get().any([](ymds::Gamepad& gamepad) { return gamepad.clicked(ymds::GamepadIn::TWO); }))
 		changeScene(SceneName::Title);
 }
 

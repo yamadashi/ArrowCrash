@@ -103,7 +103,7 @@ int Field::explode(const Point& start, ExplosionDirection direction) {
 	return numOfDestroyed;
 }
 
-void Field::setBlockAt(std::shared_ptr<Block> block, const Point& point) {
+void Field::setBlockAt(std::shared_ptr<Block> block, const Point point) {
 	blocks.at(point.x).at(point.y) = block;
 }
 
