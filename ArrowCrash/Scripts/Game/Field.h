@@ -14,8 +14,7 @@ private:
 	const Point stdPos; //Šî€“_
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 
-	const Point backgroundPos;
-	const Size backgroundSize;
+	const Rect fieldShape;
 
 	bool contains(const Point& point) const;
 
