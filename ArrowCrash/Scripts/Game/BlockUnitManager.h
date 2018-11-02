@@ -1,32 +1,40 @@
 #pragma once
 #include "BlockUnit.h"
+#include "Item.h"
 #include <queue>
 
 class BlockUnitManager {
 private:
-	//伝搬するために保持しているがこのクラスでは使わない
 	Field& field;
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 	const Point stdPos;
-	const int blockSize;
-	bool hasExchanged; //ストック交換フラグ
+	bool hasExchanged; //繧ｹ繝医ャ繧ｯ莠､謠帙ヵ繝ｩ繧ｰ
+	int ojamaBuffer;
+	const int ItemPropability;
 
-	//描画用
+	//謠冗判逕ｨ
 	std::vector<Rect>& nextUnitFrames;
 	Rect& stockFrame;
 
-	std::list<std::shared_ptr<BlockUnit>> nextUnits; //queue
-	std::shared_ptr<BlockUnit> currentUnit;
-	std::shared_ptr<BlockUnit> stock;
+	std::list<std::shared_ptr<Unit>> nextUnits; //queue
+	std::shared_ptr<Unit> currentUnit;
+	std::shared_ptr<Unit> stock;
 	
 	void generate();
 	void resetField();
 
+	std::shared_ptr<Unit> Item;
+
 public:
 	BlockUnitManager(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, GameData& gameData, int player_num);
 	~BlockUnitManager() = default;
+	void init() { managers.emplace_back(this); }
 	void update();
 	void draw() const;
-	BlockUnit& getCurrentUnit() { return *currentUnit; }
+	Unit& getCurrentUnit() { return *currentUnit; }
 	void exchangeStock();
+	void bother(int numOfDestroyed);
+
+	static std::vector<BlockUnitManager*> managers;
+	static void clearManagerPtr() { managers.clear(); }
 };

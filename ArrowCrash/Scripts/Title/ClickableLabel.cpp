@@ -2,8 +2,8 @@
 
 ClickableLabel::ClickableLabel(
 	const String& text_,
-	const Point& centerPos,
 	const String& fontHandler_,
+	const Point& centerPos,
 	const Color& textColor,
 	const std::function<void(ClickableLabel&)>& clickEvent_,
 	const std::function<void(ClickableLabel&)>& mouseOverEvent_,

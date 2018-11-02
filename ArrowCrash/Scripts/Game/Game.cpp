@@ -5,12 +5,13 @@ Game::Game()
 	:gameData(),
 	pause(false),
 	timer(true),
-	time_limit(60),
+	time_limit(180),
 	players()
 {}
 
 Game::~Game() {
 	ymds::GamepadManager::get().inactivate();
+	BlockUnitManager::clearManagerPtr();
 }
 
 void Game::init() {
@@ -24,6 +25,10 @@ void Game::init() {
 		players.emplace_back(i, gameData);
 	}
 
+	for (auto& player : players) {
+		player.init();
+	}
+
 	m_data->scores.clear();
 	for (int i = 0; i < m_data->numOfPlayer; i++)
 		m_data->scores.emplace_back();
@@ -31,6 +36,7 @@ void Game::init() {
 
 void Game::update() {
 
+	//制限時間
 	if (timer.s() > time_limit) {
 		for (int i = 0; i < players.size(); i++) {
 			m_data->scores.at(i) = players.at(i).getScore();
@@ -45,6 +51,7 @@ void Game::update() {
 		return ymds::GamepadManager::get().any([](ymds::Gamepad& gamepad) { return gamepad.clicked(ymds::GamepadIn::START); });
 	};
 
+	//ポーズ解除
 	if (pause) {
 		//if (startClicked())
 		if (Input::KeyP.clicked)
@@ -53,9 +60,9 @@ void Game::update() {
 	}
 
 	//if (startClicked())
-	if (Input::KeyP.clicked)
-		pause = true;
+	if (Input::KeyP.clicked) pause = true;
 	if (Input::KeyEnter.clicked) changeScene(SceneName::Result);
+
 	for (auto& player : players) {
 		player.update();
 	}
@@ -105,12 +112,13 @@ void Game::initGameData() {
 	}
 
 	//ブロックのサイズ
-	gameData.blockSize = fieldWidth / constants::col_len;
+	int blockSize = fieldWidth / constants::col_len;
+	Block::blockSize = blockSize;
 	//ユニットフレーム(ストック、次ブロック枠)のサイズ
-	uiInfo.unitFrameSize = gameData.blockSize * 4;
+	uiInfo.unitFrameSize = blockSize * 4;
 	//フィールドのサイズ
 	uiInfo.fieldSize.x = fieldWidth;
-	uiInfo.fieldSize.y = gameData.blockSize * constants::row_len;
+	uiInfo.fieldSize.y = blockSize * constants::row_len;
 	//フィールド左側のマージン
 	uiInfo.fieldLeftMargin = (uiInfo.playerRegion.x - uiInfo.fieldSize.x) / 2;
 	//フィールド上側のマージン
@@ -143,7 +151,7 @@ void Game::initUIComponents() {
 	case 2:
 		for (int i = 0; i < numOfPlayer; i++) {
 			//ユニットフレームの間隔
-			const int unitFrameInterval = gameData.blockSize / 2;
+			const int unitFrameInterval = Block::blockSize / 2;
 			//ストック枠
 			uiComp.stockFrames.emplace_back(
 				uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin - uiInfo.unitFrameSize - unitFrameInterval,
@@ -170,7 +178,7 @@ void Game::initUIComponents() {
 	case 4:
 		for (int i = 0; i < numOfPlayer; i++) {
 			//ユニットフレームの間隔
-			const int unitFrameInterval = gameData.blockSize * 2;
+			const int unitFrameInterval = Block::blockSize * 2;
 			//ストック枠
 			uiComp.stockFrames.emplace_back(
 				uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin,

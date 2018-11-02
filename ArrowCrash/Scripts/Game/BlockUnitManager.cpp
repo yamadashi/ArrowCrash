@@ -5,12 +5,13 @@ BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<Arro
 	:field(field_),
 	arrowBlocks(arrowBlocks_),
 	stdPos(gameData.stdPositions.at(player_num)),
-	blockSize(gameData.blockSize),
 	hasExchanged(false),
+	ojamaBuffer(0),
 	nextUnitFrames(gameData.nextUnitFrames->at(player_num)),
 	stockFrame(gameData.stockFrames->at(player_num)),
-	currentUnit(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, blockSize, arrowBlocks, field)),
-	stock(nullptr)
+	currentUnit(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, arrowBlocks, field)),
+	stock(nullptr),
+	ItemPropability(10)//ãƒ‘ãƒ¼ã‚»ãƒ³ãƒˆè¡¨è¨˜
 {
 	for (int i = 0; i < 2; i++) {
 		generate();
@@ -18,8 +19,10 @@ BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<Arro
 	currentUnit->predict();
 }
 
+std::vector<BlockUnitManager*> BlockUnitManager::managers;
+
 void BlockUnitManager::generate() {
-	nextUnits.emplace_back(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, blockSize, arrowBlocks, field));
+	nextUnits.emplace_back(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, arrowBlocks, field));
 }
 
 void BlockUnitManager::resetField() {
@@ -31,27 +34,44 @@ void BlockUnitManager::resetField() {
 
 void BlockUnitManager::update() {
 	currentUnit->update();
+	if (Item != nullptr) Item->update();
 	if (currentUnit->isSettled()) {
-		currentUnit = nextUnits.front();
-		nextUnits.pop_front();
-		generate();
 
-		if (currentUnit->checkStackedFully()) //‹CŽ‚¿ˆ«‚¢•¶–@...
-		{
-			resetField();
+		if (ojamaBuffer > 0) {
+			field.riseFloor(ojamaBuffer);
+			ojamaBuffer = 0;
 		}
 
-		currentUnit->predict();
+		if (!field.CheckItemExistence() && ItemPropability >= Random<int>(1, 100)) {
+			Item = std::shared_ptr<Unit>(new ItemUnit(Point(0, Random<int>(0, constants::col_len - 4)), stdPos, field));
+			currentUnit = Item;
+		}
+		else {
+			currentUnit = nextUnits.front();
+			nextUnits.pop_front();
+			generate();
+
+			if (currentUnit->cannotSettle()) //æ°—æŒã¡æ‚ªã„æ–‡æ³•...
+			{
+				resetField();
+			}
+
+			currentUnit->predict();
+		}
 		hasExchanged = false;
 	}
+
+	PutText(L"ojama:", ojamaBuffer).from(stdPos);
 }
 
 void BlockUnitManager::draw() const {
 	currentUnit->draw();
-
+  
+	if (Item != nullptr) Item->draw();
+  
 	static const double scale = 0.75;
 	static const Point offset = ((1.0 - scale) / 2.0 * nextUnitFrames.front().size).asPoint();
-	int counter = 0; //vector(nextUnitsFrameInfo)—p
+	int counter = 0; //vector(nextUnitsFrameInfo)ç”¨
 	for (auto&& unit : nextUnits) {
 		unit->draw(nextUnitFrames.at(counter++).pos.movedBy(offset), scale);
 	}
@@ -68,7 +88,7 @@ void BlockUnitManager::exchangeStock() {
 		currentUnit.swap(stock);
 		currentUnit->resetPoint();
 
-		if (currentUnit->checkStackedFully()) //‹CŽ‚¿ˆ«‚¢•¶–@...
+		if (currentUnit->cannotSettle())
 		{
 			resetField();
 		}
@@ -80,12 +100,21 @@ void BlockUnitManager::exchangeStock() {
 		currentUnit = nextUnits.front();
 		nextUnits.pop_front();
 
-		if (currentUnit->checkStackedFully()) //‹CŽ‚¿ˆ«‚¢•¶–@...
+		if (currentUnit->cannotSettle())
 		{
 			resetField();
 		}
 
 		generate();
 		currentUnit->predict();
+	}
+}
+
+void BlockUnitManager::bother(int numOfDestroyed) {
+	int rising = numOfDestroyed / 5;
+	for (auto mngr : managers) {
+		if (mngr != this) {
+			mngr->ojamaBuffer += rising;
+		}
 	}
 }

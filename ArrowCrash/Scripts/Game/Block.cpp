@@ -3,15 +3,16 @@
 
 //Block
 
-Block::Block(const Point& point_, const Point& stdPos_, const int blockSize_)
+Block::Block(const Point& point_, const Point& stdPos_)
 	:destroyed(false),
 	stdPos(stdPos_),
 	point(point_),
-	blockSize(blockSize_),
 	rect(stdPos.movedBy(Point(point.y, point.x)*blockSize), blockSize),
 	settled(false)
 {
 }
+
+int Block::blockSize = 0;
 
 void Block::setPoint(const Point& point_) {
 	point.set(point_);
@@ -27,24 +28,24 @@ void Block::destroy() {
 
 //NormalBlock
 
-NormalBlock::NormalBlock(const Point& point_, const Point& pos, const int blockSize)
-	:Block(point_, pos, blockSize)
+NormalBlock::NormalBlock(const Point& point_, const Point& pos, UnitType type_)
+	:Block(point_, pos),
+	type(type_)
 {}
 
 void NormalBlock::draw() const {
-	rect(TextureAsset(L"block")).draw();
+	rect(TextureAsset(L"block")(64 * (int)type, 0, 64, 64)).draw();
 }
 
-
 void NormalBlock::draw(const Point& pos, double scale) const {
-	rect.scaled(scale).setPos(pos)(TextureAsset(L"block")).draw();
+	rect.scaled(scale).setPos(pos)(TextureAsset(L"block")(64 * (int)type, 0, 64, 64)).draw();
 }
 
 
 //ArrowBlock
 
-ArrowBlock::ArrowBlock(const Point& point_, const Point& pos, const int blockSize, ExplosionDirection dir, Explodable& field_)
-	:Block(point_, pos, blockSize),
+ArrowBlock::ArrowBlock(const Point& point_, const Point& pos, ExplosionDirection dir, Explodable& field_)
+	:Block(point_, pos),
 	direction(dir),
 	field(field_)
 {}
@@ -60,23 +61,44 @@ void ArrowBlock::rotate(RotateDirection rot) {
 }
 
 void ArrowBlock::draw() const {
-	rect(TextureAsset(L"arrow")(50 * (int)direction, 0, 50, 50)).draw();
+	rect(TextureAsset(L"arrow")(64 * (int)direction, 0, 64, 64)).draw();
 }
 
 void ArrowBlock::draw(const Point& pos, double scale) const {
-	rect.scaled(scale).setPos(pos)(TextureAsset(L"arrow")(50 * (int)direction, 0, 50, 50)).draw();
+	rect.scaled(scale).setPos(pos)(TextureAsset(L"arrow")(64 * (int)direction, 0, 64, 64)).draw();
 }
 
+
+
+//ItemBlock
+
+ItemBlock::ItemBlock(const Point& point_, const Point& stdPos, const PartPlace Part_)
+	:Block(point_, stdPos),
+	Part(Part_)
+{}
+
+void ItemBlock::draw() const {
+	switch (Part) {
+	case PartPlace::UpLeft:
+	case PartPlace::UpRight:
+	case PartPlace::DownLeft:
+//	case PartPlace::DownRight: rect(TextureAsset(L"block")).draw(); break;
+	case PartPlace::DownRight: rect.draw(Color(135, 206, 250)); break;
+	default: break;
+	}
+}
+
+void ItemBlock::draw(const Point& pos, double scale) const {
+	rect.scaled(scale).setPos(pos)(TextureAsset(L"block")).draw();
+}
 
 
 //InvincibleBlock
 
-InvincibleBlock::InvincibleBlock(const Point& point_, const Point& pos, const int blockSize)
-	:Block(point_, pos, blockSize)
+InvincibleBlock::InvincibleBlock(const Point& point_, const Point& pos)
+	:Block(point_, pos)
 {
 	setSettled(); //Ç‡Ç§ÇøÇÂÇ¡Ç∆ó«Ç¢ä¥Ç∂Ç…èëÇØÇªÇ§
 }
 
-void InvincibleBlock::draw() const {
-	rect.draw(Palette::Gray);
-}
+void InvincibleBlock::draw() const {}

@@ -10,18 +10,24 @@ using func = std::function<void(ClickablePanel&)>;
 
 class ClickablePanel : public Clickable {
 private:
-	Rect shape;
 	String textureHandler;
+	Rect shape;
 	std::function<void(ClickablePanel&)> clickEvent;
 	std::function<void(ClickablePanel&)> mouseOverEvent;
 	std::function<void(ClickablePanel&)> mouseOutEvent;
 
 public:
 	ClickablePanel(
-		const int width,
-		const int height,
+		const String& texture_handler,
 		const Point& pos,
-		const String& texture_handler = L"",
+		const Size size,
+		const func& clickEvent = [](Clickable&) {},
+		const func& mouseOverEvent = [](Clickable&) {},
+		const func& mouseOutEvent = [](Clickable&) {});
+	ClickablePanel(
+		const String& texture_handler,
+		const Point& pos,
+		const double scale = 1.0,
 		const func& clickEvent = [](Clickable&) {},
 		const func& mouseOverEvent = [](Clickable&) {},
 		const func& mouseOutEvent = [](Clickable&) {});
