@@ -61,11 +61,11 @@ void ArrowBlock::rotate(RotateDirection rot) {
 }
 
 void ArrowBlock::draw() const {
-	rect(TextureAsset(L"arrow")(50 * (int)direction, 0, 50, 50)).draw();
+	rect(TextureAsset(L"arrow")(64 * (int)direction, 0, 64, 64)).draw();
 }
 
 void ArrowBlock::draw(const Point& pos, double scale) const {
-	rect.scaled(scale).setPos(pos)(TextureAsset(L"arrow")(50 * (int)direction, 0, 50, 50)).draw();
+	rect.scaled(scale).setPos(pos)(TextureAsset(L"arrow")(64 * (int)direction, 0, 64, 64)).draw();
 }
 
 
