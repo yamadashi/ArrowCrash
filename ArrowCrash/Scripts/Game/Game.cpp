@@ -5,12 +5,13 @@ Game::Game()
 	:gameData(),
 	pause(false),
 	timer(true),
-	time_limit(60),
+	time_limit(180),
 	players()
 {}
 
 Game::~Game() {
 	ymds::GamepadManager::get().inactivate();
+	BlockUnitManager::clearManagerPtr();
 }
 
 void Game::init() {
@@ -22,6 +23,10 @@ void Game::init() {
 
 	for (int i = 0; i < m_data->numOfPlayer; i++) {
 		players.emplace_back(i, gameData);
+	}
+
+	for (auto& player : players) {
+		player.init();
 	}
 
 	m_data->scores.clear();

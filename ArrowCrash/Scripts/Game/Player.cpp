@@ -72,5 +72,8 @@ void Player::explode() {
 
 	score += numOfDestroyed;
 
+	//お邪魔
+	mngr.bother(numOfDestroyed);
+
 	field->shouldCheckLine = true;
 }

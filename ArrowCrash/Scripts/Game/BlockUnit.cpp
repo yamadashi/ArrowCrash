@@ -399,7 +399,7 @@ void BlockUnit::resetPoint() {
 <<<<<<< HEAD
 }
 
-bool BlockUnit::checkStackedFully() {
+bool BlockUnit::cannotSettle() {
 	Point point_(point.movedBy(-4, 0));
 	while (!checkCollision(point_)) {
 		point_.moveBy(1, 0);

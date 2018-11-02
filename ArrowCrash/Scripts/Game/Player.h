@@ -18,6 +18,8 @@ public:
 	Player(int player_num ,const GameData& gameData);
 	~Player() = default;
 
+
+	void init() { mngr.init(); }
 	void update();
 	void draw() const;
 

@@ -80,7 +80,7 @@ public:
 	void predict();
 	bool isSettled() const { return settled; }
 	void resetPoint();
-	bool checkStackedFully();
+	bool cannotSettle();
 	void restartTimer() { timer.restart(); }
 };
 
