@@ -4,14 +4,12 @@
 
 class BlockUnitManager {
 private:
-	//伝搬するために保持しているがこのクラスでは使わない
 	Field& field;
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 	const Point stdPos;
 	bool hasExchanged; //ストック交換フラグ
 	int ojamaBuffer;
 
-	static std::vector<BlockUnitManager*> managers;
 
 	//描画用
 	std::vector<Point> nextUnitFramePos;
@@ -27,11 +25,13 @@ private:
 public:
 	BlockUnitManager(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, const GameData& gameData, int player_num);
 	~BlockUnitManager() = default;
+	void init() { managers.emplace_back(this); }
 	void update();
 	void draw() const;
 	BlockUnit& getCurrentUnit() { return *currentUnit; }
 	void exchangeStock();
 	void bother(int numOfDestroyed);
 
+	static std::vector<BlockUnitManager*> managers;
 	static void clearManagerPtr() { managers.clear(); }
 };

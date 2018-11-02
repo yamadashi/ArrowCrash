@@ -5,7 +5,7 @@ Field::Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrow
 	stdPos(stdPos_),
 	arrowBlocks(arrowBlocks_),
 	backgroundPos(stdPos.movedBy(Block::blockSize, 0)),
-	backgroundSize(Size(constants::col_len - 2, constants::row_len - 1)*Block::blockSize)
+	backgroundSize(Size(constants::col_len - 2, constants::row_len - 1)*Block::blockSize),
 	shouldCheckLine(false)
 {
 	for (int i = 0; i < constants::row_len; i++) {
@@ -135,8 +135,8 @@ void Field::riseFloor(int num) {
 
 	for (int i = 0; i < num; i++) {
 		for (int j = 1; j < constants::col_len - 1; j++) {
-			Point point(constants::row_len - 1 - num, j);
-			blocks[point.x][point.y].reset(new NormalBlock(point, stdPos));
+			Point point(constants::row_len - 2 - i, j);
+			blocks[point.x][point.y].reset(new NormalBlock(point, stdPos, UnitType::I));
 		}
 	}
 }

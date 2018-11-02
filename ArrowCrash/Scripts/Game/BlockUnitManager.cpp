@@ -16,7 +16,6 @@ BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<Arro
 		generate();
 	}
 	currentUnit->predict();
-	managers.push_back(this);
 }
 
 std::vector<BlockUnitManager*> BlockUnitManager::managers;
@@ -36,7 +35,10 @@ void BlockUnitManager::update() {
 	currentUnit->update();
 	if (currentUnit->isSettled()) {
 
-		if (ojamaBuffer > 0) field.riseFloor(ojamaBuffer);
+		if (ojamaBuffer > 0) {
+			field.riseFloor(ojamaBuffer);
+			ojamaBuffer = 0;
+		}
 
 		currentUnit = nextUnits.front();
 		nextUnits.pop_front();
@@ -50,6 +52,8 @@ void BlockUnitManager::update() {
 		currentUnit->predict();
 		hasExchanged = false;
 	}
+
+	PutText(L"ojama:",ojamaBuffer).from(stdPos);
 }
 
 void BlockUnitManager::draw() const {
