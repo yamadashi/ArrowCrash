@@ -13,8 +13,8 @@ private:
 	const int ItemPropability;
 
 	//描画用
-	std::vector<Point> nextUnitFramePos;
-	Point stockFramePos;
+	std::vector<Rect>& nextUnitFrames;
+	Rect& stockFrame;
 
 	std::list<std::shared_ptr<Unit>> nextUnits; //queue
 	std::shared_ptr<Unit> currentUnit;
@@ -26,7 +26,7 @@ private:
 	std::shared_ptr<Unit> Item;
 
 public:
-	BlockUnitManager(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, const GameData& gameData, int player_num);
+	BlockUnitManager(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, GameData& gameData, int player_num);
 	~BlockUnitManager() = default;
 	void init() { managers.emplace_back(this); }
 	void update();

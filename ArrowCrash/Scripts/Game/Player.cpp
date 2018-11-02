@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(int player_num, const GameData& gameData_)
+Player::Player(int player_num, GameData& gameData_)
 	:number(player_num),
 	gameData(gameData_),
 	score(0),

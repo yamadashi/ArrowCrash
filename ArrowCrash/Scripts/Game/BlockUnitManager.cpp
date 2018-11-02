@@ -1,14 +1,14 @@
 #include "BlockUnitManager.h"
 
 
-BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, const GameData& gameData, int player_num)
+BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, GameData& gameData, int player_num)
 	:field(field_),
 	arrowBlocks(arrowBlocks_),
 	stdPos(gameData.stdPositions.at(player_num)),
 	hasExchanged(false),
 	ojamaBuffer(0),
-	nextUnitFramePos(gameData.nextUnitFramePos.at(player_num)),
-	stockFramePos(gameData.stockFramePos.at(player_num)),
+	nextUnitFrames(gameData.nextUnitFrames->at(player_num)),
+	stockFrame(gameData.stockFrames->at(player_num)),
 	currentUnit(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, arrowBlocks, field)),
 	stock(nullptr),
 	ItemPropability(10)//パーセント表記
@@ -66,12 +66,16 @@ void BlockUnitManager::update() {
 
 void BlockUnitManager::draw() const {
 	currentUnit->draw();
+  
 	if (Item != nullptr) Item->draw();
+  
+	static const double scale = 0.75;
+	static const Point offset = ((1.0 - scale) / 2.0 * nextUnitFrames.front().size).asPoint();
 	int counter = 0; //vector(nextUnitsFrameInfo)用
 	for (auto&& unit : nextUnits) {
-		unit->draw(nextUnitFramePos.at(counter++), 1.0);
+		unit->draw(nextUnitFrames.at(counter++).pos.movedBy(offset), scale);
 	}
-	if (stock) stock->draw(stockFramePos, 1.0);
+	if (stock) stock->draw(stockFrame.pos.movedBy(offset), scale);
 }
 
 void BlockUnitManager::exchangeStock() {
