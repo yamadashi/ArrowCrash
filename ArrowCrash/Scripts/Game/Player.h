@@ -5,7 +5,7 @@
 class Player {
 private:
 	const int number; //プレイヤー番号
-	const GameData& gameData;
+	GameData& gameData;
 	int score;
 	int timer;
 
@@ -15,9 +15,11 @@ private:
 	BlockUnitManager mngr;
 
 public:
-	Player(int player_num ,const GameData& gameData);
+	Player(int player_num, GameData& gameData);
 	~Player() = default;
 
+
+	void init() { mngr.init(); }
 	void update();
 	void draw() const;
 

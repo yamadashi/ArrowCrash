@@ -14,8 +14,7 @@ private:
 	const Point stdPos; //基準点
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 
-	const Point backgroundPos;
-	const Size backgroundSize;
+	const Rect fieldShape;
 
 	bool contains(const Point& point) const;
 	void closeLine(); //行詰め
@@ -31,6 +30,7 @@ public:
 			blocks[point.x][point.y] : nullptr;
 	}
 	void reset();
+	void riseFloor(int rising);
 
 	void update();
 	void draw() const;

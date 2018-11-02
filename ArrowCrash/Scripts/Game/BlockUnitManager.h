@@ -5,16 +5,16 @@
 
 class BlockUnitManager {
 private:
-	//伝搬するために保持しているがこのクラスでは使わない
 	Field& field;
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 	const Point stdPos;
-	bool hasExchanged; //ストック交換フラグ
+	bool hasExchanged; //繧ｹ繝医ャ繧ｯ莠､謠帙ヵ繝ｩ繧ｰ
+	int ojamaBuffer;
 	const int ItemPropability;
 
-	//描画用
-	std::vector<Point> nextUnitFramePos;
-	Point stockFramePos;
+	//謠冗判逕ｨ
+	std::vector<Rect>& nextUnitFrames;
+	Rect& stockFrame;
 
 	std::list<std::shared_ptr<Unit>> nextUnits; //queue
 	std::shared_ptr<Unit> currentUnit;
@@ -26,10 +26,15 @@ private:
 	std::shared_ptr<Unit> Item;
 
 public:
-	BlockUnitManager(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, const GameData& gameData, int player_num);
+	BlockUnitManager(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, GameData& gameData, int player_num);
 	~BlockUnitManager() = default;
+	void init() { managers.emplace_back(this); }
 	void update();
 	void draw() const;
 	Unit& getCurrentUnit() { return *currentUnit; }
 	void exchangeStock();
+	void bother(int numOfDestroyed);
+
+	static std::vector<BlockUnitManager*> managers;
+	static void clearManagerPtr() { managers.clear(); }
 };

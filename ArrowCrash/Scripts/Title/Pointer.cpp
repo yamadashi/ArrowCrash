@@ -18,14 +18,14 @@ void Pointer::move() {
 
 	auto& gamepad = ymds::GamepadManager::get().getGamepad(player_num);
 	//入力ベクトルを正規化
-	Vec2 input(
+	/*Vec2 input(
 		(Input::KeyRight.pressed - Input::KeyLeft.pressed),
 		(Input::KeyDown.pressed - Input::KeyUp.pressed)
-	);
-	/*Vec2 input(
+	);*/
+	Vec2 input(
 		(gamepad.pressed(ymds::GamepadIn::RIGHT) - gamepad.pressed(ymds::GamepadIn::LEFT)),
 		(gamepad.pressed(ymds::GamepadIn::DOWN) - gamepad.pressed(ymds::GamepadIn::UP))
-	);*/
+	);
 	if (!input.isZero()) input.normalize();
 	
 	//加速・減速
@@ -46,8 +46,8 @@ bool Pointer::isOutOfRegion() const {
 }
 
 bool Pointer::isClicked() const {
-	return Input::KeySpace.clicked;
-	//return ymds::GamepadManager::get().getGamepad(player_num).clicked(ymds::GamepadIn::TWO);
+	//return Input::KeySpace.clicked;
+	return ymds::GamepadManager::get().getGamepad(player_num).clicked(ymds::GamepadIn::TWO);
 }
 
 Point Pointer::getPos() const {

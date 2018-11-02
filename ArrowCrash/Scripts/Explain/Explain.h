@@ -1,5 +1,6 @@
 #pragma once
 #include "../Scene.h"
+#include "../ymdsLib/GamePad/GamepadManager.h"
 
 class Explain : public Scene {
 private:

@@ -5,12 +5,13 @@ Game::Game()
 	:gameData(),
 	pause(false),
 	timer(true),
-	time_limit(60),
+	time_limit(180),
 	players()
 {}
 
 Game::~Game() {
 	ymds::GamepadManager::get().inactivate();
+	BlockUnitManager::clearManagerPtr();
 }
 
 void Game::init() {
@@ -22,6 +23,10 @@ void Game::init() {
 
 	for (int i = 0; i < m_data->numOfPlayer; i++) {
 		players.emplace_back(i, gameData);
+	}
+
+	for (auto& player : players) {
+		player.init();
 	}
 
 	m_data->scores.clear();
@@ -48,14 +53,15 @@ void Game::update() {
 
 	//ポーズ解除
 	if (pause) {
-		//if (startClicked())
-		if (Input::KeyP.clicked)
+		if (startClicked())
+		//if (Input::KeyP.clicked)
 			pause = false;
 		return;
 	}
 
-	//if (startClicked())
-	if (Input::KeyP.clicked) pause = true;
+	if (startClicked())
+	//if (Input::KeyP.clicked)
+		pause = true;
 	if (Input::KeyEnter.clicked) changeScene(SceneName::Result);
 
 	for (auto& player : players) {
@@ -154,11 +160,9 @@ void Game::initUIComponents() {
 				uiInfo.unitFrameSize,
 				uiInfo.unitFrameSize
 				);
-			gameData.stockFramePos.emplace_back(uiComp.stockFrames.at(i).pos); //gameDataの方にも反映
 
 			//次ユニット枠(順番は適当)
 			uiComp.nextUnitFrames.emplace_back();
-			gameData.nextUnitFramePos.emplace_back(); //gameDataの方にも反映
 			for (int j = 0; j < constants::numOfNextBlocks; j++) {
 				uiComp.nextUnitFrames.at(i).emplace_back(
 					uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin + uiInfo.fieldSize.x + unitFrameInterval,
@@ -166,9 +170,10 @@ void Game::initUIComponents() {
 					uiInfo.unitFrameSize,
 					uiInfo.unitFrameSize
 				);
-				gameData.nextUnitFramePos.at(i).emplace_back(uiComp.nextUnitFrames.at(i).at(j).pos); //gameDataの方にも反映
 			}
 		}
+		gameData.nextUnitFrames = &uiComp.nextUnitFrames;
+		gameData.stockFrames = &uiComp.stockFrames;
 		break;
 	case 3:
 	case 4:
@@ -182,11 +187,9 @@ void Game::initUIComponents() {
 				uiInfo.unitFrameSize,
 				uiInfo.unitFrameSize
 			);
-			gameData.stockFramePos.emplace_back(uiComp.stockFrames.at(i).pos); //gameDataの方にも反映
 
 			//次ユニット枠(順番は適当)
 			uiComp.nextUnitFrames.emplace_back();
-			gameData.nextUnitFramePos.emplace_back();
 			for (int j = 0; j < constants::numOfNextBlocks; j++) {
 				uiComp.nextUnitFrames.at(i).emplace_back(
 					uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin + uiInfo.fieldSize.x - uiInfo.unitFrameSize,
@@ -194,9 +197,10 @@ void Game::initUIComponents() {
 					uiInfo.unitFrameSize,
 					uiInfo.unitFrameSize
 				);
-				gameData.nextUnitFramePos.at(i).emplace_back(uiComp.nextUnitFrames.at(i).at(j).pos); //gameDataの方にも反映
 			}
 		}
+		gameData.nextUnitFrames = &uiComp.nextUnitFrames;
+		gameData.stockFrames = &uiComp.stockFrames;
 		break;
 	default:
 		break;
