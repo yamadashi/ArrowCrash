@@ -4,9 +4,7 @@ Field::Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrow
 	:Explodable(),
 	stdPos(stdPos_),
 	arrowBlocks(arrowBlocks_),
-	fieldShape(stdPos.movedBy(Block::blockSize, 0), Size(constants::col_len - 2, constants::row_len - 1)*Block::blockSize)
-	backgroundPos(stdPos.movedBy(Block::blockSize, 0)),
-	backgroundSize(Size(constants::col_len - 2, constants::row_len - 1)*Block::blockSize),
+	fieldShape(stdPos.movedBy(Block::blockSize, 0), Size(constants::col_len - 2, constants::row_len - 1)*Block::blockSize),
 	shouldCheckLine(false)
 {
 	for (int i = 0; i < constants::row_len; i++) {

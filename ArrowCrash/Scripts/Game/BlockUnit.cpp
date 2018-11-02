@@ -133,7 +133,7 @@ void Unit::rotate(RotateDirection rot) {
 }
 
 void Unit::predict() {
-	predictedPoint.set(point.movedBy(-4, 0));
+	predictedPoint.set(point);
 	while (!checkCollision(predictedPoint)) {
 		predictedPoint.moveBy(1, 0);
 	}
@@ -148,7 +148,7 @@ BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, std::vector<std:
 	arrowBlocks(arrowBlocks_),
 	type((UnitType)Random<int>(0, 6))
 {
-	auto& pattern = unitPatterns[Random<int>(0, 6)];
+	auto& pattern = unitPatterns[(int)type];
 	
 	//ArrowBlockê∂ê¨(ï™Ç©ÇËêhÇ≠ÇƒÇ≤ÇﬂÇÒÇ‚Ç≈)
 	int arrowOrder;
