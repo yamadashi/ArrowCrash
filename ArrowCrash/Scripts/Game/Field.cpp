@@ -5,7 +5,7 @@ Field::Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrow
 	stdPos(stdPos_),
 	arrowBlocks(arrowBlocks_),
 	backgroundPos(stdPos.movedBy(Block::blockSize, 0)),
-	backgroundSize(Size(constants::col_len - 2, constants::row_len - 1)*Block::blockSize)
+	backgroundSize(Size(constants::col_len - 2, constants::row_len - 1)*Block::blockSize),
 	shouldCheckLine(false)
 {
 	for (int i = 0; i < constants::row_len; i++) {
@@ -27,11 +27,11 @@ bool Field::contains(const Point& point) const {
 
 void Field::closeLine() {
 
-	std::array<int, constants::row_len - 1> table; //各行でどれだけ詰めるかを記録するテーブル
+	std::array<int, constants::row_len - 1> table; //吁E��でどれだけ詰めるかを記録するチE�Eブル
 	
 	int counter = 0;
 
-	//詰める行数の計算
+	//詰める行数の計箁E
 	for (int i = blocks.size() - 2; i > 0 ; i--) {
 
 		bool empty = true;
@@ -43,7 +43,7 @@ void Field::closeLine() {
 		}
 
 		if (empty) {
-			table[i] = 0; //空の行自体は詰めなくてよい
+			table[i] = 0; //空の行�E体�E詰めなくてよい
 			counter++;
 		}
 
@@ -69,13 +69,13 @@ void Field::closeLine() {
 
 int Field::explode(const Point& start, ExplosionDirection direction) {
 
-	//爆発方向を計算
+	//爁E��方向を計箁E
 	Point vec(0, 0);
 	int tmp = (int)direction;
 
-	//行方向(x方向)
+	//行方吁Ex方吁E
 	if (tmp % 4 != 0) vec.y = tmp / 4 == 0 ? 1 : -1;
-	//列方向(y方向)
+	//列方吁Ey方吁E
 	tmp = (tmp + 1) % 8;
 	if (tmp % 4 != 3) vec.x = tmp / 4 == 0 ? -1 : 1;
 
@@ -85,11 +85,22 @@ int Field::explode(const Point& start, ExplosionDirection direction) {
 
 	do {
 		if (auto& blk = blocks.at(point.x).at(point.y)) {
+			if (blk->ItemCheck()) {
+				//ItemBlock�S�폜
+				for (auto&& arr : blocks) {
+					for (auto&& blk : arr) {
+						if (blk)
+							if (blk->ItemCheck())
+								blk->destroy();
+					}
+				}
+
+			}			
 			blk->destroy();
 			numOfDestroyed++;
 		}
 	} while (contains(point.moveBy(vec)));
-
+	
 	return numOfDestroyed;
 }
 
@@ -99,7 +110,7 @@ void Field::setBlockAt(std::shared_ptr<Block> block, const Point& point) {
 
 void Field::reset() {
 
-	//arrowBlocksのうちsettledなものを削除
+	//arrowBlocksのぁE��settledなも�Eを削除
 	auto&& itr = std::remove_if(arrowBlocks.begin(), arrowBlocks.end(), [](std::weak_ptr<ArrowBlock> blk) { return blk.lock()->isSettled(); });
 	arrowBlocks.erase(itr, arrowBlocks.end());
 
@@ -108,7 +119,7 @@ void Field::reset() {
 			if (blk) blk->destroy();
 		}
 	}
-	//ダサいからなんとかしたい
+	//ダサぁE��らなんとかしたい
 	for (auto&& arr : blocks) {
 		for (auto&& block : arr) {
 			if (block && block->isDestroyed()) block.reset();
@@ -134,4 +145,15 @@ void Field::draw() const {
 			if (block) block->draw();
 		}
 	}
+}
+
+bool Field::CheckItemExistence() const{
+	for (auto&& arr : blocks) {
+		for (auto&& blk : arr) {
+			if (blk)
+				if (blk->ItemCheck())
+					return true;
+		}
+	}
+	return false;
 }
