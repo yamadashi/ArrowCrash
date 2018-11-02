@@ -27,11 +27,11 @@ bool Field::contains(const Point& point) const {
 
 void Field::closeLine() {
 
-	std::array<int, constants::row_len - 1> table; //各行でどれだけ詰めるかを記録するテーブル
+	std::array<int, constants::row_len - 1> table; //蜷・｡後〒縺ｩ繧後□縺題ｩｰ繧√ｋ縺九ｒ險倬鹸縺吶ｋ繝・・繝悶Ν
 	
 	int counter = 0;
 
-	//詰める行数の計算
+	//隧ｰ繧√ｋ陦梧焚縺ｮ險育ｮ・
 	for (int i = blocks.size() - 2; i > 0 ; i--) {
 
 		bool empty = true;
@@ -43,14 +43,14 @@ void Field::closeLine() {
 		}
 
 		if (empty) {
-			table[i] = 0; //空の行自体は詰めなくてよい
+			table[i] = 0; //遨ｺ縺ｮ陦瑚・菴薙・隧ｰ繧√↑縺上※繧医＞
 			counter++;
 		}
 
 		table[i - 1] = counter;
 	}
 
-	//詰める
+	//隧ｰ繧√ｋ
 	for (int i = constants::row_len - 2; i > 0; i--) {
 		if (table[i - 1] != 0) {
 			for (int j = 1; j <= constants::col_len - 2; j++) {
@@ -69,13 +69,13 @@ void Field::closeLine() {
 
 int Field::explode(const Point& start, ExplosionDirection direction) {
 
-	//爆発方向を計算
+	//辷・匱譁ｹ蜷代ｒ險育ｮ・
 	Point vec(0, 0);
 	int tmp = (int)direction;
 
-	//行方向(x方向)
+	//陦梧婿蜷・x譁ｹ蜷・
 	if (tmp % 4 != 0) vec.y = tmp / 4 == 0 ? 1 : -1;
-	//列方向(y方向)
+	//蛻玲婿蜷・y譁ｹ蜷・
 	tmp = (tmp + 1) % 8;
 	if (tmp % 4 != 3) vec.x = tmp / 4 == 0 ? -1 : 1;
 
@@ -85,11 +85,22 @@ int Field::explode(const Point& start, ExplosionDirection direction) {
 
 	do {
 		if (auto& blk = blocks.at(point.x).at(point.y)) {
+			if (blk->ItemCheck()) {
+				//ItemBlock全削除
+				for (auto&& arr : blocks) {
+					for (auto&& blk : arr) {
+						if (blk)
+							if (blk->ItemCheck())
+								blk->destroy();
+					}
+				}
+
+			}			
 			blk->destroy();
 			numOfDestroyed++;
 		}
 	} while (contains(point.moveBy(vec)));
-
+	
 	return numOfDestroyed;
 }
 
@@ -99,7 +110,7 @@ void Field::setBlockAt(std::shared_ptr<Block> block, const Point& point) {
 
 void Field::reset() {
 
-	//arrowBlocksのうちsettledなものを削除
+	//arrowBlocks縺ｮ縺・■settled縺ｪ繧ゅ・繧貞炎髯､
 	auto&& itr = std::remove_if(arrowBlocks.begin(), arrowBlocks.end(), [](std::weak_ptr<ArrowBlock> blk) { return blk.lock()->isSettled(); });
 	arrowBlocks.erase(itr, arrowBlocks.end());
 
@@ -108,7 +119,7 @@ void Field::reset() {
 			if (blk) blk->destroy();
 		}
 	}
-	//ダサいからなんとかしたい
+	//繝繧ｵ縺・°繧峨↑繧薙→縺九＠縺溘＞
 	for (auto&& arr : blocks) {
 		for (auto&& block : arr) {
 			if (block && block->isDestroyed()) block.reset();
@@ -159,4 +170,15 @@ void Field::draw() const {
 			if (block) block->draw();
 		}
 	}
+}
+
+bool Field::CheckItemExistence() const{
+	for (auto&& arr : blocks) {
+		for (auto&& blk : arr) {
+			if (blk)
+				if (blk->ItemCheck())
+					return true;
+		}
+	}
+	return false;
 }

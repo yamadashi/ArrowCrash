@@ -37,4 +37,5 @@ public:
 	void draw() const;
 
 	bool shouldCheckLine; //行詰めをチェックするかどうか
+	bool CheckItemExistence() const;
 };
