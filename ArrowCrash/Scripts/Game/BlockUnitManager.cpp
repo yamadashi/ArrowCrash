@@ -42,15 +42,6 @@ void BlockUnitManager::update() {
 			ojamaBuffer = 0;
 		}
 
-		currentUnit = nextUnits.front();
-		nextUnits.pop_front();
-		generate();
-
-		if (currentUnit->cannotSettle())
-		{
-			resetField();
-    }
-
 		if (!field.CheckItemExistence() && ItemPropability >= Random<int>(1, 100)) {
 			Item = std::shared_ptr<Unit>(new ItemUnit(Point(0, Random<int>(0, constants::col_len - 4)), stdPos, field));
 			currentUnit = Item;
@@ -60,7 +51,7 @@ void BlockUnitManager::update() {
 			nextUnits.pop_front();
 			generate();
 
-			if (currentUnit->checkStackedFully()) //気持ち悪い文法...
+			if (currentUnit->cannotSettle()) //気持ち悪い文法...
 			{
 				resetField();
 			}
@@ -70,7 +61,7 @@ void BlockUnitManager::update() {
 		hasExchanged = false;
 	}
 
-	PutText(L"ojama:",ojamaBuffer).from(stdPos);
+	PutText(L"ojama:", ojamaBuffer).from(stdPos);
 }
 
 void BlockUnitManager::draw() const {

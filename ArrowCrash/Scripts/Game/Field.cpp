@@ -119,7 +119,7 @@ void Field::reset() {
 			if (blk) blk->destroy();
 		}
 	}
-	//繝繧ｵ縺・°繧峨↑繧薙→縺九＠縺溘＞
+
 	for (auto&& arr : blocks) {
 		for (auto&& block : arr) {
 			if (block && block->isDestroyed()) block.reset();
