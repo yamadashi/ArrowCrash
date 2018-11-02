@@ -53,14 +53,15 @@ void Game::update() {
 
 	//ポーズ解除
 	if (pause) {
-		//if (startClicked())
-		if (Input::KeyP.clicked)
+		if (startClicked())
+		//if (Input::KeyP.clicked)
 			pause = false;
 		return;
 	}
 
-	//if (startClicked())
-	if (Input::KeyP.clicked) pause = true;
+	if (startClicked())
+	//if (Input::KeyP.clicked)
+		pause = true;
 	if (Input::KeyEnter.clicked) changeScene(SceneName::Result);
 
 	for (auto& player : players) {

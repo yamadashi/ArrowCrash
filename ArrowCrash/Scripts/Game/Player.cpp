@@ -11,7 +11,7 @@ Player::Player(int player_num, GameData& gameData_)
 
 void Player::update() {
 
-	if (Input::KeyUp.clicked) mngr.getCurrentUnit().fallImmediately();
+	/*if (Input::KeyUp.clicked) mngr.getCurrentUnit().fallImmediately();
 	else if (Input::KeyLeft.clicked) mngr.getCurrentUnit().move(MoveDirection::Left);
 	else if (Input::KeyRight.clicked) mngr.getCurrentUnit().move(MoveDirection::Right);
 	else if (Input::KeyDown.clicked) mngr.getCurrentUnit().move(MoveDirection::Down);
@@ -34,9 +34,9 @@ void Player::update() {
 	else if (Input::KeyD.clicked) mngr.getCurrentUnit().rotate(RotateDirection::Right);
 	else if (Input::KeyS.clicked) mngr.exchangeStock();
 
-	if (Input::KeySpace.clicked) explode();
+	if (Input::KeySpace.clicked) explode();*/
 
-	/*auto& gamepad = ymds::GamepadManager::get().getGamepad(number);
+	auto& gamepad = ymds::GamepadManager::get().getGamepad(number);
 
 	if (gamepad.clicked(ymds::GamepadIn::UP)) mngr.getCurrentUnit().fallImmediately();
 	else if (gamepad.clicked(ymds::GamepadIn::LEFT)) mngr.getCurrentUnit().move(MoveDirection::Left);
@@ -47,7 +47,7 @@ void Player::update() {
 	
 	if (gamepad.clicked(ymds::GamepadIn::L1)) mngr.exchangeStock();
 
-	if (gamepad.clicked(ymds::GamepadIn::R1)) explode();*/
+	if (gamepad.clicked(ymds::GamepadIn::R1)) explode();
 	
 
 	field->update();
