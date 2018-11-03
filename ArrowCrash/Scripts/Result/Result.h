@@ -11,6 +11,7 @@ public:
 	Result();
 	~Result();
 
+	void init() override;
 	void update() override;
-	void draw() const;
+	void draw() const override;
 };
