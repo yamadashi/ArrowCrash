@@ -1,16 +1,20 @@
 #include "Pointer.h"
 
 
-const int Pointer::radius = 15;
 const double Pointer::accel = 2.0;
 const double Pointer::frictionCoeff = 1.0;
 const double Pointer::maxSpeed = 10.0;
 
 Pointer::Pointer(int player_num_)
-	:pos(Window::Center()),
+	:player_num(player_num_),
+	pos(Window::Center().movedBy(0, Window::Height() / 6).movedBy(Size((2 * (player_num % 2) - 1)*Window::Width() / 4, (2 * (player_num / 2) - 1)*Window::Height() / 5))),
 	velocity(0, 0),
-	player_num(player_num_),
-	color(constants::playerColor[player_num])
+	color(constants::playerColor[player_num]),
+	pointerSize((Size(Window::Height(), Window::Height()) / 27.0).asPoint()),
+	anim_t(0),
+	anim_coeff(5),
+	anim_num(6),
+	anim_size(64)
 {}
 
 
@@ -59,10 +63,13 @@ void Pointer::update() {
 	while (isOutOfRegion()) {
 		pos.moveBy(-velocity.normalized());
 	}
+
+	//アニメーション
+	if (++anim_t / anim_coeff > anim_num) anim_t = 0;
 }
 
-
 void Pointer::draw() const {
-	Circle(pos, radius).drawFrame(2.0, 0.5, color);
-	Circle(pos, radius / 5).draw(color);
+	int index = anim_t / anim_coeff;
+
+	TextureAsset(L"pointer")(index*anim_size, 0, anim_size, anim_size).resize(pointerSize).draw(pos, color);
 }
