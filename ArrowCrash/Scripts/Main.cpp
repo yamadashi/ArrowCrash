@@ -10,7 +10,7 @@ void Main()
 {
 	//最大解像度を取得
 	const auto maxSize = Graphics::GetFullScreenSize().back();
-		
+	Println(maxSize);
 	Window::SetFullscreen(true, maxSize);
 	Graphics::SetBackground(Palette::Black);
 

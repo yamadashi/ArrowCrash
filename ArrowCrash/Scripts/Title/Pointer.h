@@ -6,15 +6,20 @@
 
 class Pointer {
 private:
+	int player_num;
 	Vec2 pos;
 	Vec2 velocity;
-	int player_num;
 	const Color color;
 
-	static const int radius;
 	static const double accel;
 	static const double frictionCoeff;
 	static const double maxSpeed;
+
+	const Size pointerSize;
+	int anim_t; //アニメーション用
+	const int anim_coeff;
+	const int anim_num;
+	const int anim_size;
 
 	void move();
 	bool isOutOfRegion() const;
