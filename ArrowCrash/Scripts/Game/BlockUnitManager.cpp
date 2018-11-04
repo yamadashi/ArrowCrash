@@ -61,7 +61,6 @@ void BlockUnitManager::update() {
 		hasExchanged = false;
 	}
 
-	PutText(L"ojama:", ojamaBuffer).from(stdPos);
 }
 
 void BlockUnitManager::draw() const {
