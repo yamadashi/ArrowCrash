@@ -17,7 +17,6 @@ private:
 	const Rect fieldShape;
 
 	bool contains(const Point& point) const;
-	void closeLine(); //行詰め
 
 public:
 	Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks);
@@ -31,10 +30,10 @@ public:
 	}
 	void reset();
 	void riseFloor(int rising);
+	void closeLine(); //行詰め
 
 	void update();
 	void draw() const;
 
-	bool shouldCheckLine; //行詰めをチェックするかどうか
 	bool CheckItemExistence() const;
 };

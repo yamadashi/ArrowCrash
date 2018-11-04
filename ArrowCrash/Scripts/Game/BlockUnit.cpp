@@ -13,7 +13,8 @@ Unit::Unit(const Point& point_, const Point& stdPos_, Field& field_)
 bool Unit::checkCollision(const Point& point_) const {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			if (field.getAt(point_.movedBy(i, j)) && geometry[i][j])
+			auto& tmp = field.getAt(point_.movedBy(i, j));
+			if (tmp && !tmp->isDestroyed() && geometry[i][j])
 				return true;
 		}
 	}
