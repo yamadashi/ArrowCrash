@@ -50,14 +50,13 @@ void Field::closeLine() {
 	}
 
 	//隧ｰ繧√ｋ
-	for (int i = constants::row_len - 2; i > 0; i--) {
-		if (table[i - 1] != 0) {
+	for (int i = constants::row_len - 3; i > 0; i--) {
+		if (table[i] != 0) {
 			for (int j = 1; j <= constants::col_len - 2; j++) {
-				if (blocks[i - 1][j]) {
-					auto& upper = blocks[i - 1][j];
-					upper->setPoint(upper->getPoint().movedBy(1, 0));
-					blocks[i][j] = upper;
-					upper.reset();
+				if (blocks[i][j]) {
+					blocks[i][j]->setPoint(blocks[i][j]->getPoint().movedBy(table[i], 0));
+					blocks[i + table[i]][j] = blocks[i][j];
+					blocks[i][j].reset();
 				}
 			}
 		}
