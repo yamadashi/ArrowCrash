@@ -1,14 +1,14 @@
 #include "ClickDetector.h"
 
 
-void ClickDetector::update() {
+void ymds::ClickDetector::update() {
 
 	for (auto&& target : targets) {
-		Clickable& tgt = *target.lock();
+		Clickable& tgt = *target;
 		tgt.mouseOverCount = 0;
 
 		for (const auto& pointer : pointers) {
-			Pointer& ptr = *pointer.lock();
+			IPointer& ptr = *pointer;
 
 			if (tgt.contains(ptr.getPos()))
 			{
