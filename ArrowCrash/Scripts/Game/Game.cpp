@@ -7,7 +7,9 @@ Game::Game()
 	timer(true),
 	time_limit(180),
 	players()
-{}
+{
+	Graphics::SetBackground(Color(245, 28, 0));
+}
 
 Game::~Game() {
 	ymds::GamepadManager::get().inactivate();
@@ -123,18 +125,13 @@ void Game::initGameData() {
 	//ブロックのサイズ
 	int blockSize = fieldWidth / constants::col_len;
 	Block::blockSize = blockSize;
-	//ユニットフレーム(ストック、次ブロック枠)のサイズ
-	uiInfo.unitFrameSize = blockSize * 4;
 	//フィールドのサイズ
 	uiInfo.fieldSize.x = fieldWidth;
 	uiInfo.fieldSize.y = blockSize * constants::row_len;
 	//フィールド左側のマージン
 	uiInfo.fieldLeftMargin = (uiInfo.playerRegion.x - uiInfo.fieldSize.x) / 2;
 	//フィールド上側のマージン
-	uiInfo.fieldTopMargin =
-		numOfPlayer == 2 ?
-		(uiInfo.playerRegion.y - uiInfo.fieldSize.y) / 3 :
-		(uiInfo.playerRegion.y - uiInfo.fieldSize.y) / 2;
+	uiInfo.fieldTopMargin =	(uiInfo.playerRegion.y - uiInfo.fieldSize.y) * 3 / 5;
 
 	for (int i = 0; i < numOfPlayer; i++) {
 		//各プレイヤーフィールドの基準点
@@ -147,72 +144,40 @@ void Game::initUIComponents() {
 
 	auto&& window = Window::Size();
 	uiComp.topUIBorder.set({ 0, uiInfo.topUIHeight }, { window.x, uiInfo.topUIHeight });
-	
+
 	for (int i = 1; i < m_data->numOfPlayer; i++) {
 		uiComp.playerBorders.emplace_back(
 			i*uiInfo.playerRegion.x, uiInfo.topUIHeight,
 			i*uiInfo.playerRegion.x, window.y
 		);
 	}
-	
-	switch (int numOfPlayer = m_data->numOfPlayer)
-	{
-	case 2:
-		for (int i = 0; i < numOfPlayer; i++) {
-			//ユニットフレームの間隔
-			const int unitFrameInterval = Block::blockSize / 2;
-			//ストック枠
-			uiComp.stockFrames.emplace_back(
-				uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin - uiInfo.unitFrameSize - unitFrameInterval,
-				uiInfo.topUIHeight + uiInfo.fieldTopMargin,
-				uiInfo.unitFrameSize,
-				uiInfo.unitFrameSize
-				);
 
-			//次ユニット枠(順番は適当)
-			uiComp.nextUnitFrames.emplace_back();
-			for (int j = 0; j < constants::numOfNextBlocks; j++) {
-				uiComp.nextUnitFrames.at(i).emplace_back(
-					uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin + uiInfo.fieldSize.x + unitFrameInterval,
-					uiInfo.topUIHeight + uiInfo.fieldTopMargin + uiInfo.unitFrameSize * j,
-					uiInfo.unitFrameSize,
-					uiInfo.unitFrameSize
-				);
-			}
-		}
-		gameData.nextUnitFrames = &uiComp.nextUnitFrames;
-		gameData.stockFrames = &uiComp.stockFrames;
-		break;
-	case 3:
-	case 4:
-		for (int i = 0; i < numOfPlayer; i++) {
-			//ユニットフレームの間隔
-			const int unitFrameInterval = Block::blockSize * 2;
-			//ストック枠
-			uiComp.stockFrames.emplace_back(
-				uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin,
-				uiInfo.topUIHeight + uiInfo.fieldTopMargin - uiInfo.unitFrameSize - unitFrameInterval,
-				uiInfo.unitFrameSize,
-				uiInfo.unitFrameSize
+	for (int i = 0; i < m_data->numOfPlayer; i++) {
+		//ユニットフレーム(ストック、次ブロック枠)のサイズ
+		const int unitFrameSize = Block::blockSize * 3;
+		//ユニットフレームの間隔
+		const int unitFrameInterval = Block::blockSize * 2;
+		//ストック枠
+		uiComp.stockFrames.emplace_back(
+			uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin,
+			uiInfo.topUIHeight + uiInfo.fieldTopMargin - unitFrameSize - unitFrameInterval,
+			unitFrameSize,
+			unitFrameSize
+		);
+
+		//次ユニット枠(順番は適当)
+		uiComp.nextUnitFrames.emplace_back();
+		for (int j = 0; j < constants::numOfNextBlocks; j++) {
+			uiComp.nextUnitFrames.at(i).emplace_back(
+				uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin + uiInfo.fieldSize.x - unitFrameSize * (2 - j) - unitFrameSize / 3 * j,
+				uiInfo.topUIHeight + uiInfo.fieldTopMargin - unitFrameSize * (j + 1) + unitFrameSize * 2 / 5 * j - unitFrameInterval,
+				unitFrameSize,
+				unitFrameSize
 			);
-
-			//次ユニット枠(順番は適当)
-			uiComp.nextUnitFrames.emplace_back();
-			for (int j = 0; j < constants::numOfNextBlocks; j++) {
-				uiComp.nextUnitFrames.at(i).emplace_back(
-					uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin + uiInfo.fieldSize.x - uiInfo.unitFrameSize,
-					uiInfo.topUIHeight + uiInfo.fieldTopMargin - uiInfo.unitFrameSize * (j+1) - unitFrameInterval,
-					uiInfo.unitFrameSize,
-					uiInfo.unitFrameSize
-				);
-			}
 		}
-		gameData.nextUnitFrames = &uiComp.nextUnitFrames;
-		gameData.stockFrames = &uiComp.stockFrames;
-		break;
-	default:
-		break;
 	}
+	gameData.nextUnitFrames = &uiComp.nextUnitFrames;
+	gameData.stockFrames = &uiComp.stockFrames;
 }
 
 
@@ -228,9 +193,9 @@ void Game::UIComponents::draw() const {
 		stockFrame.drawFrame();
 	}
 	
-	for (const auto& arr : nextUnitFrames) {
+	/*for (const auto& arr : nextUnitFrames) {
 		for (const auto& nextUnitFrame : arr) {
 			nextUnitFrame.drawFrame();
 		}
-	}
+	}*/
 }

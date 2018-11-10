@@ -13,7 +13,9 @@ Title::Title()
 	selectViewPos({ Window::Width(), 0 }),
 	backgroundPos(),
 	backScrollSpeed(5)
-{}
+{
+	Graphics::SetBackground(Palette::Black);
+}
 
 void Title::init() {
 	backgroundPos[0].set(0, 0);
