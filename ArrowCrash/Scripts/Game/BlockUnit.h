@@ -61,6 +61,11 @@ protected:
 	Stopwatch timer;
 	const Point stdPos; //フィールド基準点
 
+	int speed;
+	const int normalSpeed;
+	const int highSpeed;
+	bool cannotRotate;
+
 	static const double arrowProbability;
 
 	bool checkCollision(const Point& point_) const;
@@ -82,6 +87,9 @@ public:
 	void resetPoint();
 	bool cannotSettle();
 	void restartTimer() { timer.restart(); }
+	void changeSpeed(bool act);
+	void changeForbid(bool act);
+	virtual bool ItemCheck() { return false; }
 };
 
 class BlockUnit : public Unit {

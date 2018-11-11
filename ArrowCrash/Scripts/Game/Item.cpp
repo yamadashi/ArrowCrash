@@ -2,14 +2,23 @@
 
 ItemUnit::ItemUnit(const Point& point_, const Point& stdPos_, Field& field_)
 	:Unit(point_, stdPos_, field_),
-	destroyed(false)
+	destroyed(false),
+	SpeedUpRate(33),
+	ForbidRotatingRate(33),
+	InterruptionGuardRate(34)
 {
 	auto& pattern = unitPatterns[4];
 
-	geometry[1][1] = std::make_shared<ItemBlock>(point.movedBy(1, 1), stdPos, PartPlace::UpLeft);
-	geometry[1][2] = std::make_shared<ItemBlock>(point.movedBy(1, 2), stdPos, PartPlace::UpRight);
-	geometry[2][1] = std::make_shared<ItemBlock>(point.movedBy(2, 1), stdPos, PartPlace::DownLeft);
-	geometry[2][2] = std::make_shared<ItemBlock>(point.movedBy(2, 2), stdPos, PartPlace::DownRight);
+	ItemType type;
+	int x = Random<int>(1, 100);
+	if (0 < x && x <= SpeedUpRate) type = ItemType::SpeedUp;
+	else if (SpeedUpRate < x && x <= SpeedUpRate + ForbidRotatingRate) type = ItemType::ForbidRotating;
+	else if (100 - InterruptionGuardRate < x && x <= 100) type = ItemType::InterruptionGuard;
+
+	geometry[1][1] = std::make_shared<ItemBlock>(point.movedBy(1, 1), stdPos, PartPlace::UpLeft, type);
+	geometry[1][2] = std::make_shared<ItemBlock>(point.movedBy(1, 2), stdPos, PartPlace::UpRight, type);
+	geometry[2][1] = std::make_shared<ItemBlock>(point.movedBy(2, 1), stdPos, PartPlace::DownLeft, type);
+	geometry[2][2] = std::make_shared<ItemBlock>(point.movedBy(2, 2), stdPos, PartPlace::DownRight, type);
 }
 
 void ItemUnit::update() {
@@ -42,37 +51,3 @@ void ItemUnit::draw() const {
 	}
 
 }
-
-
-/*
-//âÒì]ã÷é~
-ForbidRotating::ForbidRotating(const Point& point_, const Point& pos, const int blockSize, Field& field_)
-	:ItemUnit(point_, pos, blockSize, field_)
-{}
-
-void ForbidRotating::draw() const {
-	rect.draw(Palette::Red);
-}
-
-
-
-
-//óéâ∫ë¨ìxè„è∏
-IncreaseFallVelocity::IncreaseFallVelocity(const Point& point_, const Point& pos, const int blockSize, Field& field_)
-	:ItemUnit(point_, pos, blockSize, field_)
-{}
-
-void IncreaseFallVelocity::draw() const {
-	rect.draw(Palette::Yellow);
-}
-
-
-
-//Ç®é◊ñÇñ≥å¯
-InvalidateInterruption::InvalidateInterruption(const Point& point_, const Point& pos, const int blockSize, Field& field_)
-	:ItemUnit(point_, pos, blockSize,field_)
-{}
-
-void InvalidateInterruption::draw() const {
-	rect.draw(Palette::Blue);
-}*/

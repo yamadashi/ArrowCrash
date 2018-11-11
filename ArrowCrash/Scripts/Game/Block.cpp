@@ -72,20 +72,21 @@ void ArrowBlock::draw(const Point& pos, double scale) const {
 
 //ItemBlock
 
-ItemBlock::ItemBlock(const Point& point_, const Point& stdPos, const PartPlace Part_)
+ItemBlock::ItemBlock(const Point& point_, const Point& stdPos, const PartPlace Part_, const ItemType Type_)
 	:Block(point_, stdPos),
-	Part(Part_)
+	Part(Part_),
+	Type(Type_)
 {}
 
 void ItemBlock::draw() const {
-	switch (Part) {
-	case PartPlace::UpLeft:
-	case PartPlace::UpRight:
-	case PartPlace::DownLeft:
-//	case PartPlace::DownRight: rect(TextureAsset(L"block")).draw(); break;
-	case PartPlace::DownRight: rect.draw(Color(135, 206, 250)); break;
+
+	switch (Type) {
+	case ItemType::ForbidRotating: rect(TextureAsset(L"Forbid")(32 * (int)Part, 0, 32, 32)).draw(); break;
+	case ItemType::SpeedUp: rect(TextureAsset(L"SpeedUp")(32 * (int)Part, 0, 32, 32)).draw(); break;
+	case ItemType::InterruptionGuard: rect(TextureAsset(L"InterruptionGuard")(32 * (int)Part, 0, 32, 32)).draw(); break;
 	default: break;
 	}
+
 }
 
 void ItemBlock::draw(const Point& pos, double scale) const {

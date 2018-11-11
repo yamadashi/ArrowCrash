@@ -7,6 +7,10 @@ Field::Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrow
 	fieldShape(stdPos.movedBy(Block::blockSize, 0), Size(constants::col_len - 2, constants::row_len - 1)*Block::blockSize),
 	shouldCheckLine(false)
 {
+	for (int i = 0; i < constants::numOfItemType; i++) {
+		activated.at(i) = false;
+	}
+
 	for (int i = 0; i < constants::row_len; i++) {
 		blocks.emplace_back();
 		for (int j = 0; j < constants::col_len; j++) {
@@ -18,6 +22,8 @@ Field::Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrow
 		}
 	}
 }
+
+std::vector<Field*> Field::fields;
 
 bool Field::contains(const Point& point) const {
 	return point.x >= 0 && point.x < constants::row_len &&
@@ -84,22 +90,36 @@ int Field::explode(const Point& start, ExplosionDirection direction) {
 
 	do {
 		if (auto& blk = blocks.at(point.x).at(point.y)) {
-			if (blk->ItemCheck()) {
-				//ItemBlock全削除
+			if ((int)blk->ItemCheck()) {
+				switch (blk->ItemCheck()) {
+				case ItemType::InterruptionGuard: {
+					effectOn((int)ItemType::InterruptionGuard);
+					break;
+				}
+				case ItemType::SpeedUp:
+				case ItemType::ForbidRotating: {
+					for (auto field : fields) {
+						if (field != this) {
+							field->effectOn((int)blk->ItemCheck());
+						}
+					}
+				}
+											   break;
+				default: break;
+				}
 				for (auto&& arr : blocks) {
 					for (auto&& blk : arr) {
 						if (blk)
-							if (blk->ItemCheck())
+							if ((int)blk->ItemCheck())
 								blk->destroy();
 					}
 				}
-
-			}			
+			}
 			blk->destroy();
 			numOfDestroyed++;
 		}
 	} while (contains(point.moveBy(vec)));
-	
+
 	return numOfDestroyed;
 }
 
@@ -157,7 +177,12 @@ void Field::update() {
 			if (block && block->isDestroyed()) block.reset();
 		}
 	}
-
+	
+	for (int i = 0; i < constants::numOfItemType; i++)
+		if (ItemTimers[i].s() > 10) {
+			effectEnd(i);
+		}
+	
 	if (shouldCheckLine) closeLine();
 }
 
@@ -176,9 +201,19 @@ bool Field::CheckItemExistence() const{
 	for (auto&& arr : blocks) {
 		for (auto&& blk : arr) {
 			if (blk)
-				if (blk->ItemCheck())
+				if ((int)blk->ItemCheck())
 					return true;
 		}
 	}
 	return false;
+}
+
+void Field::effectOn(int type) {
+	activated[type] = true;
+	ItemTimers[type].restart(); 
+	PutText(L"this type is ,",type).from(stdPos + Point(64, 64));
+}
+void Field::effectEnd(int type) {
+	activated[type] = false;
+	ItemTimers[type].reset();
 }
