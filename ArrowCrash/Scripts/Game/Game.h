@@ -45,7 +45,6 @@ private:
 		Size fieldSize;
 		int fieldLeftMargin;
 		int fieldTopMargin;
-		int unitFrameSize;
 	} uiInfo;
 
 	struct UIComponents {

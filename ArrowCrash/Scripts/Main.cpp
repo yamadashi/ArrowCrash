@@ -12,7 +12,6 @@ void Main()
 	const auto maxSize = Graphics::GetFullScreenSize().back();
 	Println(maxSize);
 	Window::SetFullscreen(true, maxSize);
-	Graphics::SetBackground(Palette::Black);
 
 	ymds::TextureRegisterer().fileRegister(L"Files/").preload();
 	const int fontSize = maxSize.y / 36;

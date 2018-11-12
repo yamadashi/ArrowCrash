@@ -10,7 +10,7 @@ Pause::Pause(int numOfPlayer_, Game& gameScene)
 	const String font_handler = L"kokumincho";
 
 	targets.emplace_back(new ymds::ClickableLabel(
-		L"ƒ^ƒCƒgƒ‹‚É–ß‚é", font_handler, Window::Center(), Palette::Darkslategray,
+		L"ï¿½^ï¿½Cï¿½gï¿½ï¿½ï¿½É–ß‚ï¿½", font_handler, Window::Center(), Palette::Darkslategray,
 		[&gameScene](ymds::ClickableLabel& label) { gameScene.transit(SceneName::Title); },
 		[](ymds::ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ymds::ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
@@ -39,9 +39,9 @@ void Pause::draw() const {
 
 void Pause::resetPointerPos() {
 	for (int i = 0; i < numOfPlayer; i++) {
-		//ƒ|ƒCƒ“ƒ^‚Ì‰ŠúˆÊ’u
+		//ï¿½|ï¿½Cï¿½ï¿½ï¿½^ï¿½Ìï¿½ï¿½ï¿½Ê’u
 		Point pos(Window::Center());
-		const Point tmp(2 * (i % 2) - 1, 2 * (i / 2) - 1); //i == 0 ‚Ì‚Æ‚« (-1, 0), i== ‚Ì‚Æ‚« (0, 1)
+		const Point tmp(2 * (i % 2) - 1, 2 * (i / 2) - 1); //i == 0 ï¿½Ì‚Æ‚ï¿½ (-1, 0), i== ï¿½Ì‚Æ‚ï¿½ (0, 1)
 		pos.moveBy(tmp.x * (Window::Width() / 4), tmp.y * (Window::Height() / 5));
 
 		pointers.at(i)->setPos(pos);
@@ -56,7 +56,9 @@ Game::Game()
 	timer(true),
 	time_limit(180),
 	players()
-{}
+{
+	Graphics::SetBackground(Color(245, 28, 0));
+}
 
 Game::~Game() {
 	ymds::GamepadManager::get().inactivate();
@@ -86,7 +88,7 @@ void Game::init() {
 
 void Game::update() {
   
-	//§ŒÀŠÔ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if (timer.s() > time_limit) {
 		for (int i = 0; i < players.size(); i++) {
 			m_data->scores.at(i) = players.at(i).getScore();
@@ -101,7 +103,7 @@ void Game::update() {
 		return ymds::GamepadManager::get().any([](ymds::Gamepad& gamepad) { return gamepad.clicked(ymds::GamepadIn::START); });
 	};
 	
-	//ƒ|[ƒY
+	//ï¿½|ï¿½[ï¿½Y
 	if (paused && pause) {
 		pause->update();
 
@@ -157,10 +159,10 @@ void Game::initGameData() {
 
 	const int numOfPlayer = m_data->numOfPlayer;
 
-	//ŠeƒvƒŒƒCƒ„[ƒGƒŠƒA‚ÌƒTƒCƒY
+	//ï¿½eï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Gï¿½ï¿½ï¿½Aï¿½ÌƒTï¿½Cï¿½Y
 	uiInfo.playerRegion = Size(Window::Width() / numOfPlayer, Window::Height() - uiInfo.topUIHeight);
 	
-	//ƒtƒB[ƒ‹ƒh•
+	//ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½hï¿½ï¿½
 	int fieldWidth = 0;
 	switch (m_data->numOfPlayer)
 	{
@@ -170,24 +172,24 @@ void Game::initGameData() {
 	default: break;
 	}
 
-	//ƒuƒƒbƒN‚ÌƒTƒCƒY
+	//ï¿½uï¿½ï¿½ï¿½bï¿½Nï¿½ÌƒTï¿½Cï¿½Y
 	int blockSize = fieldWidth / constants::col_len;
 	Block::blockSize = blockSize;
-	//ƒ†ƒjƒbƒgƒtƒŒ[ƒ€(ƒXƒgƒbƒNAŸƒuƒƒbƒN˜g)‚ÌƒTƒCƒY
+	//ï¿½ï¿½ï¿½jï¿½bï¿½gï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½(ï¿½Xï¿½gï¿½bï¿½Nï¿½Aï¿½ï¿½ï¿½uï¿½ï¿½ï¿½bï¿½Nï¿½g)ï¿½ÌƒTï¿½Cï¿½Y
 	uiInfo.unitFrameSize = blockSize * 4;
-	//ƒtƒB[ƒ‹ƒh‚ÌƒTƒCƒY
+	//ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ã‚µã‚¤ã‚º
 	uiInfo.fieldSize.x = fieldWidth;
 	uiInfo.fieldSize.y = blockSize * constants::row_len;
-	//ƒtƒB[ƒ‹ƒh¶‘¤‚Ìƒ}[ƒWƒ“
+	//ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½Ìƒ}ï¿½[ï¿½Wï¿½ï¿½
 	uiInfo.fieldLeftMargin = (uiInfo.playerRegion.x - uiInfo.fieldSize.x) / 2;
-	//ƒtƒB[ƒ‹ƒhã‘¤‚Ìƒ}[ƒWƒ“
+	//ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½hï¿½ã‘¤ï¿½Ìƒ}ï¿½[ï¿½Wï¿½ï¿½
 	uiInfo.fieldTopMargin =
 		numOfPlayer == 2 ?
 		(uiInfo.playerRegion.y - uiInfo.fieldSize.y) / 3 :
 		(uiInfo.playerRegion.y - uiInfo.fieldSize.y) / 2;
 
 	for (int i = 0; i < numOfPlayer; i++) {
-		//ŠeƒvƒŒƒCƒ„[ƒtƒB[ƒ‹ƒh‚ÌŠî€“_
+		//ï¿½eï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½tï¿½Bï¿½[ï¿½ï¿½ï¿½hï¿½ÌŠî€ï¿½_
 		gameData.stdPositions.emplace_back(uiInfo.playerRegion.x*i + uiInfo.fieldLeftMargin, uiInfo.topUIHeight + uiInfo.fieldTopMargin);
 	}
 
@@ -197,7 +199,7 @@ void Game::initUIComponents() {
 
 	auto&& window = Window::Size();
 	uiComp.topUIBorder.set({ 0, uiInfo.topUIHeight }, { window.x, uiInfo.topUIHeight });
-	
+
 	for (int i = 1; i < m_data->numOfPlayer; i++) {
 		uiComp.playerBorders.emplace_back(
 			i*uiInfo.playerRegion.x, uiInfo.topUIHeight,
@@ -209,9 +211,9 @@ void Game::initUIComponents() {
 	{
 	case 2:
 		for (int i = 0; i < numOfPlayer; i++) {
-			//ƒ†ƒjƒbƒgƒtƒŒ[ƒ€‚ÌŠÔŠu
+			//ï¿½ï¿½ï¿½jï¿½bï¿½gï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ÌŠÔŠu
 			const int unitFrameInterval = Block::blockSize / 2;
-			//ƒXƒgƒbƒN˜g
+			//ï¿½Xï¿½gï¿½bï¿½Nï¿½g
 			uiComp.stockFrames.emplace_back(
 				uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin - uiInfo.unitFrameSize - unitFrameInterval,
 				uiInfo.topUIHeight + uiInfo.fieldTopMargin,
@@ -219,7 +221,7 @@ void Game::initUIComponents() {
 				uiInfo.unitFrameSize
 				);
 
-			//Ÿƒ†ƒjƒbƒg˜g(‡”Ô‚Í“K“–)
+			//ï¿½ï¿½ï¿½ï¿½ï¿½jï¿½bï¿½gï¿½g(ï¿½ï¿½ï¿½Ô‚Í“Kï¿½ï¿½)
 			uiComp.nextUnitFrames.emplace_back();
 			for (int j = 0; j < constants::numOfNextBlocks; j++) {
 				uiComp.nextUnitFrames.at(i).emplace_back(
@@ -236,9 +238,9 @@ void Game::initUIComponents() {
 	case 3:
 	case 4:
 		for (int i = 0; i < numOfPlayer; i++) {
-			//ƒ†ƒjƒbƒgƒtƒŒ[ƒ€‚ÌŠÔŠu
+			//ï¿½ï¿½ï¿½jï¿½bï¿½gï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ÌŠÔŠu
 			const int unitFrameInterval = Block::blockSize * 2;
-			//ƒXƒgƒbƒN˜g
+			//ï¿½Xï¿½gï¿½bï¿½Nï¿½g
 			uiComp.stockFrames.emplace_back(
 				uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin,
 				uiInfo.topUIHeight + uiInfo.fieldTopMargin - uiInfo.unitFrameSize - unitFrameInterval,
@@ -246,7 +248,7 @@ void Game::initUIComponents() {
 				uiInfo.unitFrameSize
 			);
 
-			//Ÿƒ†ƒjƒbƒg˜g(‡”Ô‚Í“K“–)
+			//ï¿½ï¿½ï¿½ï¿½ï¿½jï¿½bï¿½gï¿½g(ï¿½ï¿½ï¿½Ô‚Í“Kï¿½ï¿½)
 			uiComp.nextUnitFrames.emplace_back();
 			for (int j = 0; j < constants::numOfNextBlocks; j++) {
 				uiComp.nextUnitFrames.at(i).emplace_back(
@@ -257,12 +259,9 @@ void Game::initUIComponents() {
 				);
 			}
 		}
-		gameData.nextUnitFrames = &uiComp.nextUnitFrames;
-		gameData.stockFrames = &uiComp.stockFrames;
-		break;
-	default:
-		break;
 	}
+	gameData.nextUnitFrames = &uiComp.nextUnitFrames;
+	gameData.stockFrames = &uiComp.stockFrames;
 }
 
 
@@ -278,9 +277,9 @@ void Game::UIComponents::draw() const {
 		stockFrame.drawFrame();
 	}
 	
-	for (const auto& arr : nextUnitFrames) {
+	/*for (const auto& arr : nextUnitFrames) {
 		for (const auto& nextUnitFrame : arr) {
 			nextUnitFrame.drawFrame();
 		}
-	}
+	}*/
 }
