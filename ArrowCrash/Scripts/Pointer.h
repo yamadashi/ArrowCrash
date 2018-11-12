@@ -1,10 +1,10 @@
 #pragma once
 #include <Siv3D.hpp>
-#include "../Constants.h"
-#include "../ymdsLib/GamePad/GamepadManager.h"
+#include "ymdsLib/Clickable/IPointer.h"
+#include "ymdsLib/GamePad/GamepadManager.h"
+#include "Constants.h"
 
-
-class Pointer {
+class Pointer : public ymds::IPointer {
 private:
 	int player_num;
 	Vec2 pos;
@@ -25,12 +25,13 @@ private:
 	bool isOutOfRegion() const;
 
 public:
-	Pointer(int player_num_);
+	Pointer(int player_num_, const Point& pos_);
 	~Pointer() = default;
 
-	void update();
-	void draw() const;
+	void update() override;
+	void draw() const override;
 
-	bool isClicked() const;
-	Point getPos() const;
+	bool isClicked() const override;
+	Point getPos() const override;
+	void setPos(const Point& pos_) { pos.set(pos_); }
 };

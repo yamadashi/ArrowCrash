@@ -26,7 +26,12 @@ void Title::init() {
 
 	//pointer
 	for (int i = 0; i < 4; i++) {
-		pointers.emplace_back(new Pointer(i));
+		//ポインタの初期位置
+		Point pos(Window::Center().movedBy(0, Window::Height() / 6));
+		const Point tmp(2 * (i % 2) - 1, 2 * (i / 2) - 1); //i == 0 のとき (-1, 0), i== のとき (0, 1)
+		pos.moveBy(tmp.x * (Window::Width() / 4), tmp.y * (Window::Height() / 5));
+
+		pointers.emplace_back(new Pointer(i, pos));
 	}
 
 
@@ -35,7 +40,7 @@ void Title::init() {
 	Size scaledTitleSize(titleTextureSize.x * scale, titleTextureSize.y * scale);
 	Point titleOffset(0, -Window::Height() / 6);
 	
-	targets.emplace_back(new ClickablePanel(L"title", Window::Center().movedBy(-scaledTitleSize / 2).movedBy(titleOffset), scaledTitleSize));
+	targets.emplace_back(new ymds::ClickablePanel(L"title", Window::Center().movedBy(-scaledTitleSize / 2).movedBy(titleOffset), scaledTitleSize));
 
 
 	const String font_handler = L"kokumincho";
@@ -43,20 +48,20 @@ void Title::init() {
 	const int labelHeight = FontAsset(font_handler).height;
 	const int labelOffset = Window::Height() / 10;
 
-	targets.emplace_back(new ClickableLabel(L"はじめる", font_handler, Window::Center().movedBy(0, labelOffset), Palette::Darkslategray,
-		[this](ClickableLabel&) { transition = true; },
-		[](ClickableLabel& label) { label.setColor(Palette::White); },
-		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
+	targets.emplace_back(new ymds::ClickableLabel(L"はじめる", font_handler, Window::Center().movedBy(0, labelOffset), Palette::Darkslategray,
+		[this](ymds::ClickableLabel&) { transition = true; },
+		[](ymds::ClickableLabel& label) { label.setColor(Palette::White); },
+		[](ymds::ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
 	));
-	targets.emplace_back(new ClickableLabel(L"せつめい", font_handler, Window::Center().movedBy(0, labelOffset + labelHeight + labelInterval), Palette::Darkslategray,
-		[this](ClickableLabel&) { changeScene(SceneName::Explain); },
-		[](ClickableLabel& label) { label.setColor(Palette::White); },
-		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
+	targets.emplace_back(new ymds::ClickableLabel(L"せつめい", font_handler, Window::Center().movedBy(0, labelOffset + labelHeight + labelInterval), Palette::Darkslategray,
+		[this](ymds::ClickableLabel&) { changeScene(SceneName::Explain); },
+		[](ymds::ClickableLabel& label) { label.setColor(Palette::White); },
+		[](ymds::ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
 	));
-	targets.emplace_back(new ClickableLabel(L"おわる", font_handler, Window::Center().movedBy(0, labelOffset + 2 * (labelHeight + labelInterval)), Palette::Darkslategray,
-		[this](ClickableLabel&) { System::Exit(); },
-		[](ClickableLabel& label) { label.setColor(Palette::White); },
-		[](ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
+	targets.emplace_back(new ymds::ClickableLabel(L"おわる", font_handler, Window::Center().movedBy(0, labelOffset + 2 * (labelHeight + labelInterval)), Palette::Darkslategray,
+		[this](ymds::ClickableLabel&) { System::Exit(); },
+		[](ymds::ClickableLabel& label) { label.setColor(Palette::White); },
+		[](ymds::ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
 	));
 
 
@@ -67,23 +72,23 @@ void Title::init() {
 	const int backButtonMargin = Window::Height() / 54;
 	const int backButtonSize = Window::Height() / 5;
 
-	targets.emplace_back(new ClickablePanel(L"2PlayerPanel", selectViewPos.movedBy(panelLeft, panelOver), Size(panelSize, panelSize),
-		[this](ClickablePanel&) { m_data->numOfPlayer = 2; changeScene(SceneName::Game); },
-		[](ClickablePanel& panel) { panel.setTextureHandler(L"2PlayerPanel_"); },
-		[](ClickablePanel& panel) { panel.setTextureHandler(L"2PlayerPanel"); }
+	targets.emplace_back(new ymds::ClickablePanel(L"2PlayerPanel", selectViewPos.movedBy(panelLeft, panelOver), Size(panelSize, panelSize),
+		[this](ymds::ClickablePanel&) { m_data->numOfPlayer = 2; changeScene(SceneName::Game); },
+		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"2PlayerPanel_"); },
+		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"2PlayerPanel"); }
 	));
-	targets.emplace_back(new ClickablePanel(L"3PlayerPanel", selectViewPos.movedBy(panelLeft + panelSize + panelInterval, panelOver), Size(panelSize, panelSize),
-		[this](ClickablePanel&) { m_data->numOfPlayer = 3; changeScene(SceneName::Game); },
-		[](ClickablePanel& panel) { panel.setTextureHandler(L"3PlayerPanel_"); },
-		[](ClickablePanel& panel) { panel.setTextureHandler(L"3PlayerPanel"); }
+	targets.emplace_back(new ymds::ClickablePanel(L"3PlayerPanel", selectViewPos.movedBy(panelLeft + panelSize + panelInterval, panelOver), Size(panelSize, panelSize),
+		[this](ymds::ClickablePanel&) { m_data->numOfPlayer = 3; changeScene(SceneName::Game); },
+		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"3PlayerPanel_"); },
+		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"3PlayerPanel"); }
 	));
-	targets.emplace_back(new ClickablePanel(L"4PlayerPanel", selectViewPos.movedBy(panelLeft + panelSize * 2 + panelInterval * 2, panelOver), Size(panelSize, panelSize),
-		[this](ClickablePanel&) { m_data->numOfPlayer = 4; changeScene(SceneName::Game); },
-		[](ClickablePanel& panel) { panel.setTextureHandler(L"4PlayerPanel_"); },
-		[](ClickablePanel& panel) { panel.setTextureHandler(L"4PlayerPanel"); }
+	targets.emplace_back(new ymds::ClickablePanel(L"4PlayerPanel", selectViewPos.movedBy(panelLeft + panelSize * 2 + panelInterval * 2, panelOver), Size(panelSize, panelSize),
+		[this](ymds::ClickablePanel&) { m_data->numOfPlayer = 4; changeScene(SceneName::Game); },
+		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"4PlayerPanel_"); },
+		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"4PlayerPanel"); }
 	));
-	targets.emplace_back(new ClickablePanel(L"back", selectViewPos.movedBy(backButtonMargin, backButtonMargin), Size(backButtonSize, backButtonSize),
-		[this](ClickablePanel&) { transition = true; }
+	targets.emplace_back(new ymds::ClickablePanel(L"back", selectViewPos.movedBy(backButtonMargin, backButtonMargin), Size(backButtonSize, backButtonSize),
+		[this](ymds::ClickablePanel&) { transition = true; }
 	));
 
 
