@@ -12,7 +12,7 @@ Game::Game()
 Game::~Game() {
 	ymds::GamepadManager::get().inactivate();
 	BlockUnitManager::clearManagerPtr();
-	Field::cleaFieldPtr();
+	Field::clearFieldPtr();
 }
 
 void Game::init() {

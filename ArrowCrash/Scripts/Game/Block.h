@@ -4,10 +4,6 @@
 #include "../ymdsLib/Effect/EffectGenerator.h"
 #include "../Enum.h"
 
-enum class ItemType {
-	NotItem, ForbidRotating, SpeedUp, InterruptionGuard
-};
-
 class Block {
 private:
 
@@ -70,11 +66,12 @@ public:
 };
 
 
-enum class PartPlace {
-	UpLeft, UpRight, DownLeft, DownRight
-};
-
 class ItemBlock : public Block {
+public:
+	enum class PartPlace {
+		UpLeft, UpRight, DownLeft, DownRight
+	};
+
 private:
 	const PartPlace Part;
 	const ItemType Type;

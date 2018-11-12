@@ -15,10 +15,10 @@ ItemUnit::ItemUnit(const Point& point_, const Point& stdPos_, Field& field_)
 	else if (SpeedUpRate < x && x <= SpeedUpRate + ForbidRotatingRate) type = ItemType::ForbidRotating;
 	else if (100 - InterruptionGuardRate < x && x <= 100) type = ItemType::InterruptionGuard;
 
-	geometry[1][1] = std::make_shared<ItemBlock>(point.movedBy(1, 1), stdPos, PartPlace::UpLeft, type);
-	geometry[1][2] = std::make_shared<ItemBlock>(point.movedBy(1, 2), stdPos, PartPlace::UpRight, type);
-	geometry[2][1] = std::make_shared<ItemBlock>(point.movedBy(2, 1), stdPos, PartPlace::DownLeft, type);
-	geometry[2][2] = std::make_shared<ItemBlock>(point.movedBy(2, 2), stdPos, PartPlace::DownRight, type);
+	geometry[1][1] = std::make_shared<ItemBlock>(point.movedBy(1, 1), stdPos, ItemBlock::PartPlace::UpLeft, type);
+	geometry[1][2] = std::make_shared<ItemBlock>(point.movedBy(1, 2), stdPos, ItemBlock::PartPlace::UpRight, type);
+	geometry[2][1] = std::make_shared<ItemBlock>(point.movedBy(2, 1), stdPos, ItemBlock::PartPlace::DownLeft, type);
+	geometry[2][2] = std::make_shared<ItemBlock>(point.movedBy(2, 2), stdPos, ItemBlock::PartPlace::DownRight, type);
 }
 
 void ItemUnit::update() {

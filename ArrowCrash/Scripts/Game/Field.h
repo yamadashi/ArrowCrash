@@ -39,7 +39,7 @@ public:
 
 	void init() { fields.emplace_back(this); }
 	static std::vector<Field*> fields;
-	static void cleaFieldPtr() { fields.clear(); }
+	static void clearFieldPtr() { fields.clear(); }
 	
 	bool shouldCheckLine; //行詰めをチェックするかどうか
 	bool CheckItemExistence() const;
