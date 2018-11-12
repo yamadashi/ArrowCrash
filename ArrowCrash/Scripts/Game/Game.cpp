@@ -39,9 +39,9 @@ void Pause::draw() const {
 
 void Pause::resetPointerPos() {
 	for (int i = 0; i < numOfPlayer; i++) {
-		//ポインタの初期位置
+		//・ｽ|・ｽC・ｽ・ｽ・ｽ^・ｽﾌ擾ｿｽ・ｽ・ｽﾊ置
 		Point pos(Window::Center());
-		const Point tmp(2 * (i % 2) - 1, 2 * (i / 2) - 1); //i == 0 のとき (-1, 0), i== のとき (0, 1)
+		const Point tmp(2 * (i % 2) - 1, 2 * (i / 2) - 1); //i == 0 ・ｽﾌとゑｿｽ (-1, 0), i== ・ｽﾌとゑｿｽ (0, 1)
 		pos.moveBy(tmp.x * (Window::Width() / 4), tmp.y * (Window::Height() / 5));
 
 		pointers.at(i)->setPos(pos);
@@ -88,7 +88,7 @@ void Game::init() {
 
 void Game::update() {
   
-	//制限時間
+	//・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ
 	if (timer.s() > time_limit) {
 		for (int i = 0; i < players.size(); i++) {
 			m_data->scores.at(i) = players.at(i).getScore();
@@ -103,7 +103,7 @@ void Game::update() {
 		return ymds::GamepadManager::get().any([](ymds::Gamepad& gamepad) { return gamepad.clicked(ymds::GamepadIn::START); });
 	};
 	
-	//ポーズ
+	//・ｽ|・ｽ[・ｽY
 	if (paused && pause) {
 		pause->update();
 
@@ -159,10 +159,10 @@ void Game::initGameData() {
 
 	const int numOfPlayer = m_data->numOfPlayer;
 
-	//各プレイヤーエリアのサイズ
+	//・ｽe・ｽv・ｽ・ｽ・ｽC・ｽ・ｽ・ｽ[・ｽG・ｽ・ｽ・ｽA・ｽﾌサ・ｽC・ｽY
 	uiInfo.playerRegion = Size(Window::Width() / numOfPlayer, Window::Height() - uiInfo.topUIHeight);
 	
-	//フィールド幅
+	//・ｽt・ｽB・ｽ[・ｽ・ｽ・ｽh・ｽ・ｽ
 	int fieldWidth = 0;
 	switch (m_data->numOfPlayer)
 	{
@@ -172,18 +172,20 @@ void Game::initGameData() {
 	default: break;
 	}
 
-	//ブロックのサイズ
+	//・ｽu・ｽ・ｽ・ｽb・ｽN・ｽﾌサ・ｽC・ｽY
 	int blockSize = fieldWidth / constants::col_len;
 	Block::blockSize = blockSize;
 	//フィールドのサイズ
 	uiInfo.fieldSize.x = fieldWidth;
 	uiInfo.fieldSize.y = blockSize * constants::row_len;
-	//フィールド左側のマージン
+	//・ｽt・ｽB・ｽ[・ｽ・ｽ・ｽh・ｽ・ｽ・ｽ・ｽ・ｽﾌマ・ｽ[・ｽW・ｽ・ｽ
 	uiInfo.fieldLeftMargin = (uiInfo.playerRegion.x - uiInfo.fieldSize.x) / 2;
-	//フィールド上側のマージンuiInfo.fieldTopMargin =	(uiInfo.playerRegion.y - uiInfo.fieldSize.y) * 3 / 5;
+	//フィールド上側のマージン
+	uiInfo.fieldTopMargin =	(uiInfo.playerRegion.y - uiInfo.fieldSize.y) * 3 / 5;
+
 
 	for (int i = 0; i < numOfPlayer; i++) {
-		//各プレイヤーフィールドの基準点
+		//・ｽe・ｽv・ｽ・ｽ・ｽC・ｽ・ｽ・ｽ[・ｽt・ｽB・ｽ[・ｽ・ｽ・ｽh・ｽﾌ基準・ｽ_
 		gameData.stdPositions.emplace_back(uiInfo.playerRegion.x*i + uiInfo.fieldLeftMargin, uiInfo.topUIHeight + uiInfo.fieldTopMargin);
 	}
 
