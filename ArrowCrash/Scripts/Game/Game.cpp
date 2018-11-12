@@ -107,7 +107,6 @@ void Game::update() {
 	if (paused && pause) {
 		pause->update();
 
-		//if (Input::KeyP.clicked)
 		if (startClicked())
 		{
 			paused = false;
@@ -115,7 +114,6 @@ void Game::update() {
 		}
 		return;
 	}
-	//if (Input::KeyP.clicked)
 	if (startClicked())
 	{
 		paused = true;

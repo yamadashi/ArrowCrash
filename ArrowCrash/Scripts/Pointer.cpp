@@ -23,10 +23,6 @@ void Pointer::move() {
 
 	auto& gamepad = ymds::GamepadManager::get().getGamepad(player_num);
 	//“ü—ÍƒxƒNƒgƒ‹‚ğ³‹K‰»
-	/*Vec2 input(
-		(Input::KeyRight.pressed - Input::KeyLeft.pressed),
-		(Input::KeyDown.pressed - Input::KeyUp.pressed)
-	);*/
 	Vec2 input(
 		(gamepad.pressed(ymds::GamepadIn::RIGHT) - gamepad.pressed(ymds::GamepadIn::LEFT)),
 		(gamepad.pressed(ymds::GamepadIn::DOWN) - gamepad.pressed(ymds::GamepadIn::UP))
@@ -51,7 +47,6 @@ bool Pointer::isOutOfRegion() const {
 }
 
 bool Pointer::isClicked() const {
-	//return Input::KeySpace.clicked;
 	return ymds::GamepadManager::get().getGamepad(player_num).clicked(ymds::GamepadIn::TWO);
 }
 

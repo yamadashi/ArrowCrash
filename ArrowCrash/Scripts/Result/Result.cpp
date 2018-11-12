@@ -13,9 +13,6 @@ void Result::init() {
 }
 
 void Result::update() {
-	/*if (Input::KeyEnter.clicked) {
-		changeScene(SceneName::Title);
-	}*/
 
 	ymds::GamepadManager::get().update();
 
