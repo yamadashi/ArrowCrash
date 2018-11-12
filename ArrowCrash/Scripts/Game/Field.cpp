@@ -144,6 +144,10 @@ void Field::reset() {
 			if (block && block->isDestroyed()) block.reset();
 		}
 	}
+
+	for (int i = 0; i < constants::numOfItemType; i++) {
+		effectEnd(i);
+	}
 }
 
 void Field::riseFloor(int num) {
@@ -179,10 +183,12 @@ void Field::update() {
 	}
 	
 	for (int i = 0; i < constants::numOfItemType; i++)
-		if (ItemTimers[i].s() > 10) {
-			effectEnd(i);
+		switch (i) {
+		case (int)ItemType::ForbidRotating: if(ItemTimers[i].s() > 5) effectEnd(i); break;
+		case (int)ItemType::InterruptionGuard: if(ItemTimers[i].s() > 5) effectEnd(i); break;
+		case (int)ItemType::SpeedUp: if(ItemTimers[i].s() > 10) effectEnd(i); break;
 		}
-	
+
 	if (shouldCheckLine) closeLine();
 }
 

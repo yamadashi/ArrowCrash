@@ -9,7 +9,7 @@ Unit::Unit(const Point& point_, const Point& stdPos_, Field& field_)
 	timer(true),
 	stdPos(stdPos_),
 	normalSpeed(1500),
-	highSpeed(200),
+	highSpeed(280),
 	speed(1500),
 	cannotRotate(false)
 {}
