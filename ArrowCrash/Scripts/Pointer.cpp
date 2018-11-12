@@ -5,9 +5,10 @@ const double Pointer::accel = 2.0;
 const double Pointer::frictionCoeff = 1.0;
 const double Pointer::maxSpeed = 10.0;
 
-Pointer::Pointer(int player_num_)
-	:player_num(player_num_),
-	pos(Window::Center().movedBy(0, Window::Height() / 6).movedBy(Size((2 * (player_num % 2) - 1)*Window::Width() / 4, (2 * (player_num / 2) - 1)*Window::Height() / 5))),
+Pointer::Pointer(int player_num_, const Point& pos_)
+	:IPointer(),
+	player_num(player_num_),
+	pos(pos_),
 	velocity(0, 0),
 	color(constants::playerColor[player_num]),
 	pointerSize((Size(Window::Height(), Window::Height()) / 27.0).asPoint()),

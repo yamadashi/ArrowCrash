@@ -1,6 +1,6 @@
 #include "Clickablelabel.h"
 
-ClickableLabel::ClickableLabel(
+ymds::ClickableLabel::ClickableLabel(
 	const String& text_,
 	const String& fontHandler_,
 	const Point& centerPos,
@@ -19,10 +19,10 @@ ClickableLabel::ClickableLabel(
 {}
 
 
-bool ClickableLabel::contains(const Point& point) const {
+bool ymds::ClickableLabel::contains(const Point& point) const {
 	return FontAsset(fontHandler)(text).region(pos).contains(point);
 }
 
-void ClickableLabel::draw() const {
+void ymds::ClickableLabel::draw() const {
 	FontAsset(fontHandler)(text).draw(pos, color);
 }
