@@ -210,6 +210,8 @@ void Field::effectOn(int type) {
 	activated[type] = true;
 	ItemTimers[type].restart(); 
 	PutText(L"this type is ,",type).from(stdPos + Point(64, 64));
+	const int explosionCellSize = TextureAsset(L"speedup_effect").height;
+	ymds::EffectGenerator::addLinkedImage(L"speedup_effect", explosionCellSize, stdPos, (256, 64), 0.2);
 }
 void Field::effectEnd(int type) {
 	activated[type] = false;
