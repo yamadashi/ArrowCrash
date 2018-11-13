@@ -1,7 +1,7 @@
 #include "ClickablePanel.h"
 
 
-ClickablePanel::ClickablePanel(
+ymds::ClickablePanel::ClickablePanel(
 	const String& textureHandler_,
 	const Point& pos,
 	const Size size,
@@ -17,7 +17,7 @@ ClickablePanel::ClickablePanel(
 	mouseOutEvent(mouseOutEvent_)
 {}
 
-ClickablePanel::ClickablePanel(
+ymds::ClickablePanel::ClickablePanel(
 	const String& textureHandler_,
 	const Point& pos,
 	const double scale,
@@ -33,11 +33,11 @@ ClickablePanel::ClickablePanel(
 	mouseOutEvent(mouseOutEvent_)
 {}
 
-bool ClickablePanel::contains(const Point& point) const {
+bool ymds::ClickablePanel::contains(const Point& point) const {
 	return shape.movedBy(pos).contains(point);
 }
 
-void ClickablePanel::draw() const {
+void ymds::ClickablePanel::draw() const {
 	if (textureHandler != L"") shape(TextureAsset(textureHandler)).draw(pos);
 	else shape.movedBy(pos).draw(Palette::Lawngreen);
 }

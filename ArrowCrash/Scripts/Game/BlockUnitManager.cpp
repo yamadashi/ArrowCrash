@@ -70,19 +70,26 @@ void BlockUnitManager::update() {
 		hasExchanged = false;
 	}
 
-	PutText(L"ojama:", ojamaBuffer).from(stdPos);
 }
 
 void BlockUnitManager::draw() const {
 	currentUnit->draw();
-  
+
 	static const double scale = 0.75;
-	static const Point offset = ((1.0 - scale) / 2.0 * nextUnitFrames.front().size).asPoint();
-	int counter = 0; //vector(nextUnitsFrameInfo)用
+	const auto& frameSize = nextUnitFrames.front().size;
+	const double unitScale = scale * frameSize.x / (Block::blockSize * 4);
+	const Point offset = ((1.0 - scale) / 2.0 * frameSize).asPoint();
+
+	static const Size frameTextureSize = TextureAsset(L"next").size;
+	const double frameTextureScale = 2.3 * frameSize.x / frameTextureSize.x;
+	const Point frameTexturePos = nextUnitFrames.front().pos - Point(frameSize.x * 2 / 5, frameSize.y * 3 / 4);
+
+	TextureAsset(L"next").scale(frameTextureScale).draw(frameTexturePos);
+	int counter = 0;
 	for (auto&& unit : nextUnits) {
-		unit->draw(nextUnitFrames.at(counter++).pos.movedBy(offset), scale);
+		unit->draw(nextUnitFrames.at(counter++).pos.movedBy(offset), unitScale);
 	}
-	if (stock) stock->draw(stockFrame.pos.movedBy(offset), scale);
+	if (stock) stock->draw(stockFrame.pos.movedBy(offset), unitScale);
 }
 
 void BlockUnitManager::exchangeStock() {
