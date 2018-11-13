@@ -11,3 +11,7 @@ enum class RotateDirection {
 enum class MoveDirection {
 	Left, Right, Down
 };
+
+enum class ItemType {
+	NotItem, ForbidRotating, SpeedUp, InterruptionGuard
+};

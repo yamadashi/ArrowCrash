@@ -27,7 +27,7 @@ public:
 	bool isSettled() const { return settled; }
 	void setSettled() { settled = true; }
 
-	virtual bool ItemCheck() { return false; }
+	virtual ItemType ItemCheck() const { return ItemType::NotItem; }
 	virtual void destroy();
 
 	virtual void rotate(RotateDirection) = 0;
@@ -66,22 +66,24 @@ public:
 };
 
 
-enum class PartPlace {
-	UpRight, DownRight, DownLeft, UpLeft
-};
-
 class ItemBlock : public Block {
+public:
+	enum class PartPlace {
+		UpLeft, UpRight, DownLeft, DownRight
+	};
+
 private:
 	const PartPlace Part;
+	const ItemType Type;
 
 public:
-	ItemBlock(const Point& point_, const Point& stdPos, const PartPlace Part);
+	ItemBlock(const Point& point_, const Point& stdPos, const PartPlace Part, const ItemType Type);
 	~ItemBlock() = default;
 
 	void draw() const override;
 	void draw(const Point& pos, double scale) const;
 	void rotate(RotateDirection) override {}
-	bool ItemCheck() override { return true; }
+	ItemType ItemCheck() const override { return Type; }
 };
 
 

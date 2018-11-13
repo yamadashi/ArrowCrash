@@ -11,7 +11,7 @@ BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<Arro
 	stockFrame(gameData.stockFrames->at(player_num)),
 	currentUnit(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, arrowBlocks, field)),
 	stock(nullptr),
-	ItemPropability(10)//パーセント表記
+	ItemPropability(50)//パーセント表記
 {
 	for (int i = 0; i < 2; i++) {
 		generate();
@@ -33,8 +33,17 @@ void BlockUnitManager::resetField() {
 }
 
 void BlockUnitManager::update() {
+
+	for (int i = 0; i < constants::numOfItemType; i++) {
+		switch (i) {
+		case (int)ItemType::ForbidRotating: changeForbid(field.getActivatedEffect()[i]); break;
+		case (int)ItemType::SpeedUp: changeSpeed(field.getActivatedEffect()[i]); break;
+		case (int)ItemType::InterruptionGuard:
+			if (field.getActivatedEffect()[i]) GuardOn(); break;
+		}
+	}
+
 	currentUnit->update();
-	if (Item != nullptr) Item->update();
 	if (currentUnit->isSettled()) {
 
 		if (ojamaBuffer > 0) {
@@ -65,7 +74,7 @@ void BlockUnitManager::update() {
 
 void BlockUnitManager::draw() const {
 	currentUnit->draw();
-    
+
 	static const double scale = 0.75;
 	const auto& frameSize = nextUnitFrames.front().size;
 	const double unitScale = scale * frameSize.x / (Block::blockSize * 4);
@@ -86,6 +95,7 @@ void BlockUnitManager::draw() const {
 void BlockUnitManager::exchangeStock() {
 
 	if (hasExchanged) return;
+	if (currentUnit->ItemCheck())return;
 	
 	hasExchanged = true;
 
@@ -122,4 +132,16 @@ void BlockUnitManager::bother(int numOfDestroyed) {
 			mngr->ojamaBuffer += rising;
 		}
 	}
+}
+
+void BlockUnitManager::changeForbid(bool active){
+	currentUnit->changeForbid(active);
+}
+
+void BlockUnitManager::changeSpeed(bool active) {
+	currentUnit->changeSpeed(active);
+}
+
+void BlockUnitManager::GuardOn() {
+	ojamaBuffer = 0;
 }

@@ -34,6 +34,9 @@ public:
 	Unit& getCurrentUnit() { return *currentUnit; }
 	void exchangeStock();
 	void bother(int numOfDestroyed);
+	void changeSpeed(bool active);
+	void changeForbid(bool active);
+	void GuardOn();
 	void closeField() { field.closeLine(); }
 
 	static std::vector<BlockUnitManager*> managers;

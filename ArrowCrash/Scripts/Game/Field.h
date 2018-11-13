@@ -17,6 +17,8 @@ private:
 	const Rect fieldShape;
 
 	bool contains(const Point& point) const;
+	std::array< bool, constants::numOfItemType > activated; //各アイテムについて起動中はtrue
+	Stopwatch ItemTimers[constants::numOfItemType];
 
 public:
 	Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks);
@@ -35,5 +37,12 @@ public:
 	void update();
 	void draw() const;
 
+	void init() { fields.emplace_back(this); }
+	static std::vector<Field*> fields;
+	static void clearFieldPtr() { fields.clear(); }
+  
 	bool CheckItemExistence() const;
+	std::array< bool, constants::numOfItemType > getActivatedEffect() const { return activated; }
+	void effectOn(int type);
+	void effectEnd(int type);
 };

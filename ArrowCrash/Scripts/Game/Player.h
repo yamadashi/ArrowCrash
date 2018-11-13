@@ -19,7 +19,7 @@ public:
 	~Player() = default;
 
 
-	void init() { mngr.init(); }
+	void init() { mngr.init(); field->init(); }
 	void update();
 	void draw() const;
 
