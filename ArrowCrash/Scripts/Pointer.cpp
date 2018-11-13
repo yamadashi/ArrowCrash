@@ -1,16 +1,21 @@
 #include "Pointer.h"
 
 
-const int Pointer::radius = 15;
 const double Pointer::accel = 2.0;
 const double Pointer::frictionCoeff = 1.0;
 const double Pointer::maxSpeed = 10.0;
 
-Pointer::Pointer(int player_num_)
-	:pos(Window::Center()),
-	velocity(0, 0),
+Pointer::Pointer(int player_num_, const Point& pos_)
+	:IPointer(),
 	player_num(player_num_),
-	color(constants::playerColor[player_num])
+	pos(pos_),
+	velocity(0, 0),
+	color(constants::playerColor[player_num]),
+	pointerSize((Size(Window::Height(), Window::Height()) / 27.0).asPoint()),
+	anim_t(0),
+	anim_coeff(5),
+	anim_num(6),
+	anim_size(64)
 {}
 
 
@@ -18,10 +23,6 @@ void Pointer::move() {
 
 	auto& gamepad = ymds::GamepadManager::get().getGamepad(player_num);
 	//入力ベクトルを正規化
-	/*Vec2 input(
-		(Input::KeyRight.pressed - Input::KeyLeft.pressed),
-		(Input::KeyDown.pressed - Input::KeyUp.pressed)
-	);*/
 	Vec2 input(
 		(gamepad.pressed(ymds::GamepadIn::RIGHT) - gamepad.pressed(ymds::GamepadIn::LEFT)),
 		(gamepad.pressed(ymds::GamepadIn::DOWN) - gamepad.pressed(ymds::GamepadIn::UP))
@@ -46,7 +47,6 @@ bool Pointer::isOutOfRegion() const {
 }
 
 bool Pointer::isClicked() const {
-	//return Input::KeySpace.clicked;
 	return ymds::GamepadManager::get().getGamepad(player_num).clicked(ymds::GamepadIn::TWO);
 }
 
@@ -59,10 +59,13 @@ void Pointer::update() {
 	while (isOutOfRegion()) {
 		pos.moveBy(-velocity.normalized());
 	}
+
+	//アニメーション
+	if (++anim_t / anim_coeff > anim_num) anim_t = 0;
 }
 
-
 void Pointer::draw() const {
-	Circle(pos, radius).drawFrame(2.0, 0.5, color);
-	Circle(pos, radius / 5).draw(color);
+	int index = anim_t / anim_coeff;
+
+	TextureAsset(L"pointer")(index*anim_size, 0, anim_size, anim_size).resize(pointerSize).draw(pos, color);
 }

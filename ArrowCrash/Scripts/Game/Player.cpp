@@ -75,5 +75,6 @@ void Player::explode() {
 	//お邪魔
 	mngr.bother(numOfDestroyed);
 
-	field->shouldCheckLine = true;
+	mngr.closeField();
+	mngr.getCurrentUnit().predict();
 }

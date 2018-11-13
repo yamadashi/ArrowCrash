@@ -7,13 +7,18 @@ Unit::Unit(const Point& point_, const Point& stdPos_, Field& field_)
 	predictedPoint(point_),
 	settled(false),
 	timer(true),
-	stdPos(stdPos_)
+	stdPos(stdPos_),
+	normalSpeed(1500),
+	highSpeed(200),
+	speed(1500),
+	cannotRotate(false)
 {}
 
 bool Unit::checkCollision(const Point& point_) const {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			if (field.getAt(point_.movedBy(i, j)) && geometry[i][j])
+			auto& tmp = field.getAt(point_.movedBy(i, j));
+			if (tmp && !tmp->isDestroyed() && geometry[i][j])
 				return true;
 		}
 	}
@@ -97,6 +102,10 @@ void Unit::move(MoveDirection mov) {
 }
 
 void Unit::rotate(RotateDirection rot) {
+	if (cannotRotate) {
+		//	draw();
+		return;
+	}
 
 	auto prev = geometry;
 
@@ -129,7 +138,6 @@ void Unit::rotate(RotateDirection rot) {
 		}
 	}
 	predict();
-
 }
 
 void Unit::predict() {
@@ -140,6 +148,16 @@ void Unit::predict() {
 	predictedPoint.moveBy(-1, 0); //Ç±Ç±É_ÉTÇ¢
 }
 
+void Unit::changeSpeed(bool act) {
+	if (act)
+		speed = highSpeed;
+	else 
+		speed = normalSpeed;
+}
+
+void Unit::changeForbid(bool act) {
+	cannotRotate = act;
+}
 
 
 BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, Field& field_)
@@ -182,7 +200,7 @@ BlockUnit::BlockUnit(const Point& point_, const Point& stdPos_, std::vector<std:
 }
 
 void BlockUnit::update() {
-	if (timer.ms() > 1500)
+	if (timer.ms() > speed)
 	{
 		if (checkCollision(point.movedBy(1, 0))) {
 			settle();

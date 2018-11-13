@@ -15,4 +15,7 @@ namespace constants {
 
 	//次ブロックの表示数
 	const int numOfNextBlocks = 2;
+	
+	//アイテムタイプの数
+	const int numOfItemType = 4;
 }

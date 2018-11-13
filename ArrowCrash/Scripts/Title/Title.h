@@ -1,15 +1,16 @@
 #pragma once
 #include "../Scene.h"
-#include "Pointer.h"
-#include "ClickableLabel.h"
-#include "ClickablePanel.h"
-#include "ClickDetector.h"
+#include "../Pointer.h"
+#include "../ymdsLib/Clickable/ClickableLabel.h"
+#include "../ymdsLib/Clickable/ClickablePanel.h"
+#include "../ymdsLib/Clickable/IPointer.h"
+#include "../ymdsLib/Clickable/ClickDetector.h"
 
 class Title : public Scene {
 private:
-	ClickDetector clickDetector;
-	std::vector<std::shared_ptr<Pointer>> pointers;
-	std::vector<std::shared_ptr<Clickable>> targets;
+	ymds::ClickDetector clickDetector;
+	std::vector<std::shared_ptr<ymds::IPointer>> pointers;
+	std::vector<std::shared_ptr<ymds::Clickable>> targets;
 
 	enum class TitleScene { TOP, SELECT } scene;
 	bool transition;
