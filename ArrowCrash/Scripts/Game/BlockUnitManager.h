@@ -37,6 +37,7 @@ public:
 	void changeSpeed(bool active);
 	void changeForbid(bool active);
 	void GuardOn();
+	void closeField() { field.closeLine(); }
 
 	static std::vector<BlockUnitManager*> managers;
 	static void clearManagerPtr() { managers.clear(); }

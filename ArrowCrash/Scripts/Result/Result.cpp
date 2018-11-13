@@ -2,18 +2,24 @@
 
 
 Result::Result() {
-
 }
 
 Result::~Result() {
+	ymds::GamepadManager::get().inactivate();
+}
 
+void Result::init() {
+	ymds::GamepadManager::get().activate();
 }
 
 void Result::update() {
-	/*if (Input::KeyEnter.clicked) {
-		changeScene(SceneName::Title);
-	}*/
-	if (ymds::GamepadManager::get().any([](ymds::Gamepad gamepad) { return gamepad.clicked(ymds::GamepadIn::TWO); }))
+
+	ymds::GamepadManager::get().update();
+
+	static auto twoClicked = []() -> bool {
+		return ymds::GamepadManager::get().any([](ymds::Gamepad& gamepad) { return gamepad.clicked(ymds::GamepadIn::TWO); });
+	};
+	if (twoClicked())
 		changeScene(SceneName::Title);
 }
 
