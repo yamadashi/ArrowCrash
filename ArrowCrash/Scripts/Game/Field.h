@@ -21,6 +21,8 @@ private:
 	Stopwatch ItemTimers[constants::numOfItemType];
 
 public:
+	static std::vector<Field*> fields; 
+	
 	Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks);
 	~Field() = default;
 
@@ -38,11 +40,12 @@ public:
 	void draw() const;
 
 	void init() { fields.emplace_back(this); }
-	static std::vector<Field*> fields;
-	static void clearFieldPtr() { fields.clear(); }
-  
+	const Rect& getFieldShape() const { return fieldShape; }
+	  
 	bool CheckItemExistence() const;
 	std::array< bool, constants::numOfItemType > getActivatedEffect() const { return activated; }
 	void effectOn(int type);
 	void effectEnd(int type);
+
+	static void clearFieldPtr() { fields.clear(); }
 };
