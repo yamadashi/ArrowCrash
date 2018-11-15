@@ -133,6 +133,10 @@ void Game::update() {
 
 void Game::draw() const {
 
+	for (int i = 0; i < m_data->numOfPlayer; i++) {
+		uiComp.playerPanel.at(i).draw(constants::playerColor[i]);
+	}
+
 	for (auto& player : players) {
 		player.draw();
 	}
@@ -196,10 +200,8 @@ void Game::initUIComponents() {
 	uiComp.topUIBorder.set({ 0, uiInfo.topUIHeight }, { window.x, uiInfo.topUIHeight });
 
 	for (int i = 1; i < m_data->numOfPlayer; i++) {
-		uiComp.playerBorders.emplace_back(
-			i*uiInfo.playerRegion.x, uiInfo.topUIHeight,
-			i*uiInfo.playerRegion.x, window.y
-		);
+		uiComp.playerPanel.emplace_back(
+			uiInfo.playerRegion.movedBy(uiInfo.playerRegion.write*i, uiInfo.topUIHeight));
 	}
 
 	for (int i = 0; i < m_data->numOfPlayer; i++) {
@@ -231,13 +233,10 @@ void Game::initUIComponents() {
 }
 
 
+//‚»‚Ì‚¤‚¿‚¢‚ç‚È‚­‚È‚é
 void Game::UIComponents::draw() const {
 
 	topUIBorder.draw();
-	
-	for (const auto& line : playerBorders) {
-		line.draw();
-	}
 	
 	for (const auto& stockFrame : stockFrames) {
 		stockFrame.drawFrame();
