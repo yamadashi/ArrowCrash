@@ -45,9 +45,9 @@ void Player::update() {
 	else if (gamepad.clicked(ymds::GamepadIn::THREE)) mngr.getCurrentUnit().rotate(RotateDirection::Left);
 	else if (gamepad.clicked(ymds::GamepadIn::TWO)) mngr.getCurrentUnit().rotate(RotateDirection::Right);
 	
-	if (gamepad.clicked(ymds::GamepadIn::L1)) mngr.exchangeStock();
+	else if (gamepad.clicked(ymds::GamepadIn::L1)) mngr.exchangeStock();
 
-	if (gamepad.clicked(ymds::GamepadIn::R1)) explode();
+	else if (gamepad.clicked(ymds::GamepadIn::R1)) explode();
 	
 
 	field->update();
