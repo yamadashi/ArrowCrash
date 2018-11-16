@@ -178,9 +178,9 @@ void Game::initGameData() {
 	int fieldWidth = 0;
 	switch (m_data->numOfPlayer)
 	{
-	case 2: fieldWidth = uiInfo.playerRegion.x * 2 / 5; break;
-	case 3:	fieldWidth = uiInfo.playerRegion.x / 2; break;
-	case 4:	fieldWidth = uiInfo.playerRegion.x * 3 / 5;	break;
+	case 2: fieldWidth = uiInfo.playerRegion.x * 13 / 30; break;
+	case 3:	fieldWidth = uiInfo.playerRegion.x * 3 / 5;	break;
+	case 4:	fieldWidth = uiInfo.playerRegion.x * 7 / 10; break;
 	default: break;
 	}
 
