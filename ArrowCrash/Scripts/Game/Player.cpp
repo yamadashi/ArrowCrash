@@ -6,57 +6,38 @@ Player::Player(int player_num, GameData& gameData_)
 	score(0),
 	arrowBlocks(new std::vector<std::weak_ptr<ArrowBlock>>()),
 	field(new Field(gameData.stdPositions.at(number), *arrowBlocks)),
-	mngr(*field, *arrowBlocks, gameData, number)
-{}
+	mngr(new BlockUnitManager(*field, *arrowBlocks, gameData, number)),
+	ojamaGauge(none)
+{
+	static const Size gauge_size = TextureAsset(L"gauge").size;
+	double scale = (double)field->getFieldShape().h / gauge_size.y;
+	ojamaGauge.emplace(field->getFieldShape().pos.movedBy(-gauge_size.x*scale*1.5, 0), scale, *mngr);
+}
 
 void Player::update() {
 
-	/*if (Input::KeyUp.clicked) mngr.getCurrentUnit().fallImmediately();
-	else if (Input::KeyLeft.clicked) mngr.getCurrentUnit().move(MoveDirection::Left);
-	else if (Input::KeyRight.clicked) mngr.getCurrentUnit().move(MoveDirection::Right);
-	else if (Input::KeyDown.clicked) mngr.getCurrentUnit().move(MoveDirection::Down);
-	if (Input::KeyLeft.pressed) {
-		timer++;
-		if (timer % 8 == 0)mngr.getCurrentUnit().move(MoveDirection::Left);
-	}
-	if (Input::KeyLeft.released) timer = 0;
-	if (Input::KeyRight.pressed) {
-		timer++;
-		if (timer % 8 == 0)mngr.getCurrentUnit().move(MoveDirection::Right);
-	}
-	if (Input::KeyRight.released) timer = 0;
-	if (Input::KeyDown.pressed) {
-		timer++;
-		if (timer % 6 == 0)mngr.getCurrentUnit().move(MoveDirection::Down);
-	}
-	if (Input::KeyDown.released) timer = 0;	
-	else if (Input::KeyA.clicked) mngr.getCurrentUnit().rotate(RotateDirection::Left);
-	else if (Input::KeyD.clicked) mngr.getCurrentUnit().rotate(RotateDirection::Right);
-	else if (Input::KeyS.clicked) mngr.exchangeStock();
-
-	if (Input::KeySpace.clicked) explode();*/
-
 	auto& gamepad = ymds::GamepadManager::get().getGamepad(number);
 
-	if (gamepad.clicked(ymds::GamepadIn::UP)) mngr.getCurrentUnit().fallImmediately();
-	else if (gamepad.clicked(ymds::GamepadIn::LEFT)) mngr.getCurrentUnit().move(MoveDirection::Left);
-	else if (gamepad.clicked(ymds::GamepadIn::RIGHT)) mngr.getCurrentUnit().move(MoveDirection::Right);
-	else if (gamepad.clicked(ymds::GamepadIn::DOWN)) mngr.getCurrentUnit().move(MoveDirection::Down);
-	else if (gamepad.clicked(ymds::GamepadIn::THREE)) mngr.getCurrentUnit().rotate(RotateDirection::Left);
-	else if (gamepad.clicked(ymds::GamepadIn::TWO)) mngr.getCurrentUnit().rotate(RotateDirection::Right);
+	if (gamepad.clicked(ymds::GamepadIn::UP)) mngr->getCurrentUnit().fallImmediately();
+	else if (gamepad.clicked(ymds::GamepadIn::LEFT)) mngr->getCurrentUnit().move(MoveDirection::Left);
+	else if (gamepad.clicked(ymds::GamepadIn::RIGHT)) mngr->getCurrentUnit().move(MoveDirection::Right);
+	else if (gamepad.clicked(ymds::GamepadIn::DOWN)) mngr->getCurrentUnit().move(MoveDirection::Down);
+	else if (gamepad.clicked(ymds::GamepadIn::THREE)) mngr->getCurrentUnit().rotate(RotateDirection::Left);
+	else if (gamepad.clicked(ymds::GamepadIn::TWO)) mngr->getCurrentUnit().rotate(RotateDirection::Right);
 	
-	if (gamepad.clicked(ymds::GamepadIn::L1)) mngr.exchangeStock();
+	else if (gamepad.clicked(ymds::GamepadIn::L1)) mngr->exchangeStock();
 
-	if (gamepad.clicked(ymds::GamepadIn::R1)) explode();
+	else if (gamepad.clicked(ymds::GamepadIn::R1)) explode();
 	
 
 	field->update();
-	mngr.update();
+	mngr->update();
 }
 
 void Player::draw() const {
 	field->draw();
-	mngr.draw();
+	ojamaGauge->draw();
+	mngr->draw();
 }
 
 void Player::explode() {
@@ -73,8 +54,8 @@ void Player::explode() {
 	score += numOfDestroyed;
 
 	//お邪魔
-	mngr.bother(numOfDestroyed);
+	mngr->bother(numOfDestroyed);
 
-	mngr.closeField();
-	mngr.getCurrentUnit().predict();
+	mngr->closeField();
+	mngr->getCurrentUnit().predict();
 }

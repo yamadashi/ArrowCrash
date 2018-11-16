@@ -11,7 +11,7 @@ BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<Arro
 	stockFrame(gameData.stockFrames->at(player_num)),
 	currentUnit(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, arrowBlocks, field)),
 	stock(nullptr),
-	ItemPropability(50)//パーセント表記
+	ItemPropability(0)//パーセント表記
 {
 	for (int i = 0; i < 2; i++) {
 		generate();
