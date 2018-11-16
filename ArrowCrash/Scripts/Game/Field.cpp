@@ -24,9 +24,13 @@ Field::Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrow
 
 std::vector<Field*> Field::fields;
 
-bool Field::contains(const Point& point) const {
-	return point.x >= 0 && point.x < constants::row_len &&
-		point.y >= 0 && point.y < constants::col_len;
+bool Field::contains(const Point& point, bool ignoreEdge = false) const {
+	if (!ignoreEdge)
+		return point.x >= 0 && point.x < constants::row_len &&
+			point.y >= 0 && point.y < constants::col_len;
+	else
+		return point.x >= 0 && point.x < constants::row_len - 1&&
+			point.y >= 1 && point.y < constants::col_len - 1;
 }
 
 void Field::closeLine() {
@@ -115,7 +119,7 @@ int Field::explode(const Point& start, ExplosionDirection direction) {
 			blk->destroy();
 			numOfDestroyed++;
 		}
-	} while (contains(point.moveBy(vec)));
+	} while (contains(point.moveBy(vec), true));
 
 	return numOfDestroyed;
 }

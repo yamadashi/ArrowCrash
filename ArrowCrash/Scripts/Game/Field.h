@@ -16,7 +16,7 @@ private:
 
 	const Rect fieldShape;
 
-	bool contains(const Point& point) const;
+	bool contains(const Point& point, bool ignoreEdge = false) const;
 	std::array< bool, constants::numOfItemType > activated; //各アイテムについて起動中はtrue
 	Stopwatch ItemTimers[constants::numOfItemType];
 
