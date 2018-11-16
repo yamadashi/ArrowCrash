@@ -112,8 +112,8 @@ int Field::explode(const Point& start, ExplosionDirection direction) {
 					}
 				}
 			}
+			if (!(blk->isDestroyed()))numOfDestroyed++;
 			blk->destroy();
-			numOfDestroyed++;
 		}
 	} while (contains(point.moveBy(vec)));
 

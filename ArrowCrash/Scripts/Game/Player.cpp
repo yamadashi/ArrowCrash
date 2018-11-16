@@ -4,6 +4,7 @@ Player::Player(int player_num, GameData& gameData_)
 	:number(player_num),
 	gameData(gameData_),
 	score(0),
+	timer(true),
 	arrowBlocks(new std::vector<std::weak_ptr<ArrowBlock>>()),
 	field(new Field(gameData.stdPositions.at(number), *arrowBlocks)),
 	mngr(new BlockUnitManager(*field, *arrowBlocks, gameData, number)),
@@ -19,16 +20,30 @@ void Player::update() {
 	auto& gamepad = ymds::GamepadManager::get().getGamepad(number);
 
 	if (gamepad.clicked(ymds::GamepadIn::UP)) mngr->getCurrentUnit().fallImmediately();
-	else if (gamepad.clicked(ymds::GamepadIn::LEFT)) mngr->getCurrentUnit().move(MoveDirection::Left);
-	else if (gamepad.clicked(ymds::GamepadIn::RIGHT)) mngr->getCurrentUnit().move(MoveDirection::Right);
-	else if (gamepad.clicked(ymds::GamepadIn::DOWN)) mngr->getCurrentUnit().move(MoveDirection::Down);
-	else if (gamepad.clicked(ymds::GamepadIn::THREE)) mngr->getCurrentUnit().rotate(RotateDirection::Left);
-	else if (gamepad.clicked(ymds::GamepadIn::TWO)) mngr->getCurrentUnit().rotate(RotateDirection::Right);
-	
-	else if (gamepad.clicked(ymds::GamepadIn::L1)) mngr->exchangeStock();
-
-	else if (gamepad.clicked(ymds::GamepadIn::R1)) explode();
-	
+	else {
+		if (gamepad.pressed(ymds::GamepadIn::LEFT)) {
+			if (timer.ms() > 100) {
+				mngr->getCurrentUnit().move(MoveDirection::Left);
+				timer.restart();
+			}
+		}
+		else if (gamepad.pressed(ymds::GamepadIn::RIGHT)) {
+			if (timer.ms() > 100) {
+				mngr->getCurrentUnit().move(MoveDirection::Right);
+				timer.restart();
+			}
+		}
+		if (gamepad.pressed(ymds::GamepadIn::DOWN)) {
+			if (timer.ms() > 100) {
+				mngr->getCurrentUnit().move(MoveDirection::Down);
+				timer.restart();
+			}
+		}
+		if (gamepad.clicked(ymds::GamepadIn::THREE)) mngr->getCurrentUnit().rotate(RotateDirection::Left);
+		if (gamepad.clicked(ymds::GamepadIn::TWO)) mngr->getCurrentUnit().rotate(RotateDirection::Right);
+		if (gamepad.clicked(ymds::GamepadIn::L1)) mngr->exchangeStock();
+		if (gamepad.clicked(ymds::GamepadIn::R1)) explode();
+	}
 
 	field->update();
 	mngr->update();
@@ -38,6 +53,7 @@ void Player::draw() const {
 	field->draw();
 	ojamaGauge->draw();
 	mngr->draw();
+	PutText(L"Score:", score).from(gameData.stdPositions.at(number) + Point(64, 384));
 }
 
 void Player::explode() {
