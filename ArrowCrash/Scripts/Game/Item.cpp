@@ -22,7 +22,7 @@ ItemUnit::ItemUnit(const Point& point_, const Point& stdPos_, Field& field_)
 }
 
 void ItemUnit::update() {
-	if (timer.ms() > 100)
+	if (timer.ms() > 75)
 	{
 		if (checkCollision(point.movedBy(1, 0))) {
 			settle();

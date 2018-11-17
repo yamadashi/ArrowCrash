@@ -141,6 +141,10 @@ void Field::reset() {
 			if (block && block->isDestroyed()) block.reset();
 		}
 	}
+
+	for (int i = 0; i < constants::numOfItemType; i++) {
+		effectEnd(i);
+	}
 }
 
 void Field::riseFloor(int num) {
@@ -204,8 +208,19 @@ bool Field::CheckItemExistence() const{
 
 void Field::effectOn(int type) {
 	activated[type] = true;
-	ItemTimers[type].restart(); 
-	PutText(L"this type is ,",type).from(stdPos + Point(64, 64));
+	ItemTimers[type].restart();
+
+	String texture_name = L"";
+
+	switch (type) {
+	case (int)ItemType::ForbidRotating: texture_name += L"Forbid_effect"; break;
+	case (int)ItemType::SpeedUp: texture_name += L"SpeedUp_effect"; break;
+	case (int)ItemType::InterruptionGuard: texture_name += L"Guard_effect"; break;
+	default: break;
+	}
+	const double effectCellSize = TextureAsset(texture_name).width;
+	ymds::EffectGenerator::addLinkedImage(texture_name, effectCellSize, stdPos + Point(Block::blockSize, 2 * Block::blockSize), 12 * (double)Block::blockSize / effectCellSize, 0.01);
+
 }
 void Field::effectEnd(int type) {
 	activated[type] = false;
