@@ -103,7 +103,9 @@ void Unit::move(MoveDirection mov) {
 
 void Unit::rotate(RotateDirection rot) {
 	if (cannotRotate) {
-		//	draw();
+		const int EffectSize = TextureAsset(L"cannotRotate").height;
+		Point pos = geometry[2][2]->getPoint();
+		ymds::EffectGenerator::addLinkedImage(L"cannotRotate", EffectSize, stdPos.movedBy(Point(pos.y, pos.x)*Block::blockSize), (double)Block::blockSize * 2 / EffectSize, 0.2);
 		return;
 	}
 
