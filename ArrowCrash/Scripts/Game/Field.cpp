@@ -167,7 +167,7 @@ void Field::riseFloor(int num) {
 	for (int i = 0; i < num; i++) {
 		for (int j = 1; j < constants::col_len - 1; j++) {
 			Point point(constants::row_len - 2 - i, j);
-			blocks[point.x][point.y].reset(new NormalBlock(point, stdPos, UnitType::I));
+			blocks[point.x][point.y].reset(new NormalBlock(point, stdPos, UnitType::None));
 		}
 	}
 }

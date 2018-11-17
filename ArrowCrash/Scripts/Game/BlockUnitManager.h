@@ -38,6 +38,7 @@ public:
 	void changeForbid(bool active);
 	void GuardOn();
 	void closeField() { field.closeLine(); }
+	int getOjamaCount() const { return ojamaBuffer; }
 
 	static std::vector<BlockUnitManager*> managers;
 	static void clearManagerPtr() { managers.clear(); }
