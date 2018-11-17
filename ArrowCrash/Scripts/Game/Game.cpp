@@ -154,7 +154,10 @@ void Game::draw() const {
 
 	ymds::EventManager::get().draw();
 
-	PutText(time_limit - timer.s()).at(Window::Center().x, 20);
+	//ƒ^ƒCƒ€•\Ž¦
+	int remaining = time_limit - timer.s();
+	const Point timePos(Window::Center().x, Window::Height() / 50);
+	FontAsset(L"digital")(remaining / 60, L":", Pad(remaining % 60, {2, L'0'})).drawAt(timePos);
 
 
 	if (paused && pause) pause->draw();
@@ -178,9 +181,9 @@ void Game::initGameData() {
 	int fieldWidth = 0;
 	switch (m_data->numOfPlayer)
 	{
-	case 2: fieldWidth = uiInfo.playerRegion.x * 2 / 5; break;
-	case 3:	fieldWidth = uiInfo.playerRegion.x / 2; break;
-	case 4:	fieldWidth = uiInfo.playerRegion.x * 3 / 5;	break;
+	case 2: fieldWidth = uiInfo.playerRegion.x * 13 / 30; break;
+	case 3:	fieldWidth = uiInfo.playerRegion.x * 3 / 5;	break;
+	case 4:	fieldWidth = uiInfo.playerRegion.x * 7 / 10; break;
 	default: break;
 	}
 

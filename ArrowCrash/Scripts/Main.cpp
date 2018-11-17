@@ -14,8 +14,11 @@ void Main()
 	Window::SetFullscreen(true, maxSize);
 
 	ymds::TextureRegisterer().fileRegister(L"Files/").preload();
-	const int fontSize = maxSize.y / 36;
-	FontAsset::Register(L"kokumincho", fontSize, L"font_1_kokumr_1.00_rls");
+
+	FontManager::Register(L"font_1_kokumr_1.00_rls.ttf");
+	FontManager::Register(L"dash_digital-7.ttf");
+	FontAsset::Register(L"kokumincho", maxSize.y / 36, L"刻明朝 Regular");
+	FontAsset::Register(L"digital", maxSize.y / 40, L"Dash Digital-7");
 
 	MySceneManager sceneManager;
 	sceneManager.add<Title>(SceneName::Title);

@@ -11,9 +11,10 @@ void OjamaGauge::draw() const {
 	gauge_back.draw(pos);
 
 	const auto& memory = TextureAsset(L"memory").scale(scale);
+	PutText(mngr.getOjamaCount()).from(pos);
 	for (int i = 0; i < mngr.getOjamaCount(); i++) {
-		if (mngr.getOjamaCount() > constants::row_len - 1) break;
-		const Point position(pos.movedBy(0, gauge_back.size.y - (i + 1)*memory.size.y));
+		if (i > constants::row_len - 1) break;
+		const Point position(pos.movedBy(0, gauge_back.size.y - memory.size.y*(i + 1)));
 		memory.draw(position);
 	}
 	TextureAsset(L"gauge").scale(scale).draw(pos);
