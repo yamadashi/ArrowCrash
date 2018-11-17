@@ -24,7 +24,7 @@ Field::Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrow
 
 std::vector<Field*> Field::fields;
 
-bool Field::contains(const Point& point, bool ignoreEdge = false) const {
+bool Field::contains(const Point& point, bool ignoreEdge) const {
 	if (!ignoreEdge)
 		return point.x >= 0 && point.x < constants::row_len &&
 			point.y >= 0 && point.y < constants::col_len;

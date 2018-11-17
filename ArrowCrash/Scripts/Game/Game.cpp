@@ -154,7 +154,10 @@ void Game::draw() const {
 
 	ymds::EventManager::get().draw();
 
-	PutText(time_limit - timer.s()).at(Window::Center().x, 20);
+	//ƒ^ƒCƒ€•\¦
+	int remaining = time_limit - timer.s();
+	const Point timePos(Window::Center().x, Window::Height() / 50);
+	FontAsset(L"digital")(remaining / 60, L":", Pad(remaining % 60, {2, L'0'})).drawAt(timePos);
 
 
 	if (paused && pause) pause->draw();
