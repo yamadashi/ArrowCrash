@@ -90,6 +90,7 @@ public:
 	void changeSpeed(bool act);
 	void changeForbid(bool act);
 	virtual bool ItemCheck() { return false; }
+	Point getUnitCenter();
 };
 
 class BlockUnit : public Unit {

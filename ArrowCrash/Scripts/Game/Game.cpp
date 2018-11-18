@@ -56,9 +56,7 @@ Game::Game()
 	timer(true),
 	time_limit(180),
 	players()
-{
-	Graphics::SetBackground(Color(245, 28, 0));
-}
+{}
 
 Game::~Game() {
 	ymds::GamepadManager::get().inactivate();
@@ -133,6 +131,21 @@ void Game::update() {
 
 void Game::draw() const {
 
+	//背景用にプレイヤー色を調整
+	static auto toHSV = [](const Vec3& vec) -> HSV { return HSV(vec.x, vec.y, vec.z); };
+	static Color playerColorBack[4] = {
+
+		Color(toHSV(HSV(Palette::Red).asVec3().movedBy(0.0, -0.3, 0.0))),
+		Color(toHSV(HSV(Palette::Blue).asVec3().movedBy(0.0, -0.3, 0.0))),
+		Color(toHSV(HSV(Palette::Yellow).asVec3().movedBy(0.0, -0.3, 0.0))),
+		Color(toHSV(HSV(Palette::Green).asVec3().movedBy(0.0, -0.3, 0.1)))
+
+	};
+	
+	for (int i = 0; i < m_data->numOfPlayer; i++) {
+		uiComp.playerPanel.at(i).draw(playerColorBack[i]);
+	}
+
 	for (auto& player : players) {
 		player.draw();
 	}
@@ -195,10 +208,9 @@ void Game::initUIComponents() {
 	auto&& window = Window::Size();
 	uiComp.topUIBorder.set({ 0, uiInfo.topUIHeight }, { window.x, uiInfo.topUIHeight });
 
-	for (int i = 1; i < m_data->numOfPlayer; i++) {
-		uiComp.playerBorders.emplace_back(
-			i*uiInfo.playerRegion.x, uiInfo.topUIHeight,
-			i*uiInfo.playerRegion.x, window.y
+	for (int i = 0; i < m_data->numOfPlayer; i++) {
+		uiComp.playerPanel.emplace_back(
+			Point(uiInfo.playerRegion.x*i, uiInfo.topUIHeight), uiInfo.playerRegion
 		);
 	}
 
@@ -231,13 +243,10 @@ void Game::initUIComponents() {
 }
 
 
+//そのうちいらなくなる
 void Game::UIComponents::draw() const {
 
 	topUIBorder.draw();
-	
-	for (const auto& line : playerBorders) {
-		line.draw();
-	}
 	
 	for (const auto& stockFrame : stockFrames) {
 		stockFrame.drawFrame();
