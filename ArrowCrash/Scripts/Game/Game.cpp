@@ -10,7 +10,7 @@ Pause::Pause(int numOfPlayer_, Game& gameScene)
 	const String font_handler = L"kokumincho";
 
 	targets.emplace_back(new ymds::ClickableLabel(
-		L"ã‚¿ã‚¤ãƒˆãƒ«ã«æˆ»ã‚‹", font_handler, Window::Center(), Palette::Darkslategray,
+		L"ƒ^ƒCƒgƒ‹‚É–ß‚é", font_handler, Window::Center(), Palette::Darkslategray,
 		[&gameScene](ymds::ClickableLabel& label) { gameScene.transit(SceneName::Title); },
 		[](ymds::ClickableLabel& label) { label.setColor(Palette::White); },
 		[](ymds::ClickableLabel& label) { label.setColor(Palette::Darkslategray); }
@@ -39,9 +39,9 @@ void Pause::draw() const {
 
 void Pause::resetPointerPos() {
 	for (int i = 0; i < numOfPlayer; i++) {
-		//ãƒ»ï½½|ãƒ»ï½½Cãƒ»ï½½ãƒ»ï½½ãƒ»ï½½^ãƒ»ï½½ï¾Œæ“¾ï½¿ï½½ãƒ»ï½½ãƒ»ï½½ï¾Šç½®
+		//ãƒ»?½½|ãƒ»?½½Cãƒ»?½½ãƒ»?½½ãƒ»?½½^ãƒ»?½½?¾Œæ“¾?½¿?½½ãƒ»?½½ãƒ»?½½?¾Šç½®
 		Point pos(Window::Center());
-		const Point tmp(2 * (i % 2) - 1, 2 * (i / 2) - 1); //i == 0 ãƒ»ï½½ï¾Œã¨ã‚‘ï½¿ï½½ (-1, 0), i== ãƒ»ï½½ï¾Œã¨ã‚‘ï½¿ï½½ (0, 1)
+		const Point tmp(2 * (i % 2) - 1, 2 * (i / 2) - 1); //i == 0 ãƒ»?½½?¾Œã¨ã‚‘ï½¿?½½ (-1, 0), i== ãƒ»?½½?¾Œã¨ã‚‘ï½¿?½½ (0, 1)
 		pos.moveBy(tmp.x * (Window::Width() / 4), tmp.y * (Window::Height() / 5));
 
 		pointers.at(i)->setPos(pos);
@@ -87,7 +87,7 @@ void Game::init() {
 
 void Game::update() {
   
-	//ãƒ»ï½½ãƒ»ï½½ãƒ»ï½½ãƒ»ï½½ãƒ»ï½½ãƒ»ï½½ãƒ»ï½½
+	//ãƒ»?½½ãƒ»?½½ãƒ»?½½ãƒ»?½½ãƒ»?½½ãƒ»?½½ãƒ»?½½
 	if (timer.s() > time_limit) {
 		for (int i = 0; i < players.size(); i++) {
 			m_data->scores.at(i) = players.at(i).getScore();
@@ -102,7 +102,7 @@ void Game::update() {
 		return ymds::GamepadManager::get().any([](ymds::Gamepad& gamepad) { return gamepad.clicked(ymds::GamepadIn::START); });
 	};
 	
-	//ãƒ»ï½½|ãƒ»ï½½[ãƒ»ï½½Y
+	//ãƒ»?½½|ãƒ»?½½[ãƒ»?½½Y
 	if (paused && pause) {
 		pause->update();
 
@@ -154,7 +154,7 @@ void Game::draw() const {
 
 	ymds::EventManager::get().draw();
 
-	//ã‚¿ã‚¤ãƒ è¡¨ç¤º
+	//ã‚¿ã‚¤ãƒ?è¡¨ç¤º
 	int remaining = time_limit - timer.s();
 	const Point timePos(Window::Center().x, Window::Height() / 50);
 	FontAsset(L"digital")(remaining / 60, L":", Pad(remaining % 60, {2, L'0'})).drawAt(timePos);
@@ -174,10 +174,10 @@ void Game::initGameData() {
 
 	const int numOfPlayer = m_data->numOfPlayer;
 
-	//ãƒ»ï½½eãƒ»ï½½vãƒ»ï½½ãƒ»ï½½ãƒ»ï½½Cãƒ»ï½½ãƒ»ï½½ãƒ»ï½½[ãƒ»ï½½Gãƒ»ï½½ãƒ»ï½½ãƒ»ï½½Aãƒ»ï½½ï¾Œã‚µãƒ»ï½½Cãƒ»ï½½Y
+	//ãƒ»?½½eãƒ»?½½vãƒ»?½½ãƒ»?½½ãƒ»?½½Cãƒ»?½½ãƒ»?½½ãƒ»?½½[ãƒ»?½½Gãƒ»?½½ãƒ»?½½ãƒ»?½½Aãƒ»?½½?¾Œã‚µãƒ»?½½Cãƒ»?½½Y
 	uiInfo.playerRegion = Size(Window::Width() / numOfPlayer, Window::Height() - uiInfo.topUIHeight);
 	
-	//ãƒ»ï½½tãƒ»ï½½Bãƒ»ï½½[ãƒ»ï½½ãƒ»ï½½ãƒ»ï½½hãƒ»ï½½ãƒ»ï½½
+	//ãƒ»?½½tãƒ»?½½Bãƒ»?½½[ãƒ»?½½ãƒ»?½½ãƒ»?½½hãƒ»?½½ãƒ»?½½
 	int fieldWidth = 0;
 	switch (m_data->numOfPlayer)
 	{
@@ -187,20 +187,20 @@ void Game::initGameData() {
 	default: break;
 	}
 
-	//ãƒ»ï½½uãƒ»ï½½ãƒ»ï½½ãƒ»ï½½bãƒ»ï½½Nãƒ»ï½½ï¾Œã‚µãƒ»ï½½Cãƒ»ï½½Y
+	//ãƒ»?½½uãƒ»?½½ãƒ»?½½ãƒ»?½½bãƒ»?½½Nãƒ»?½½?¾Œã‚µãƒ»?½½Cãƒ»?½½Y
 	int blockSize = fieldWidth / constants::col_len;
 	Block::blockSize = blockSize;
-	//ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ã‚µã‚¤ã‚º
+	//ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã?®ã‚µã‚¤ã‚º
 	uiInfo.fieldSize.x = fieldWidth;
 	uiInfo.fieldSize.y = blockSize * constants::row_len;
-	//ãƒ»ï½½tãƒ»ï½½Bãƒ»ï½½[ãƒ»ï½½ãƒ»ï½½ãƒ»ï½½hãƒ»ï½½ãƒ»ï½½ãƒ»ï½½ãƒ»ï½½ãƒ»ï½½ï¾Œãƒãƒ»ï½½[ãƒ»ï½½Wãƒ»ï½½ãƒ»ï½½
+	//ãƒ»?½½tãƒ»?½½Bãƒ»?½½[ãƒ»?½½ãƒ»?½½ãƒ»?½½hãƒ»?½½ãƒ»?½½ãƒ»?½½ãƒ»?½½ãƒ»?½½?¾Œã?ã?»?½½[ãƒ»?½½Wãƒ»?½½ãƒ»?½½
 	uiInfo.fieldLeftMargin = (uiInfo.playerRegion.x - uiInfo.fieldSize.x) / 2;
-	//ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ä¸Šå´ã®ãƒãƒ¼ã‚¸ãƒ³
+	//ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ä¸Šå?´ã®ãƒã?¼ã‚¸ãƒ³
 	uiInfo.fieldTopMargin =	(uiInfo.playerRegion.y - uiInfo.fieldSize.y) * 3 / 5;
 
 
 	for (int i = 0; i < numOfPlayer; i++) {
-		//ãƒ»ï½½eãƒ»ï½½vãƒ»ï½½ãƒ»ï½½ãƒ»ï½½Cãƒ»ï½½ãƒ»ï½½ãƒ»ï½½[ãƒ»ï½½tãƒ»ï½½Bãƒ»ï½½[ãƒ»ï½½ãƒ»ï½½ãƒ»ï½½hãƒ»ï½½ï¾ŒåŸºæº–ãƒ»ï½½_
+		//ãƒ»?½½eãƒ»?½½vãƒ»?½½ãƒ»?½½ãƒ»?½½Cãƒ»?½½ãƒ»?½½ãƒ»?½½[ãƒ»?½½tãƒ»?½½Bãƒ»?½½[ãƒ»?½½ãƒ»?½½ãƒ»?½½hãƒ»?½½?¾ŒåŸºæº–ã?»?½½_
 		gameData.stdPositions.emplace_back(uiInfo.playerRegion.x*i + uiInfo.fieldLeftMargin, uiInfo.topUIHeight + uiInfo.fieldTopMargin);
 	}
 
@@ -218,11 +218,11 @@ void Game::initUIComponents() {
 	}
 
 	for (int i = 0; i < m_data->numOfPlayer; i++) {
-		//ãƒ¦ãƒ‹ãƒƒãƒˆãƒ•ãƒ¬ãƒ¼ãƒ ã®ã‚µã‚¤ã‚º
+		//ãƒ¦ãƒ‹ãƒƒãƒˆãƒ•ãƒ¬ãƒ¼ãƒ?ã®ã‚µã‚¤ã‚º
 		const int unitFrameSize = Block::blockSize * 3;
-		//ãƒ¦ãƒ‹ãƒƒãƒˆãƒ•ãƒ¬ãƒ¼ãƒ ã®é–“éš”
+		//ãƒ¦ãƒ‹ãƒƒãƒˆãƒ•ãƒ¬ãƒ¼ãƒ?ã®é–“éš”
 		const int unitFrameInterval = Block::blockSize * 2;
-		//ã‚¹ãƒˆãƒƒã‚¯æ 
+		//ã‚¹ãƒˆãƒƒã‚¯æ?
 		uiComp.stockFrames.emplace_back(
 			uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin,
 			uiInfo.topUIHeight + uiInfo.fieldTopMargin - unitFrameSize - unitFrameInterval,
@@ -246,7 +246,7 @@ void Game::initUIComponents() {
 }
 
 
-//ãã®ã†ã¡ã„ã‚‰ãªããªã‚‹
+//ãã?®ã?ã¡ã?ã‚‰ãªããªã‚?
 void Game::UIComponents::draw() const {
 
 	topUIBorder.draw();
