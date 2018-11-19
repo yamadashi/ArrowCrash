@@ -126,7 +126,15 @@ void BlockUnitManager::exchangeStock() {
 }
 
 void BlockUnitManager::bother(int numOfDestroyed) {
-	int rising = numOfDestroyed / 14;
+	int rising = numOfDestroyed / 20;
+	if (ojamaBuffer >= rising) {
+		ojamaBuffer -= rising;
+		rising = 0;
+	}
+	else if (ojamaBuffer < rising) {
+		rising -= ojamaBuffer;
+		ojamaBuffer = 0;
+	}
 	for (auto mngr : managers) {
 		if (mngr != this) {
 			mngr->ojamaBuffer += rising;

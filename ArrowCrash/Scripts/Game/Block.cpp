@@ -51,8 +51,9 @@ ArrowBlock::ArrowBlock(const Point& point_, const Point& pos, ExplosionDirection
 {}
 
 int ArrowBlock::explode() {
-	destroy();
-	return field.explode(point, direction) + 1; //Ž©•ª‚Ì•ª‚ð‘«‚µ‚Ä‚¢‚é
+	//destroy();
+	//return field.explode(point, direction) + 1; //Ž©•ª‚Ì•ª‚ð‘«‚µ‚Ä‚¢‚é
+	return field.explode(point, direction);
 }
 
 void ArrowBlock::rotate(RotateDirection rot) {
