@@ -24,9 +24,13 @@ Field::Field(const Point& stdPos_, std::vector<std::weak_ptr<ArrowBlock>>& arrow
 
 std::vector<Field*> Field::fields;
 
-bool Field::contains(const Point& point) const {
-	return point.x >= 0 && point.x < constants::row_len &&
-		point.y >= 0 && point.y < constants::col_len;
+bool Field::contains(const Point& point, bool ignoreEdge) const {
+	if (!ignoreEdge)
+		return point.x >= 0 && point.x < constants::row_len &&
+			point.y >= 0 && point.y < constants::col_len;
+	else
+		return point.x >= 0 && point.x < constants::row_len - 1&&
+			point.y >= 1 && point.y < constants::col_len - 1;
 }
 
 void Field::closeLine() {
@@ -115,7 +119,7 @@ int Field::explode(const Point& start, ExplosionDirection direction) {
 			if (!(blk->isDestroyed()))numOfDestroyed++;
 			blk->destroy();
 		}
-	} while (contains(point.moveBy(vec)));
+	} while (contains(point.moveBy(vec), true));
 
 	return numOfDestroyed;
 }
@@ -140,6 +144,10 @@ void Field::reset() {
 		for (auto&& block : arr) {
 			if (block && block->isDestroyed()) block.reset();
 		}
+	}
+
+	for (int i = 0; i < constants::numOfItemType; i++) {
+		effectEnd(i);
 	}
 }
 
@@ -204,8 +212,19 @@ bool Field::CheckItemExistence() const{
 
 void Field::effectOn(int type) {
 	activated[type] = true;
-	ItemTimers[type].restart(); 
-	PutText(L"this type is ,",type).from(stdPos + Point(64, 64));
+	ItemTimers[type].restart();
+
+	String texture_name = L"";
+
+	switch (type) {
+	case (int)ItemType::ForbidRotating: texture_name += L"Forbid_effect"; break;
+	case (int)ItemType::SpeedUp: texture_name += L"SpeedUp_effect"; break;
+	case (int)ItemType::InterruptionGuard: texture_name += L"Guard_effect"; break;
+	default: break;
+	}
+	const double effectCellSize = TextureAsset(texture_name).width;
+	ymds::EffectGenerator::addLinkedImage(texture_name, effectCellSize, stdPos + Point(Block::blockSize, 2 * Block::blockSize), 12 * (double)Block::blockSize / effectCellSize, 0.01);
+
 }
 void Field::effectEnd(int type) {
 	activated[type] = false;
