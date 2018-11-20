@@ -14,6 +14,8 @@ private:
 	const Point stdPos; //基準点
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 
+	bool deathFlag;
+
 	const Rect fieldShape;
 
 	bool contains(const Point& point, bool ignoreEdge = false) const;
@@ -46,6 +48,9 @@ public:
 	std::array< bool, constants::numOfItemType > getActivatedEffect() const { return activated; }
 	void effectOn(int type);
 	void effectEnd(int type);
+
+	bool deathCheck() { return deathFlag; }
+	void restart() { deathFlag = false; }
 
 	static void clearFieldPtr() { fields.clear(); }
 };

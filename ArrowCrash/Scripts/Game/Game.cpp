@@ -54,7 +54,7 @@ Game::Game()
 	paused(false),
 	pause(none),
 	timer(true),
-	time_limit(180),
+	time_limit(120),
 	players()
 {}
 

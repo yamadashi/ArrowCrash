@@ -4,6 +4,7 @@ Player::Player(int player_num, GameData& gameData_)
 	:number(player_num),
 	gameData(gameData_),
 	score(0),
+	penalty(-40),
 	timer(true),
 	arrowBlocks(new std::vector<std::weak_ptr<ArrowBlock>>()),
 	field(new Field(gameData.stdPositions.at(number), *arrowBlocks)),
@@ -46,6 +47,13 @@ void Player::update() {
 	}
 
 	field->update();
+	if (field->deathCheck()) {
+		PutText(L"", penalty).from(gameData.stdPositions.at(number) + Point(64, 450));
+		if (score >= -penalty)
+			score += penalty;
+		else score = 0;
+		field->restart();
+	}
 	mngr->update();
 }
 

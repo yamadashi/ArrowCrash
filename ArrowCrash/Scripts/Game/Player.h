@@ -8,6 +8,7 @@ private:
 	const int number; //プレイヤー番号
 	GameData& gameData;
 	int score;
+	int penalty;
 	Stopwatch timer;
 
 	// 一括で爆発するためフィールド上の全てのArrowBlockへの参照を持っておく
