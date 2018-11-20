@@ -21,12 +21,14 @@ public:
 	Player(int player_num, GameData& gameData);
 	~Player() = default;
 
+	static std::vector<Player*> players;
 
-	void init() { mngr->init(); field->init(); }
+	void init() { players.emplace_back(this); mngr->init(); field->init(); }
 	void update();
 	void draw() const;
 
 	void explode();
-	int calculateAddScores(int numOfDestroyed_);
 	int getScore() const { return score; }
+
+	static void clearPlayerPtr() { players.clear(); }
 };

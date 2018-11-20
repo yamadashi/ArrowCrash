@@ -4,7 +4,7 @@ Player::Player(int player_num, GameData& gameData_)
 	:number(player_num),
 	gameData(gameData_),
 	score(0),
-	penalty(-40),
+	penalty(5000),
 	timer(true),
 	arrowBlocks(new std::vector<std::weak_ptr<ArrowBlock>>()),
 	field(new Field(gameData.stdPositions.at(number), *arrowBlocks)),
@@ -15,6 +15,8 @@ Player::Player(int player_num, GameData& gameData_)
 	double scale = (double)field->getFieldShape().h / gauge_size.y;
 	ojamaGauge.emplace(field->getFieldShape().pos.movedBy(-gauge_size.x*scale*1.5, 0), scale, *mngr);
 }
+
+std::vector < Player *> Player::players;
 
 void Player::update() {
 
@@ -49,9 +51,11 @@ void Player::update() {
 	field->update();
 	if (field->deathCheck()) {
 		PutText(L"", penalty).from(gameData.stdPositions.at(number) + Point(64, 450));
-		if (score >= -penalty)
-			score += penalty;
-		else score = 0;
+		for (auto player : players) {
+			if (player != this) {
+				player->score += penalty;
+			}
+		}
 		field->restart();
 	}
 	mngr->update();
@@ -61,7 +65,7 @@ void Player::draw() const {
 	field->draw();
 	ojamaGauge->draw();
 	mngr->draw();
-	PutText(L"Score:", score).from(gameData.stdPositions.at(number) + Point(64, 384));
+	PutText(L"Score:", score).from(gameData.stdPositions.at(number) + Point(64, 400));
 }
 
 void Player::explode() {
@@ -75,16 +79,11 @@ void Player::explode() {
 	auto&& itr = std::remove_if(arrowBlocks->begin(), arrowBlocks->end(), [](const std::weak_ptr<ArrowBlock>& ref) { return ref.lock()->isDestroyed(); });
 	arrowBlocks->erase(itr, arrowBlocks->end());
 
-	score += calculateAddScores(numOfDestroyed);
-	//score += numOfDestroyed;
+	score += 100 * int(pow(numOfDestroyed, 1.2));
 
 	//お邪魔
 	mngr->bother(numOfDestroyed);
 
 	mngr->closeField();
 	mngr->getCurrentUnit().predict();
-}
-
-int Player::calculateAddScores(int numOfDestroyed_){
-	return numOfDestroyed_;
 }
