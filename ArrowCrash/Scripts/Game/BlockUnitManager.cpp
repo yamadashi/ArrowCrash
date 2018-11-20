@@ -52,7 +52,8 @@ void BlockUnitManager::update() {
 		}
 
 		if (!field.CheckItemExistence() && ItemPropability >= Random<int>(1, 100)) {
-			Item = std::shared_ptr<Unit>(new ItemUnit(Point(0, Random<int>(0, constants::col_len - 4)), stdPos, field));
+			if (field.pickUpRandomFlat() != -1) Item = std::shared_ptr<Unit>(new ItemUnit(Point(0, field.pickUpRandomFlat()), stdPos, field));
+			else Item = std::shared_ptr<Unit>(new ItemUnit(Point(0, Random<int>(0, constants::col_len - 4)), stdPos, field));
 			currentUnit = Item;
 		}
 		else {

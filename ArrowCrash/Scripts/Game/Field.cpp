@@ -182,10 +182,16 @@ void Field::update() {
 			if (block && block->isDestroyed()) block.reset();
 		}
 	}
-	for (int i = 0; i < constants::numOfItemType; i++)
-		if (ItemTimers[i].s() > 10) {
-			effectEnd(i);
+	for (int i = 0; i < constants::numOfItemType; i++) {
+		int timeLimit = 0;
+		switch (i) {
+		case (int)ItemType::ForbidRotating: timeLimit = 5; break;
+		case (int)ItemType::SpeedUp:
+		case (int)ItemType::InterruptionGuard: timeLimit = 10; break;
+		default: break;
 		}
+		if (ItemTimers[i].s() > timeLimit) effectEnd(i);
+	}
 }
 
 void Field::draw() const {
@@ -226,7 +232,32 @@ void Field::effectOn(int type) {
 	ymds::EffectGenerator::addLinkedImage(texture_name, effectCellSize, stdPos + Point(Block::blockSize, 2 * Block::blockSize), 12 * (double)Block::blockSize / effectCellSize, 0.01);
 
 }
+
 void Field::effectEnd(int type) {
 	activated[type] = false;
 	ItemTimers[type].reset();
+}
+
+int Field::pickUpRandomFlat() {
+	int tmp_height = -1;
+	std::vector<int> flats;
+
+	for (int y = 1; y < constants::col_len - 1; y++) {
+		for (int x = 0; x < constants::row_len; x++) {
+			if (blocks[x][y]) {
+				if (tmp_height == x) {
+					flats.push_back(y - 2);
+				}
+				tmp_height = x;
+				break;
+			}
+		}
+	}
+
+	if (flats.empty()) return -1;
+	else {
+		std::mt19937 get_rand_mt;
+		std::shuffle(flats.begin(), flats.end(), get_rand_mt);
+		return flats.front();
+	}
 }
