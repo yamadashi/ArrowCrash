@@ -104,8 +104,7 @@ void Unit::move(MoveDirection mov) {
 void Unit::rotate(RotateDirection rot) {
 	if (cannotRotate) {
 		const int EffectSize = TextureAsset(L"cannotRotate").height;
-		Point pos = getUnitCenter();
-		ymds::EffectGenerator::addLinkedImage(L"cannotRotate", EffectSize, stdPos.movedBy(Point(pos.y, pos.x)*Block::blockSize) , (double)Block::blockSize * 2 / EffectSize, 0.2);
+		ymds::EffectGenerator::addLinkedImage(L"cannotRotate", EffectSize, stdPos.movedBy(getUnitCenter()), (double)Block::blockSize * 2 / EffectSize, 0.2);
 		return;
 	}
 
@@ -162,16 +161,15 @@ void Unit::changeForbid(bool act) {
 }
 
 Point Unit::getUnitCenter() {
-	double x = 0, y = 0;
+	Vec2 center = { 0, 0 };
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			if (geometry[i][j]) {
-				x += (double)i / 4;
-				y += (double)j / 4;
+				center += geometry[i][j]->getPoint();
 			}
 		}
 	}
-	return geometry[int(x + 0.5)][int(y + 0.5)]->getPoint();
+	return { int(center.y / 4 * Block::blockSize) , int(center.x / 4 * Block::blockSize) };
 }
 
 
