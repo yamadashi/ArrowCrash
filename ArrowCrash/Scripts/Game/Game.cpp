@@ -156,7 +156,7 @@ void Game::draw() const {
 
 	//タイム表示
 	int remaining = time_limit - timer.s();
-	const Point timePos(Window::Center().x, Window::Height() / 50);
+	const Point timePos(Window::Center().x, Window::Height() / 25);
 	FontAsset(L"digital")(remaining / 60, L":", Pad(remaining % 60, {2, L'0'})).drawAt(timePos);
 
 
@@ -194,7 +194,9 @@ void Game::initGameData() {
 	uiInfo.fieldSize.x = fieldWidth;
 	uiInfo.fieldSize.y = blockSize * constants::row_len;
 	//・ｽt・ｽB・ｽ[・ｽ・ｽ・ｽh・ｽ・ｽ・ｽ・ｽ・ｽﾌマ・ｽ[・ｽW・ｽ・ｽ
-	uiInfo.fieldLeftMargin = (uiInfo.playerRegion.x - uiInfo.fieldSize.x) / 2;
+	auto&& gauge = TextureAsset(L"gauge");
+	const int ojamaWidth = blockSize*(constants::row_len - 1)*(double)gauge.width / gauge.height; //お邪魔ゲージの分
+	uiInfo.fieldLeftMargin = (uiInfo.playerRegion.x + ojamaWidth - uiInfo.fieldSize.x) / 2;
 	//フィールド上側のマージン
 	uiInfo.fieldTopMargin =	(uiInfo.playerRegion.y - uiInfo.fieldSize.y) * 3 / 5;
 
