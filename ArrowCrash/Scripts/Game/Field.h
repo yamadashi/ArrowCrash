@@ -46,6 +46,7 @@ public:
 	std::array< bool, constants::numOfItemType > getActivatedEffect() const { return activated; }
 	void effectOn(int type);
 	void effectEnd(int type);
+	int pickUpRandomFlat();//アイテムのランダム生成の左端を返す。平地がなければ-1を返す
 
 	static void clearFieldPtr() { fields.clear(); }
 };
