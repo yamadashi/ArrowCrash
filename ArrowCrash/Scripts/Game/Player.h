@@ -27,5 +27,6 @@ public:
 	void draw() const;
 
 	void explode();
+	int calculateAddScores(int numOfDestroyed_);
 	int getScore() const { return score; }
 };

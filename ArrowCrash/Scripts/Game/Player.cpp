@@ -34,16 +34,16 @@ void Player::update() {
 				timer.restart();
 			}
 		}
-		if (gamepad.pressed(ymds::GamepadIn::DOWN)) {
+		else if (gamepad.pressed(ymds::GamepadIn::DOWN)) {
 			if (timer.ms() > 100) {
 				mngr->getCurrentUnit().move(MoveDirection::Down);
 				timer.restart();
 			}
-		}
+		}		
+		else if (gamepad.clicked(ymds::GamepadIn::L1)) mngr->exchangeStock();
+		else if (gamepad.pressed(ymds::GamepadIn::R1)) explode();
 		if (gamepad.clicked(ymds::GamepadIn::THREE)) mngr->getCurrentUnit().rotate(RotateDirection::Left);
 		if (gamepad.clicked(ymds::GamepadIn::TWO)) mngr->getCurrentUnit().rotate(RotateDirection::Right);
-		if (gamepad.clicked(ymds::GamepadIn::L1)) mngr->exchangeStock();
-		if (gamepad.clicked(ymds::GamepadIn::R1)) explode();
 	}
 
 	field->update();
@@ -75,11 +75,16 @@ void Player::explode() {
 	auto&& itr = std::remove_if(arrowBlocks->begin(), arrowBlocks->end(), [](const std::weak_ptr<ArrowBlock>& ref) { return ref.lock()->isDestroyed(); });
 	arrowBlocks->erase(itr, arrowBlocks->end());
 
-	score += numOfDestroyed;
+	score += calculateAddScores(numOfDestroyed);
+	//score += numOfDestroyed;
 
 	//お邪魔
 	mngr->bother(numOfDestroyed);
 
 	mngr->closeField();
 	mngr->getCurrentUnit().predict();
+}
+
+int Player::calculateAddScores(int numOfDestroyed_){
+	return numOfDestroyed_;
 }
