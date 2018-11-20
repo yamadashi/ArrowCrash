@@ -54,7 +54,7 @@ Game::Game()
 	paused(false),
 	pause(none),
 	timer(true),
-	time_limit(180),
+	time_limit(120),
 	players()
 {}
 
@@ -88,10 +88,11 @@ void Game::init() {
 void Game::update() {
   
 	//・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ
-	if (timer.s() > time_limit) {
+	if (timer.s() >= time_limit) {
 		for (int i = 0; i < players.size(); i++) {
 			m_data->scores.at(i) = players.at(i).getScore();
 		}
+		timer.pause();
 		changeScene(SceneName::Result);
 	}
 
