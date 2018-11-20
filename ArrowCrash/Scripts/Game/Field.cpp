@@ -217,6 +217,10 @@ bool Field::CheckItemExistence() const{
 }
 
 void Field::effectOn(int type) {
+	if (activated[type] == true && ItemTimers[type].s() < 2) {
+		ItemTimers[type].restart(); 
+		return;
+	}
 	activated[type] = true;
 	ItemTimers[type].restart();
 
@@ -229,8 +233,15 @@ void Field::effectOn(int type) {
 	default: break;
 	}
 	const double effectCellSize = TextureAsset(texture_name).width;
-	ymds::EffectGenerator::addLinkedImage(texture_name, effectCellSize, stdPos + Point(Block::blockSize, 2 * Block::blockSize), 12 * (double)Block::blockSize / effectCellSize, 0.01);
-
+	
+	int OverlapAvoid = 1;
+	
+	for (auto timer : ItemTimers){
+		if (timer.isActive() && timer.s() < 2) {
+			OverlapAvoid += 2;
+		}
+	}
+	ymds::EffectGenerator::addLinkedImage(texture_name, effectCellSize, stdPos + Point(Block::blockSize, OverlapAvoid * Block::blockSize), 12 * (double)Block::blockSize / effectCellSize, 0.01);
 }
 
 void Field::effectEnd(int type) {
