@@ -56,7 +56,6 @@ void Player::draw() const {
 	ojamaGauge->draw();
 	infoWindow->draw();
 	mngr->draw();
-	PutText(L"Score:", score).from(gameData.stdPositions.at(number) + Point(64, 384));
 }
 
 void Player::explode() {

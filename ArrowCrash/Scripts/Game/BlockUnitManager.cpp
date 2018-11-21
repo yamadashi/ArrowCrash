@@ -8,8 +8,8 @@ BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<Arro
 	stdPos(gameData.stdPositions.at(playerNum)),
 	hasExchanged(false),
 	ojamaBuffer(0),
-	nextUnitFrames(gameData.nextUnitFrames->at(playerNum)),
-	stockFrame(gameData.stockFrames->at(playerNum)),
+	nextUnitFrames(gameData.nextUnitFrames.at(playerNum)),
+	stockFrame(gameData.stockFrames.at(playerNum)),
 	currentUnit(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, arrowBlocks, field)),
 	stock(nullptr),
 	ItemPropability(20)//パーセント表記

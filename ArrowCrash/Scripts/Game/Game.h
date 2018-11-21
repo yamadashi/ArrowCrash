@@ -45,12 +45,7 @@ private:
 		int fieldTopMargin;
 	} uiInfo;
 
-	struct UIComponents {
-		Line topUIBorder;
-		std::vector<Rect> playerPanel;
-		std::vector<Rect> stockFrames;
-		std::vector<std::vector<Rect>> nextUnitFrames;
-	} uiComp;
+	std::vector<Rect> playerPanel;
 
 	void initGameData();
 	void initUIComponents();
