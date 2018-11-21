@@ -100,6 +100,7 @@ namespace ymds {
 
 		void registerEvent(Event* event) { eventList.emplace_back(event, shouldErase); }
 		bool hasEvent() const { return eventList.size() > 0; }
+		void clear() { eventList.clear(); }
 	};
 
 }
