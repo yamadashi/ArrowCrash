@@ -9,6 +9,7 @@ private:
 	const int number; //プレイヤー番号
 	GameData& gameData;
 	int score;
+	const int penalty;
 	Stopwatch timer;
 
 	// 一括で爆発するためフィールド上の全てのArrowBlockへの参照を持っておく
@@ -22,11 +23,14 @@ public:
 	Player(int player_num, GameData& gameData);
 	~Player() = default;
 
+	static std::vector<Player*> players;
 
-	void init() { mngr->init(); field->init(); infoWindow.emplace(number, gameData, score); }
+	void init() { players.emplace_back(this); mngr->init(); field->init(); infoWindow.emplace(number, gameData, score); }
 	void update();
 	void draw() const;
 
 	void explode();
 	int getScore() const { return score; }
+
+	static void clearPlayerPtr() { players.clear(); }
 };

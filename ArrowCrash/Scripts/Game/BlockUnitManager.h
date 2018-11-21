@@ -35,6 +35,7 @@ public:
 	Unit& getCurrentUnit() { return *currentUnit; }
 	void exchangeStock();
 	void bother(int numOfDestroyed);
+	int calculateRising(int numOfDestroyed);
 	void changeSpeed(bool active);
 	void changeForbid(bool active);
 	void GuardOn();

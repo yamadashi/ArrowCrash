@@ -14,6 +14,8 @@ private:
 	const Point stdPos; //基準点
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 
+	bool deathFlag;
+
 	const Rect fieldShape;
 
 	bool contains(const Point& point, bool ignoreEdge = false) const;
@@ -47,6 +49,9 @@ public:
 	void effectOn(int type);
 	void effectEnd(int type);
 	int pickUpRandomFlat();//アイテムのランダム生成の左端を返す。平地がなければ-1を返す
+
+	bool deathCheck() { return deathFlag; }
+	void restart() { deathFlag = false; }
 
 	static void clearFieldPtr() { fields.clear(); }
 };

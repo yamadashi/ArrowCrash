@@ -4,6 +4,7 @@ Player::Player(int player_num, GameData& gameData_)
 	:number(player_num),
 	gameData(gameData_),
 	score(0),
+	penalty(5000),
 	timer(true),
 	arrowBlocks(new std::vector<std::weak_ptr<ArrowBlock>>()),
 	field(new Field(gameData.stdPositions.at(number), *arrowBlocks)),
@@ -15,6 +16,8 @@ Player::Player(int player_num, GameData& gameData_)
 	double scale = (double)field->getFieldShape().h / gauge_size.y;
 	ojamaGauge.emplace(field->getFieldShape().pos.movedBy(-gauge_size.x*scale*1.5, 0), scale, *mngr);
 }
+
+std::vector < Player *> Player::players;
 
 void Player::update() {
 
@@ -35,19 +38,28 @@ void Player::update() {
 				timer.restart();
 			}
 		}
-		if (gamepad.pressed(ymds::GamepadIn::DOWN)) {
+		else if (gamepad.pressed(ymds::GamepadIn::DOWN)) {
 			if (timer.ms() > 100) {
 				mngr->getCurrentUnit().move(MoveDirection::Down);
 				timer.restart();
 			}
-		}
+		}		
+		else if (gamepad.clicked(ymds::GamepadIn::L1)) mngr->exchangeStock();
+		else if (gamepad.pressed(ymds::GamepadIn::R1)) explode();
 		if (gamepad.clicked(ymds::GamepadIn::THREE)) mngr->getCurrentUnit().rotate(RotateDirection::Left);
 		if (gamepad.clicked(ymds::GamepadIn::TWO)) mngr->getCurrentUnit().rotate(RotateDirection::Right);
-		if (gamepad.clicked(ymds::GamepadIn::L1)) mngr->exchangeStock();
-		if (gamepad.clicked(ymds::GamepadIn::R1)) explode();
 	}
 
 	field->update();
+	if (field->deathCheck()) {
+		PutText(L"", penalty).from(gameData.stdPositions.at(number) + Point(64, 450));
+		for (auto player : players) {
+			if (player != this) {
+				player->score += penalty;
+			}
+		}
+		field->restart();
+	}
 	mngr->update();
 }
 
@@ -69,7 +81,7 @@ void Player::explode() {
 	auto&& itr = std::remove_if(arrowBlocks->begin(), arrowBlocks->end(), [](const std::weak_ptr<ArrowBlock>& ref) { return ref.lock()->isDestroyed(); });
 	arrowBlocks->erase(itr, arrowBlocks->end());
 
-	score += numOfDestroyed;
+	score += 10 * int(pow(numOfDestroyed, 1.2));
 
 	//お邪魔
 	mngr->bother(numOfDestroyed);
