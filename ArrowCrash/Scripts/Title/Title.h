@@ -19,9 +19,7 @@ private:
 	double speed;
 	const double deceleration;
 	Point selectViewPos;
-
-	std::array<Point, 2> backgroundPos;
-	const int backScrollSpeed;
+	float alpha; //•s“§–¾“x
 
 public:
 	Title();
