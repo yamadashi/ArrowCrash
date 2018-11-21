@@ -217,7 +217,7 @@ bool Field::CheckItemExistence() const{
 }
 
 void Field::effectOn(int type) {
-	if (activated[type] == true && ItemTimers[type].s() < 2) {
+	if (activated[type] && ItemTimers[type].s() < 2) {
 		ItemTimers[type].restart(); 
 		return;
 	}
