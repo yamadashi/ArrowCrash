@@ -83,15 +83,19 @@ void BlockUnitManager::draw() const {
 		const Point offset = ((1.0 - scale) / 2.0 * frameSize).asPoint();
 
 		static const Size frameTextureSize = TextureAsset(L"next").size;
-		const double frameTextureScale = 2.3 * frameSize.x / frameTextureSize.x;
-		const Point frameTexturePos = nextUnitFrames.front().pos - Point(frameSize.x * 2 / 5, frameSize.y * 3 / 4);
+		const double nextTextureScale = 2.3 * frameSize.x / frameTextureSize.x;
+		const Point nextTexturePos = nextUnitFrames.front().pos - Point(frameSize.x * 2 / 5, frameSize.y * 3 / 4);
 
-		TextureAsset(L"next").scale(frameTextureScale).draw(frameTexturePos);
+		TextureAsset(L"next").scale(nextTextureScale).draw(nextTexturePos);
 		int counter = 0;
 		for (auto&& unit : nextUnits) {
 			unit->draw(nextUnitFrames.at(counter++).pos.movedBy(offset), unitScale);
 		}
-		if (stock) stock->draw(stockFrame.pos.movedBy(offset), unitScale);
+
+		TextureAsset(L"stock").resize(frameSize).draw(stockFrame.pos);
+		if (stock) {
+			stock->draw(stockFrame.pos.movedBy(offset), unitScale);
+		}
 	}
 }
 

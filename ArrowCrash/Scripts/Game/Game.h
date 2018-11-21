@@ -50,8 +50,6 @@ private:
 		std::vector<Rect> playerPanel;
 		std::vector<Rect> stockFrames;
 		std::vector<std::vector<Rect>> nextUnitFrames;
-
-		void draw() const;
 	} uiComp;
 
 	void initGameData();

@@ -156,8 +156,6 @@ void Game::draw() const {
 		player.draw();
 	}
 
-	uiComp.draw();
-
 	ymds::EventManager::get().draw();
 
 	//ƒ^ƒCƒ€•\Ž¦
@@ -251,16 +249,4 @@ void Game::initUIComponents() {
 	}
 	gameData.nextUnitFrames = &uiComp.nextUnitFrames;
 	gameData.stockFrames = &uiComp.stockFrames;
-}
-
-
-//‚»‚Ì‚¤‚¿‚¢‚ç‚È‚­‚È‚é
-void Game::UIComponents::draw() const {
-
-	topUIBorder.draw();
-	
-	for (const auto& stockFrame : stockFrames) {
-		stockFrame.drawFrame();
-	}
-	
 }
