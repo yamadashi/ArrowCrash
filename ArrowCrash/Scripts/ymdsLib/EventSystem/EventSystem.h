@@ -2,7 +2,7 @@
 #ifndef EVENT_SYSTEM_H
 #define EVENT_SYSTEM_H
 
-#include <Siv3D.hpp>
+#include <list>
 
 
 //EventManagerクラスを作って、Eventクラスを継承した処理のクラスを登録すればよい
@@ -100,6 +100,7 @@ namespace ymds {
 
 		void registerEvent(Event* event) { eventList.emplace_back(event, shouldErase); }
 		bool hasEvent() const { return eventList.size() > 0; }
+		void clear() { eventList.clear(); }
 	};
 
 }

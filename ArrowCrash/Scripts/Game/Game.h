@@ -41,8 +41,6 @@ private:
 
 	struct UIInfo {
 		int topUIHeight;
-		Size playerRegion;
-		Size fieldSize;
 		int fieldLeftMargin;
 		int fieldTopMargin;
 	} uiInfo;
@@ -52,8 +50,6 @@ private:
 		std::vector<Rect> playerPanel;
 		std::vector<Rect> stockFrames;
 		std::vector<std::vector<Rect>> nextUnitFrames;
-
-		void draw() const;
 	} uiComp;
 
 	void initGameData();

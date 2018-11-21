@@ -5,6 +5,7 @@
 
 class BlockUnitManager {
 private:
+	int playerNum;
 	Field& field;
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 	const Point stdPos;
