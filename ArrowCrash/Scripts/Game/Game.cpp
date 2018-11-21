@@ -63,6 +63,7 @@ Game::~Game() {
 	BlockUnitManager::clearManagerPtr();
 	Field::clearFieldPtr();
 	Player::clearPlayerPtr();
+	ymds::EventManager::get().clear();
 }
 
 void Game::init() {
@@ -84,15 +85,19 @@ void Game::init() {
 	m_data->scores.clear();
 	for (int i = 0; i < m_data->numOfPlayer; i++)
 		m_data->scores.emplace_back();
+
+	//ゲーム画面で表示する情報ウィンドウ
+	InfoWindow::setFont(L"Dash Digital-7", 0.05 * gameData.fieldSize.x);
 }
 
 void Game::update() {
   
-	//繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽ
-	if (timer.s() > time_limit) {
+	//・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ
+	if (timer.s() >= time_limit) {
 		for (int i = 0; i < players.size(); i++) {
 			m_data->scores.at(i) = players.at(i).getScore();
 		}
+		timer.pause();
 		changeScene(SceneName::Result);
 	}
 
@@ -144,20 +149,18 @@ void Game::draw() const {
 	};
 	
 	for (int i = 0; i < m_data->numOfPlayer; i++) {
-		uiComp.playerPanel.at(i).draw(playerColorBack[i]);
+		playerPanel.at(i).draw(playerColorBack[i]);
 	}
 
 	for (auto& player : players) {
 		player.draw();
 	}
 
-	uiComp.draw();
-
 	ymds::EventManager::get().draw();
 
 	//繧ｿ繧､繝?陦ｨ遉ｺ
 	int remaining = time_limit - timer.s();
-	const Point timePos(Window::Center().x, Window::Height() / 50);
+	const Point timePos(Window::Center().x, Window::Height() / 25);
 	FontAsset(L"digital")(remaining / 60, L":", Pad(remaining % 60, {2, L'0'})).drawAt(timePos);
 
 
@@ -175,34 +178,36 @@ void Game::initGameData() {
 
 	const int numOfPlayer = m_data->numOfPlayer;
 
-	//繝ｻ?ｽｽe繝ｻ?ｽｽv繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽC繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽ[繝ｻ?ｽｽG繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽA繝ｻ?ｽｽ?ｾ後し繝ｻ?ｽｽC繝ｻ?ｽｽY
-	uiInfo.playerRegion = Size(Window::Width() / numOfPlayer, Window::Height() - uiInfo.topUIHeight);
-	
-	//繝ｻ?ｽｽt繝ｻ?ｽｽB繝ｻ?ｽｽ[繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽh繝ｻ?ｽｽ繝ｻ?ｽｽ
+	//プレイヤー領域
+	gameData.playerRegion = Size(Window::Width() / numOfPlayer, Window::Height() - uiInfo.topUIHeight);
+
+	//フィールド幅
 	int fieldWidth = 0;
 	switch (m_data->numOfPlayer)
 	{
-	case 2: fieldWidth = uiInfo.playerRegion.x * 9 / 20; break;
-	case 3:	fieldWidth = uiInfo.playerRegion.x * 13 / 20; break;
-	case 4:	fieldWidth = uiInfo.playerRegion.x * 17 / 20; break;
+	case 2: fieldWidth = gameData.playerRegion.x * 9 / 20; break;
+	case 3:	fieldWidth = gameData.playerRegion.x * 13 / 20; break;
+	case 4:	fieldWidth = gameData.playerRegion.x * 17 / 20; break;
 	default: break;
 	}
 
 	//繝ｻ?ｽｽu繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽb繝ｻ?ｽｽN繝ｻ?ｽｽ?ｾ後し繝ｻ?ｽｽC繝ｻ?ｽｽY
 	int blockSize = fieldWidth / constants::col_len;
 	Block::blockSize = blockSize;
-	//繝輔ぅ繝ｼ繝ｫ繝峨?ｮ繧ｵ繧､繧ｺ
-	uiInfo.fieldSize.x = fieldWidth;
-	uiInfo.fieldSize.y = blockSize * constants::row_len;
-	//繝ｻ?ｽｽt繝ｻ?ｽｽB繝ｻ?ｽｽ[繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽh繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽ?ｾ後?槭?ｻ?ｽｽ[繝ｻ?ｽｽW繝ｻ?ｽｽ繝ｻ?ｽｽ
-	uiInfo.fieldLeftMargin = (uiInfo.playerRegion.x - uiInfo.fieldSize.x) / 2;
-	//繝輔ぅ繝ｼ繝ｫ繝我ｸ雁?ｴ縺ｮ繝槭?ｼ繧ｸ繝ｳ
-	uiInfo.fieldTopMargin =	(uiInfo.playerRegion.y - uiInfo.fieldSize.y) * 3 / 5;
 
+	//フィールドのサイズ
+	gameData.fieldSize.x = fieldWidth;
+	gameData.fieldSize.y = blockSize * constants::row_len;
+	//・ｽt・ｽB・ｽ[・ｽ・ｽ・ｽh・ｽ・ｽ・ｽ・ｽ・ｽﾌマ・ｽ[・ｽW・ｽ・ｽ
+	auto&& gauge = TextureAsset(L"gauge");
+	const int ojamaWidth = blockSize*(constants::row_len - 1)*(double)gauge.width / gauge.height; //お邪魔ゲージの分
+	uiInfo.fieldLeftMargin = (gameData.playerRegion.x + ojamaWidth - gameData.fieldSize.x) / 2;
+	//フィールド上側のマージン
+	uiInfo.fieldTopMargin =	(gameData.playerRegion.y - gameData.fieldSize.y) * 3 / 5;
 
 	for (int i = 0; i < numOfPlayer; i++) {
-		//繝ｻ?ｽｽe繝ｻ?ｽｽv繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽC繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽ[繝ｻ?ｽｽt繝ｻ?ｽｽB繝ｻ?ｽｽ[繝ｻ?ｽｽ繝ｻ?ｽｽ繝ｻ?ｽｽh繝ｻ?ｽｽ?ｾ悟渕貅悶?ｻ?ｽｽ_
-		gameData.stdPositions.emplace_back(uiInfo.playerRegion.x*i + uiInfo.fieldLeftMargin, uiInfo.topUIHeight + uiInfo.fieldTopMargin);
+		//・ｽe・ｽv・ｽ・ｽ・ｽC・ｽ・ｽ・ｽ[・ｽt・ｽB・ｽ[・ｽ・ｽ・ｽh・ｽﾌ基準・ｽ_
+		gameData.stdPositions.emplace_back(gameData.playerRegion.x*i + uiInfo.fieldLeftMargin, uiInfo.topUIHeight + uiInfo.fieldTopMargin);
 	}
 
 }
@@ -210,11 +215,10 @@ void Game::initGameData() {
 void Game::initUIComponents() {
 
 	auto&& window = Window::Size();
-	uiComp.topUIBorder.set({ 0, uiInfo.topUIHeight }, { window.x, uiInfo.topUIHeight });
-
+	
 	for (int i = 0; i < m_data->numOfPlayer; i++) {
-		uiComp.playerPanel.emplace_back(
-			Point(uiInfo.playerRegion.x*i, uiInfo.topUIHeight), uiInfo.playerRegion
+		playerPanel.emplace_back(
+			Point(gameData.playerRegion.x*i, uiInfo.topUIHeight), gameData.playerRegion
 		);
 	}
 
@@ -224,36 +228,22 @@ void Game::initUIComponents() {
 		//繝ｦ繝九ャ繝医ヵ繝ｬ繝ｼ繝?縺ｮ髢馴囈
 		const int unitFrameInterval = Block::blockSize * 2;
 		//繧ｹ繝医ャ繧ｯ譫?
-		uiComp.stockFrames.emplace_back(
-			uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin,
+		gameData.stockFrames.emplace_back(
+			gameData.playerRegion.x * i + uiInfo.fieldLeftMargin,
 			uiInfo.topUIHeight + uiInfo.fieldTopMargin - unitFrameSize - unitFrameInterval,
 			unitFrameSize,
 			unitFrameSize
 		);
 
 		//谺｡繝ｦ繝九ャ繝域棧
-		uiComp.nextUnitFrames.emplace_back();
+		gameData.nextUnitFrames.emplace_back();
 		for (int j = 0; j < constants::numOfNextBlocks; j++) {
-			uiComp.nextUnitFrames.at(i).emplace_back(
-				uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin + uiInfo.fieldSize.x - unitFrameSize * (2 - j) - unitFrameSize / 3 * j,
+			gameData.nextUnitFrames.at(i).emplace_back(
+				gameData.playerRegion.x * i + uiInfo.fieldLeftMargin + gameData.fieldSize.x - unitFrameSize * (2 - j) - unitFrameSize * 1 / 3 * j,
 				uiInfo.topUIHeight + uiInfo.fieldTopMargin - unitFrameSize * (j + 1) + unitFrameSize * 2 / 5 * j - unitFrameInterval,
 				unitFrameSize,
 				unitFrameSize
 			);
 		}
 	}
-	gameData.nextUnitFrames = &uiComp.nextUnitFrames;
-	gameData.stockFrames = &uiComp.stockFrames;
-}
-
-
-//縺昴?ｮ縺?縺｡縺?繧峨↑縺上↑繧?
-void Game::UIComponents::draw() const {
-
-	topUIBorder.draw();
-	
-	for (const auto& stockFrame : stockFrames) {
-		stockFrame.drawFrame();
-	}
-	
 }

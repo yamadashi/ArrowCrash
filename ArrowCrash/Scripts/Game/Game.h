@@ -41,20 +41,11 @@ private:
 
 	struct UIInfo {
 		int topUIHeight;
-		Size playerRegion;
-		Size fieldSize;
 		int fieldLeftMargin;
 		int fieldTopMargin;
 	} uiInfo;
 
-	struct UIComponents {
-		Line topUIBorder;
-		std::vector<Rect> playerPanel;
-		std::vector<Rect> stockFrames;
-		std::vector<std::vector<Rect>> nextUnitFrames;
-
-		void draw() const;
-	} uiComp;
+	std::vector<Rect> playerPanel;
 
 	void initGameData();
 	void initUIComponents();

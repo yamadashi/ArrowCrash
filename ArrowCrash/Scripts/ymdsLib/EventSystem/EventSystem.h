@@ -2,7 +2,7 @@
 #ifndef EVENT_SYSTEM_H
 #define EVENT_SYSTEM_H
 
-#include <Siv3D.hpp>
+#include <list>
 
 
 //EventManagerクラスを作って、Eventクラスを継承した処理のクラスを登録すればよい
@@ -73,11 +73,13 @@ namespace ymds {
 	class EventManager final{
 	private:
 		EventManager()
-			:shouldErase(false)
+			:shouldErase(false),
+			paused(false)
 		{}
 
 		list<EventOwner> eventList;
 		bool shouldErase;
+		bool paused;
 
 	public:
 		~EventManager() = default;
@@ -87,6 +89,8 @@ namespace ymds {
 		}
 
 		void update() {
+			if (paused) return;
+
 			for (auto& elm : eventList) elm.execute();
 
 			if (shouldErase) {
@@ -100,6 +104,9 @@ namespace ymds {
 
 		void registerEvent(Event* event) { eventList.emplace_back(event, shouldErase); }
 		bool hasEvent() const { return eventList.size() > 0; }
+		void clear() { eventList.clear(); }
+		void pause() { paused = true; }
+		void resume() { paused = false; }
 	};
 
 }

@@ -2,6 +2,7 @@
 #include "BlockUnitManager.h"
 #include "OjamaGauge.h"
 #include "../ymdsLib/GamePad/GamepadManager.h"
+#include "InfoWindow.h"
 
 class Player {
 private:
@@ -16,6 +17,7 @@ private:
 	std::shared_ptr<Field> field;
 	std::shared_ptr<BlockUnitManager> mngr;
 	Optional<OjamaGauge> ojamaGauge;
+	Optional<InfoWindow> infoWindow;
 
 public:
 	Player(int player_num, GameData& gameData);
@@ -23,7 +25,7 @@ public:
 
 	static std::vector<Player*> players;
 
-	void init() { players.emplace_back(this); mngr->init(); field->init(); }
+	void init() { players.emplace_back(this); mngr->init(); field->init(); infoWindow.emplace(number, gameData, score); }
 	void update();
 	void draw() const;
 

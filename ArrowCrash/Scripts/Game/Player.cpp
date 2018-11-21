@@ -9,7 +9,8 @@ Player::Player(int player_num, GameData& gameData_)
 	arrowBlocks(new std::vector<std::weak_ptr<ArrowBlock>>()),
 	field(new Field(gameData.stdPositions.at(number), *arrowBlocks)),
 	mngr(new BlockUnitManager(*field, *arrowBlocks, gameData, number)),
-	ojamaGauge(none)
+	ojamaGauge(none),
+	infoWindow(none)
 {
 	static const Size gauge_size = TextureAsset(L"gauge").size;
 	double scale = (double)field->getFieldShape().h / gauge_size.y;
@@ -23,6 +24,7 @@ void Player::update() {
 	auto& gamepad = ymds::GamepadManager::get().getGamepad(number);
 
 	if (gamepad.clicked(ymds::GamepadIn::UP)) mngr->getCurrentUnit().fallImmediately();
+
 	else {
 		if (gamepad.pressed(ymds::GamepadIn::LEFT)) {
 			if (timer.ms() > 100) {
@@ -64,6 +66,7 @@ void Player::update() {
 void Player::draw() const {
 	field->draw();
 	ojamaGauge->draw();
+	infoWindow->draw();
 	mngr->draw();
 }
 
