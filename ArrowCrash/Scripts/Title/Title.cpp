@@ -25,7 +25,7 @@ void Title::init() {
 		//ポインタの初期位置
 		Point pos(Window::Center().movedBy(0, Window::Height() / 6));
 		const Point tmp(2 * (i % 2) - 1, 2 * (i / 2) - 1); //i == 0 のとき (-1, 0), i== のとき (0, 1)
-		pos.moveBy(tmp.x * (Window::Width() / 4), tmp.y * (Window::Height() / 5));
+		pos.moveBy(0.2 * Window::Width() * tmp.x, 0.2 * tmp.y * Window::Height());
 
 		pointers.emplace_back(new Pointer(i, pos));
 	}
@@ -149,7 +149,6 @@ void Title::draw() const {
 
 	static const Rect clientRect(0, 0, Window::Size());
 	clientRect.draw(Color(Palette::White, alpha));
-	PutText(alpha).from(0, 0);
 
 	for (const auto& target : targets) target->draw();
 

@@ -4,9 +4,9 @@
 InfoWindow::InfoWindow(int playerNum, GameData& data, const int& score_)
 	:playerNumber(playerNum),
 	score(score_),
-	size(1.2 * data.fieldSize.x, 0.2 * data.fieldSize.x),
+	size(1.0 * data.fieldSize.x, 0.2 * data.fieldSize.x),
 	//•ª‚©‚è‚É‚­‚­‚Ä‚²‚ß‚ñ‚â‚Å
-	centerPos(data.stdPositions[playerNumber].movedBy(0.5 * data.fieldSize.x, data.fieldSize.y + (Window::Height() - (data.stdPositions[playerNumber].y + data.fieldSize.y)) * 0.5))
+	centerPos(data.playerRegion.x * (0.5 + playerNumber), data.stdPositions[playerNumber].y + data.fieldSize.y + (Window::Height() - (data.stdPositions[playerNumber].y + data.fieldSize.y)) * 0.5)
 {}
 
 void InfoWindow::draw() const {

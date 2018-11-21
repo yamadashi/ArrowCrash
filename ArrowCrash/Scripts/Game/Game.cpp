@@ -85,8 +85,7 @@ void Game::init() {
 	for (int i = 0; i < m_data->numOfPlayer; i++)
 		m_data->scores.emplace_back();
 
-	//突然何って感じやけど、許して
-	//ゲーム画面で表示する情報ウィンドウの
+	//ゲーム画面で表示する情報ウィンドウ
 	InfoWindow::setFont(L"Dash Digital-7", 0.05 * gameData.fieldSize.x);
 }
 
@@ -149,7 +148,7 @@ void Game::draw() const {
 	};
 	
 	for (int i = 0; i < m_data->numOfPlayer; i++) {
-		uiComp.playerPanel.at(i).draw(playerColorBack[i]);
+		playerPanel.at(i).draw(playerColorBack[i]);
 	}
 
 	for (auto& player : players) {
@@ -215,10 +214,9 @@ void Game::initGameData() {
 void Game::initUIComponents() {
 
 	auto&& window = Window::Size();
-	uiComp.topUIBorder.set({ 0, uiInfo.topUIHeight }, { window.x, uiInfo.topUIHeight });
-
+	
 	for (int i = 0; i < m_data->numOfPlayer; i++) {
-		uiComp.playerPanel.emplace_back(
+		playerPanel.emplace_back(
 			Point(gameData.playerRegion.x*i, uiInfo.topUIHeight), gameData.playerRegion
 		);
 	}
@@ -229,7 +227,7 @@ void Game::initUIComponents() {
 		//繝ｦ繝九ャ繝医ヵ繝ｬ繝ｼ繝?縺ｮ髢馴囈
 		const int unitFrameInterval = Block::blockSize * 2;
 		//繧ｹ繝医ャ繧ｯ譫?
-		uiComp.stockFrames.emplace_back(
+		gameData.stockFrames.emplace_back(
 			gameData.playerRegion.x * i + uiInfo.fieldLeftMargin,
 			uiInfo.topUIHeight + uiInfo.fieldTopMargin - unitFrameSize - unitFrameInterval,
 			unitFrameSize,
@@ -237,9 +235,9 @@ void Game::initUIComponents() {
 		);
 
 		//谺｡繝ｦ繝九ャ繝域棧
-		uiComp.nextUnitFrames.emplace_back();
+		gameData.nextUnitFrames.emplace_back();
 		for (int j = 0; j < constants::numOfNextBlocks; j++) {
-			uiComp.nextUnitFrames.at(i).emplace_back(
+			gameData.nextUnitFrames.at(i).emplace_back(
 				gameData.playerRegion.x * i + uiInfo.fieldLeftMargin + gameData.fieldSize.x - unitFrameSize * (2 - j) - unitFrameSize * 1 / 3 * j,
 				uiInfo.topUIHeight + uiInfo.fieldTopMargin - unitFrameSize * (j + 1) + unitFrameSize * 2 / 5 * j - unitFrameInterval,
 				unitFrameSize,
@@ -247,6 +245,4 @@ void Game::initUIComponents() {
 			);
 		}
 	}
-	gameData.nextUnitFrames = &uiComp.nextUnitFrames;
-	gameData.stockFrames = &uiComp.stockFrames;
 }

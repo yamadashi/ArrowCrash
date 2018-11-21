@@ -11,7 +11,6 @@ void OjamaGauge::draw() const {
 	gauge_back.draw(pos);
 
 	const auto& memory = TextureAsset(L"memory").scale(scale);
-	PutText(mngr.getOjamaCount()).from(pos);
 	for (int i = 0; i < mngr.getOjamaCount(); i++) {
 		if (i > constants::row_len - 1) break;
 		const Point position(pos.movedBy(0, gauge_back.size.y - memory.size.y*(i + 1)));
