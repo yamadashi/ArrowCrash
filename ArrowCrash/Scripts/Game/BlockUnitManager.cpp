@@ -2,13 +2,14 @@
 
 
 BlockUnitManager::BlockUnitManager(Field& field_, std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks_, GameData& gameData, int player_num)
-	:field(field_),
+	:playerNum(player_num),
+	field(field_),
 	arrowBlocks(arrowBlocks_),
-	stdPos(gameData.stdPositions.at(player_num)),
+	stdPos(gameData.stdPositions.at(playerNum)),
 	hasExchanged(false),
 	ojamaBuffer(0),
-	nextUnitFrames(gameData.nextUnitFrames->at(player_num)),
-	stockFrame(gameData.stockFrames->at(player_num)),
+	nextUnitFrames(gameData.nextUnitFrames->at(playerNum)),
+	stockFrame(gameData.stockFrames->at(playerNum)),
 	currentUnit(new BlockUnit(Point(0, constants::col_len / 2 - 2), stdPos, arrowBlocks, field)),
 	stock(nullptr),
 	ItemPropability(20)//パーセント表記
@@ -82,17 +83,16 @@ void BlockUnitManager::draw() const {
 		const double unitScale = scale * frameSize.x / (Block::blockSize * 4);
 		const Point offset = ((1.0 - scale) / 2.0 * frameSize).asPoint();
 
-		static const Size frameTextureSize = TextureAsset(L"next").size;
-		const double nextTextureScale = 2.3 * frameSize.x / frameTextureSize.x;
+		const double nextTextureScale = 2.3 * frameSize.x / 250;
 		const Point nextTexturePos = nextUnitFrames.front().pos - Point(frameSize.x * 2 / 5, frameSize.y * 3 / 4);
 
-		TextureAsset(L"next").scale(nextTextureScale).draw(nextTexturePos);
+		TextureAsset(L"next")(250*playerNum, 0, 250, 250).scale(nextTextureScale).draw(nextTexturePos);
 		int counter = 0;
 		for (auto&& unit : nextUnits) {
 			unit->draw(nextUnitFrames.at(counter++).pos.movedBy(offset), unitScale);
 		}
 
-		TextureAsset(L"stock").resize(frameSize).draw(stockFrame.pos);
+		TextureAsset(L"stock")(64*playerNum, 0, 64, 64).resize(frameSize).draw(stockFrame.pos);
 		if (stock) {
 			stock->draw(stockFrame.pos.movedBy(offset), unitScale);
 		}
