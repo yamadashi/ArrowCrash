@@ -83,6 +83,10 @@ void Game::init() {
 	m_data->scores.clear();
 	for (int i = 0; i < m_data->numOfPlayer; i++)
 		m_data->scores.emplace_back();
+
+	//突然何って感じやけど、許して
+	//ゲーム画面で表示する情報ウィンドウの
+	InfoWindow::setFont(L"Dash Digital-7", 0.05 * gameData.fieldSize.x);
 }
 
 void Game::update() {
@@ -175,16 +179,16 @@ void Game::initGameData() {
 
 	const int numOfPlayer = m_data->numOfPlayer;
 
-	//・ｽe・ｽv・ｽ・ｽ・ｽC・ｽ・ｽ・ｽ[・ｽG・ｽ・ｽ・ｽA・ｽﾌサ・ｽC・ｽY
-	uiInfo.playerRegion = Size(Window::Width() / numOfPlayer, Window::Height() - uiInfo.topUIHeight);
-	
-	//・ｽt・ｽB・ｽ[・ｽ・ｽ・ｽh・ｽ・ｽ
+	//プレイヤー領域
+	gameData.playerRegion = Size(Window::Width() / numOfPlayer, Window::Height() - uiInfo.topUIHeight);
+
+	//フィール幅
 	int fieldWidth = 0;
 	switch (m_data->numOfPlayer)
 	{
-	case 2: fieldWidth = uiInfo.playerRegion.x * 13 / 30; break;
-	case 3:	fieldWidth = uiInfo.playerRegion.x * 3 / 5;	break;
-	case 4:	fieldWidth = uiInfo.playerRegion.x * 7 / 10; break;
+	case 2: fieldWidth = gameData.playerRegion.x * 13 / 30; break;
+	case 3:	fieldWidth = gameData.playerRegion.x * 3 / 5;	break;
+	case 4:	fieldWidth = gameData.playerRegion.x * 7 / 10; break;
 	default: break;
 	}
 
@@ -192,19 +196,19 @@ void Game::initGameData() {
 	int blockSize = fieldWidth / constants::col_len;
 	Block::blockSize = blockSize;
 	//フィールドのサイズ
-	uiInfo.fieldSize.x = fieldWidth;
-	uiInfo.fieldSize.y = blockSize * constants::row_len;
+	gameData.fieldSize.x = fieldWidth;
+	gameData.fieldSize.y = blockSize * constants::row_len;
 	//・ｽt・ｽB・ｽ[・ｽ・ｽ・ｽh・ｽ・ｽ・ｽ・ｽ・ｽﾌマ・ｽ[・ｽW・ｽ・ｽ
 	auto&& gauge = TextureAsset(L"gauge");
 	const int ojamaWidth = blockSize*(constants::row_len - 1)*(double)gauge.width / gauge.height; //お邪魔ゲージの分
-	uiInfo.fieldLeftMargin = (uiInfo.playerRegion.x + ojamaWidth - uiInfo.fieldSize.x) / 2;
+	uiInfo.fieldLeftMargin = (gameData.playerRegion.x + ojamaWidth - gameData.fieldSize.x) / 2;
 	//フィールド上側のマージン
-	uiInfo.fieldTopMargin =	(uiInfo.playerRegion.y - uiInfo.fieldSize.y) * 3 / 5;
+	uiInfo.fieldTopMargin =	(gameData.playerRegion.y - gameData.fieldSize.y) * 3 / 5;
 
 
 	for (int i = 0; i < numOfPlayer; i++) {
 		//・ｽe・ｽv・ｽ・ｽ・ｽC・ｽ・ｽ・ｽ[・ｽt・ｽB・ｽ[・ｽ・ｽ・ｽh・ｽﾌ基準・ｽ_
-		gameData.stdPositions.emplace_back(uiInfo.playerRegion.x*i + uiInfo.fieldLeftMargin, uiInfo.topUIHeight + uiInfo.fieldTopMargin);
+		gameData.stdPositions.emplace_back(gameData.playerRegion.x*i + uiInfo.fieldLeftMargin, uiInfo.topUIHeight + uiInfo.fieldTopMargin);
 	}
 
 }
@@ -216,7 +220,7 @@ void Game::initUIComponents() {
 
 	for (int i = 0; i < m_data->numOfPlayer; i++) {
 		uiComp.playerPanel.emplace_back(
-			Point(uiInfo.playerRegion.x*i, uiInfo.topUIHeight), uiInfo.playerRegion
+			Point(gameData.playerRegion.x*i, uiInfo.topUIHeight), gameData.playerRegion
 		);
 	}
 
@@ -227,7 +231,7 @@ void Game::initUIComponents() {
 		const int unitFrameInterval = Block::blockSize * 2;
 		//ストック枠
 		uiComp.stockFrames.emplace_back(
-			uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin,
+			gameData.playerRegion.x * i + uiInfo.fieldLeftMargin,
 			uiInfo.topUIHeight + uiInfo.fieldTopMargin - unitFrameSize - unitFrameInterval,
 			unitFrameSize,
 			unitFrameSize
@@ -237,7 +241,7 @@ void Game::initUIComponents() {
 		uiComp.nextUnitFrames.emplace_back();
 		for (int j = 0; j < constants::numOfNextBlocks; j++) {
 			uiComp.nextUnitFrames.at(i).emplace_back(
-				uiInfo.playerRegion.x * i + uiInfo.fieldLeftMargin + uiInfo.fieldSize.x - unitFrameSize * (2 - j) - unitFrameSize * 1 / 3 * j,
+				gameData.playerRegion.x * i + uiInfo.fieldLeftMargin + gameData.fieldSize.x - unitFrameSize * (2 - j) - unitFrameSize * 1 / 3 * j,
 				uiInfo.topUIHeight + uiInfo.fieldTopMargin - unitFrameSize * (j + 1) + unitFrameSize * 2 / 5 * j - unitFrameInterval,
 				unitFrameSize,
 				unitFrameSize

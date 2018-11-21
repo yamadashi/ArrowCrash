@@ -60,7 +60,7 @@ void BlockUnitManager::update() {
 			nextUnits.pop_front();
 			generate();
 
-			if (currentUnit->cannotSettle()) //気持ち悪い文法...
+			if (currentUnit->cannotSettle())
 			{
 				resetField();
 			}

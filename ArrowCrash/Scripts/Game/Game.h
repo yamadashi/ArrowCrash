@@ -41,8 +41,6 @@ private:
 
 	struct UIInfo {
 		int topUIHeight;
-		Size playerRegion;
-		Size fieldSize;
 		int fieldLeftMargin;
 		int fieldTopMargin;
 	} uiInfo;

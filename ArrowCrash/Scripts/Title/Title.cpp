@@ -21,7 +21,6 @@ void Title::init() {
 	backgroundPos[0].set(0, 0);
 	backgroundPos[1].set(Window::Width(), 0);
 
-	//GamepadManager
 	ymds::GamepadManager::get().activate();
 
 	//pointer
