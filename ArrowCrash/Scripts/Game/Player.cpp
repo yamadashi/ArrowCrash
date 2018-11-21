@@ -79,7 +79,7 @@ void Player::explode() {
 	auto&& itr = std::remove_if(arrowBlocks->begin(), arrowBlocks->end(), [](const std::weak_ptr<ArrowBlock>& ref) { return ref.lock()->isDestroyed(); });
 	arrowBlocks->erase(itr, arrowBlocks->end());
 
-	score += 100 * int(pow(numOfDestroyed, 1.2));
+	score += 10 * int(pow(numOfDestroyed, 1.2));
 
 	//お邪魔
 	mngr->bother(numOfDestroyed);

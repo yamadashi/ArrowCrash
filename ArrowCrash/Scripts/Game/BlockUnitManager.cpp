@@ -93,7 +93,7 @@ void BlockUnitManager::draw() const {
 	if (stock) stock->draw(stockFrame.pos.movedBy(offset), unitScale);
 	if (ojamaBuffer > 0) {
 		const double effectCellSize = TextureAsset(L"WARNING").width;
-		TextureAsset(L"WARNING").scale(12 * Block::blockSize / effectCellSize).draw(stdPos + Point(Block::blockSize, 0.8 * Block::blockSize));
+		TextureAsset(L"WARNING").scale(12 * Block::blockSize / effectCellSize).draw(stdPos + Point(Block::blockSize, 0.5 * Block::blockSize));
 	}
 }
 
