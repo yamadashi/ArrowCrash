@@ -91,6 +91,10 @@ void BlockUnitManager::draw() const {
 		unit->draw(nextUnitFrames.at(counter++).pos.movedBy(offset), unitScale);
 	}
 	if (stock) stock->draw(stockFrame.pos.movedBy(offset), unitScale);
+	if (ojamaBuffer > 0) {
+		const double effectCellSize = TextureAsset(L"WARNING").width;
+		TextureAsset(L"WARNING").scale(12 * Block::blockSize / effectCellSize).draw(stdPos + Point(Block::blockSize, 0.8 * Block::blockSize));
+	}
 }
 
 void BlockUnitManager::exchangeStock() {
@@ -132,6 +136,7 @@ void BlockUnitManager::bother(int numOfDestroyed) {
 	if (ojamaBuffer >= rising) {
 		ojamaBuffer -= rising;
 		rising = 0;
+		return;
 	}
 	else if (ojamaBuffer < rising) {
 		rising -= ojamaBuffer;
