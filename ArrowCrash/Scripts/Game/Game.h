@@ -38,6 +38,7 @@ private:
 	enum class State { Init, Wait, Show	} state;
 
 	std::vector<bool> winner;
+	std::vector<bool> checked;
 
 
 public:
