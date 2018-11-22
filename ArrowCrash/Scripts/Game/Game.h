@@ -73,7 +73,6 @@ private:
 	std::vector<Rect> playerPanel;
 
 	void initGameData();
-	void initUIComponents();
 
 public:
 	Game();
