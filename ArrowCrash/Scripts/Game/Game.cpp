@@ -49,10 +49,73 @@ void Pause::resetPointerPos() {
 }
 
 
+Result::Result(int numOfPlayer_, GameData& data_, Game& gameScene_, std::vector<int>& scores_)
+	:numOfPlayer(numOfPlayer_),
+	data(data_),
+	gameScene(gameScene_),
+	scores(scores_),
+	backColor(Palette::Black, 0),
+	timer(false),
+	state(State::Init),
+	winner()
+{
+	//勝者のナンバーを取得
+	int maxScore = *std::max_element(scores.begin(), scores.end());
+	for (int i = 0; i < scores.size(); i++) {
+		winner.emplace_back(scores[i] == maxScore);
+	}
+}
+
+void Result::update() {
+	switch (state)
+	{
+	case Result::State::Init:
+		backColor.a += 3;
+		if (backColor.a >= 150) {
+			backColor.a = 150;
+			state = State::Wait;
+			timer.start();
+		}
+		break;
+
+	case Result::State::Wait:
+		if (timer.ms() >= 1000) state = State::Show;
+		break;
+
+	case Result::State::Show:
+	{
+		bool twoClicked = ymds::GamepadManager::get().any([](ymds::Gamepad& pad) { return pad.clicked(ymds::GamepadIn::TWO); });
+		if (twoClicked) gameScene.transit(SceneName::Title);
+		break;
+	}
+	
+	}
+	
+}
+
+void Result::draw() const {
+	static const Rect&& clientRect(Window::ClientRect());
+	clientRect.draw(backColor);
+
+	const double scale = (double)data.fieldSize.x / TextureAsset(L"WIN").width;
+
+	if (state == State::Show) {
+		for (int i = 0; i < winner.size(); i++) {
+			const Point pos(data.stdPositions[i].movedBy(0, data.fieldSize.y / 5));
+			if (winner[i]) TextureAsset(L"WIN").scale(scale).draw(pos);
+			else TextureAsset(L"LOSE").scale(scale).draw(pos);
+		}
+	}
+}
+
+
+
 Game::Game()
 	:gameData(),
 	paused(false),
 	pause(none),
+	result(none),
+	timeUp(false),
 	timer(true),
 	time_limit(120),
 	players()
@@ -92,13 +155,20 @@ void Game::init() {
 
 void Game::update() {
   
+	if (timeUp) {
+		result->update();
+		return;
+	}
+
 	//・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ
-	if (timer.s() >= time_limit) {
+	if (timer.s() >= time_limit || Input::KeyEnter.clicked) {
 		for (int i = 0; i < players.size(); i++) {
 			m_data->scores.at(i) = players.at(i).getScore();
 		}
 		timer.pause();
-		changeScene(SceneName::Result);
+
+		result.emplace(m_data->numOfPlayer, gameData, *this, m_data->scores);
+		timeUp = true;
 	}
 
 
@@ -125,9 +195,7 @@ void Game::update() {
 		timer.pause();
 		pause->resetPointerPos();
 	}
-
-	if (Input::KeyEnter.clicked) changeScene(SceneName::Result);
-
+	
 	for (auto& player : players) {
 		player.update();
 	}
@@ -165,6 +233,8 @@ void Game::draw() const {
 
 
 	if (paused && pause) pause->draw();
+
+	if (timeUp) result->draw();
 
 }
 

@@ -27,10 +27,34 @@ public:
 	void resetPointerPos();
 };
 
+class Result {
+private:
+	const int numOfPlayer;
+	GameData& data;
+	Game& gameScene; //シーン遷移のためだけのやつ(インターフェースに分離したほうが良いかも)
+	std::vector<int>& scores;
+	Color backColor;
+	Stopwatch timer;
+	enum class State { Init, Wait, Show	} state;
+
+	std::vector<bool> winner;
+
+
+public:
+	Result(int numOfPlayer, GameData& data, Game& gameScene_, std::vector<int>& scores);
+	~Result() = default;
+
+	void update();
+	void draw() const;
+};
+
 class Game : public Scene {
 private:
 	bool paused;
 	Optional<Pause> pause; //初期化タイミングを遅らせる
+	Optional<Result> result;
+
+	bool timeUp;
 
 	Stopwatch timer;
 	const int time_limit; //�b
