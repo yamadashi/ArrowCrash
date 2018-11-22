@@ -49,10 +49,82 @@ void Pause::resetPointerPos() {
 }
 
 
+Result::Result(int numOfPlayer_, GameData& data_, Game& gameScene_, std::vector<int>& scores_)
+	:numOfPlayer(numOfPlayer_),
+	data(data_),
+	gameScene(gameScene_),
+	scores(scores_),
+	backColor(Palette::Black, 0),
+	timer(false),
+	state(State::Init),
+	winner(),
+	checked()
+{
+	//勝者のナンバーを取得
+	int maxScore = *std::max_element(scores.begin(), scores.end());
+	for (int i = 0; i < scores.size(); i++) {
+		winner.emplace_back(scores[i] == maxScore);
+		checked.emplace_back(false);
+	}
+}
+
+void Result::update() {
+	switch (state)
+	{
+	case Result::State::Init:
+		backColor.a += 3;
+		if (backColor.a >= 150) {
+			backColor.a = 150;
+			state = State::Wait;
+			timer.start();
+		}
+		break;
+
+	case Result::State::Wait:
+		if (timer.ms() >= 1000) state = State::Show;
+		break;
+
+	case Result::State::Show:
+	{
+		for (int i = 0; i < checked.size(); i++) {
+			static auto twoClicked = [](int num) { return ymds::GamepadManager::get().getGamepad(num).clicked(ymds::GamepadIn::TWO); };
+			if (!checked[i] && twoClicked(i)) checked[i] = true;
+		}
+		//全てがtrueなら
+		if (!std::any_of(checked.begin(), checked.end(), [](bool f) { return !f; })) {
+			gameScene.transit(SceneName::Title);
+		}
+		break;
+	}
+	
+	}
+	
+}
+
+void Result::draw() const {
+	static const Rect&& clientRect(Window::ClientRect());
+	clientRect.draw(backColor);
+
+	const double scale = (double)data.fieldSize.x / TextureAsset(L"WIN").width;
+
+	if (state == State::Show) {
+		for (int i = 0; i < winner.size(); i++) {
+			const Point pos(data.stdPositions[i].movedBy(0, data.fieldSize.y / 5));
+			const Color color(checked[i] ? Color(100,100,100) : Palette::White);
+			if (winner[i]) TextureAsset(L"WIN").scale(scale).draw(pos, color);
+			else TextureAsset(L"LOSE").scale(scale).draw(pos, color);
+		}
+	}
+}
+
+
+
 Game::Game()
 	:gameData(),
 	paused(false),
 	pause(none),
+	result(none),
+	timeUp(false),
 	timer(true),
 	time_limit(120),
 	players()
@@ -92,17 +164,23 @@ void Game::init() {
 
 void Game::update() {
   
+	ymds::GamepadManager::get().update();
+
+	if (timeUp) {
+		result->update();
+		return;
+	}
+
 	//・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ
-	if (timer.s() >= time_limit) {
+	if (timer.s() >= time_limit || Input::KeyEnter.clicked) {
 		for (int i = 0; i < players.size(); i++) {
 			m_data->scores.at(i) = players.at(i).getScore();
 		}
 		timer.pause();
-		changeScene(SceneName::Result);
+
+		result.emplace(m_data->numOfPlayer, gameData, *this, m_data->scores);
+		timeUp = true;
 	}
-
-
-	ymds::GamepadManager::get().update();
 
 	static auto startClicked = []() {
 		return ymds::GamepadManager::get().any([](ymds::Gamepad& gamepad) { return gamepad.clicked(ymds::GamepadIn::START); });
@@ -125,9 +203,7 @@ void Game::update() {
 		timer.pause();
 		pause->resetPointerPos();
 	}
-
-	if (Input::KeyEnter.clicked) changeScene(SceneName::Result);
-
+	
 	for (auto& player : players) {
 		player.update();
 	}
@@ -165,6 +241,8 @@ void Game::draw() const {
 
 
 	if (paused && pause) pause->draw();
+
+	if (timeUp) result->draw();
 
 }
 
