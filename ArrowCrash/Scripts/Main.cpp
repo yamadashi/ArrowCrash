@@ -11,7 +11,9 @@ void Main()
 	const auto maxSize = Graphics::GetFullScreenSize().back();
 	Window::SetFullscreen(true, maxSize);
 
-	ymds::TextureRegisterer().fileRegister(L"Files/").preload();
+	ymds::AssetRegisterer().fileRegister(L"Files/").preload();
+	/*SoundAsset(L"bgm").setLoop(true);
+	SoundAsset(L"bgm").play();*/
 
 	FontManager::Register(L"font_1_kokumr_1.00_rls.ttf");
 	FontManager::Register(L"dash_digital-7.ttf");

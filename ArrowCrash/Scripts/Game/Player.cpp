@@ -72,6 +72,7 @@ void Player::draw() const {
 
 void Player::explode() {
 	int numOfDestroyed = 0;
+	if (arrowBlocks->size() != 0) SoundAsset(L"explosion").playMulti(1.0);
 	for (auto arrow : *arrowBlocks) {
 		const auto& ptr = arrow.lock();
 		if (ptr->isSettled())

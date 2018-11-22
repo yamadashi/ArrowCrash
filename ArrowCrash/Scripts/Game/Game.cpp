@@ -55,8 +55,8 @@ Result::Result(int numOfPlayer_, GameData& data_, Game& gameScene_, std::vector<
 	gameScene(gameScene_),
 	scores(scores_),
 	backColor(Palette::Black, 0),
-	timer(false),
-	state(State::Init),
+	timer(true),
+	state(State::Wait1),
 	winner(),
 	checked()
 {
@@ -71,16 +71,23 @@ Result::Result(int numOfPlayer_, GameData& data_, Game& gameScene_, std::vector<
 void Result::update() {
 	switch (state)
 	{
+	case Result::State::Wait1:
+		if (timer.ms() >= 1300) {
+			state = State::Init;
+			timer.restart();
+		}
+		break;
+
 	case Result::State::Init:
 		backColor.a += 3;
 		if (backColor.a >= 150) {
 			backColor.a = 150;
-			state = State::Wait;
-			timer.start();
+			state = State::Wait2;
+			timer.restart();
 		}
 		break;
 
-	case Result::State::Wait:
+	case Result::State::Wait2:
 		if (timer.ms() >= 1000) {
 			state = State::Show;
 			timer.restart();
@@ -91,7 +98,10 @@ void Result::update() {
 	{
 		for (int i = 0; i < checked.size(); i++) {
 			static auto twoClicked = [](int num) { return ymds::GamepadManager::get().getGamepad(num).clicked(ymds::GamepadIn::TWO); };
-			if (!checked[i] && twoClicked(i)) checked[i] = true;
+			if (!checked[i] && twoClicked(i)) {
+				checked[i] = true;
+				SoundAsset(L"hit").playMulti();
+			}
 		}
 		//全てがtrueなら
 		if (!std::any_of(checked.begin(), checked.end(), [](bool f) { return !f; })) {
@@ -156,7 +166,7 @@ Game::Game()
 	result(none),
 	timeUp(false),
 	timer(true),
-	time_limit(30),
+	time_limit(120),
 	players()
 {}
 
@@ -166,10 +176,15 @@ Game::~Game() {
 	Field::clearFieldPtr();
 	Player::clearPlayerPtr();
 	ymds::EventManager::get().clear();
+	SoundAsset(L"bgm").stop();
 }
 
 void Game::init() {
-	
+
+	SoundAsset(L"bgm").setLoop(true);
+	SoundAsset(L"bgm").setVolume(1.0);
+	SoundAsset(L"bgm").play();
+
 	ymds::GamepadManager::get().activate();
 
 	initGameData();
@@ -212,11 +227,20 @@ void Game::update() {
 
 		result.emplace(m_data->numOfPlayer, gameData, *this, m_data->scores);
 		timeUp = true;
+		SoundAsset(L"whistle").play();
+		SoundAsset(L"bgm").setVolume(0.3);
 	}
 	//十秒前
 	if (!issued10sBeforeRunner && time_limit - timer.s() <= 12) {
 		ymds::EventManager::get().registerEvent(new Runner(L"10秒前"));
 		issued10sBeforeRunner = true;
+		SoundAsset(L"whistle_single").play();
+	}
+	//一分前
+	if (!issued1mBeforeRunner && time_limit - timer.s() <= 60) {
+		ymds::EventManager::get().registerEvent(new Runner(L"1分前"));
+		issued1mBeforeRunner = true;
+		SoundAsset(L"whistle_single").play();
 	}
 
 	static auto startClicked = []() {
@@ -231,6 +255,8 @@ void Game::update() {
 		{
 			paused = false;
 			timer.resume();
+			SoundAsset(L"select").playMulti();
+			SoundAsset(L"bgm").setVolume(1.0);
 		}
 		return;
 	}
@@ -239,6 +265,8 @@ void Game::update() {
 		paused = true;
 		timer.pause();
 		pause->resetPointerPos();
+		SoundAsset(L"select").playMulti();
+		SoundAsset(L"bgm").setVolume(0.4);
 	}
 	
 	for (auto& player : players) {

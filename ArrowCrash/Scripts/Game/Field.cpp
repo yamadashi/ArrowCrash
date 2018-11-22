@@ -131,6 +131,8 @@ void Field::setBlockAt(std::shared_ptr<Block> block, const Point point) {
 
 void Field::reset() {
 
+	SoundAsset(L"explosion").playMulti();
+
 	//arrowBlocks縺ｮ縺・■settled縺ｪ繧ゅ・繧貞炎髯､
 	auto&& itr = std::remove_if(arrowBlocks.begin(), arrowBlocks.end(), [](std::weak_ptr<ArrowBlock> blk) { return blk.lock()->isSettled(); });
 	arrowBlocks.erase(itr, arrowBlocks.end());
@@ -155,7 +157,7 @@ void Field::reset() {
 }
 
 void Field::riseFloor(int num) {
-
+	SoundAsset(L"riseFloor").play();
 	for (int i = 0; i < constants::row_len - 1; i++) {
 		for (int j = 1; j < constants::col_len - 1; j++) {
 			if (blocks[i][j]) {
@@ -245,6 +247,7 @@ void Field::effectOn(int type) {
 		}
 	}
 	ymds::EffectGenerator::addLinkedImage(texture_name, effectCellSize, stdPos + Point(Block::blockSize, OverlapAvoid * Block::blockSize), 12 * (double)Block::blockSize / effectCellSize, 0.01);
+	SoundAsset(L"item").playMulti(0.83);
 }
 
 void Field::effectEnd(int type) {

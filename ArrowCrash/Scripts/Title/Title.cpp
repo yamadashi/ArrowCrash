@@ -18,6 +18,9 @@ Title::Title()
 
 void Title::init() {
 
+	SoundAsset(L"title_bgm").setLoop(true);
+	SoundAsset(L"title_bgm").play();
+
 	ymds::GamepadManager::get().activate();
 
 	//pointer
@@ -45,12 +48,12 @@ void Title::init() {
 	const int labelOffset = Window::Height() / 10;
 
 	targets.emplace_back(new ymds::ClickableLabel(L"‚Í‚¶‚ß‚é", font_handler, Window::Center().movedBy(0, labelOffset), Palette::White,
-		[this](ymds::ClickableLabel&) { transition = true; },
+		[this](ymds::ClickableLabel&) { SoundAsset(L"select").playMulti(); transition = true; },
 		[](ymds::ClickableLabel& label) { label.setColor(Palette::Darkslategray); },
 		[](ymds::ClickableLabel& label) { label.setColor(Palette::White); }
 	));
 	targets.emplace_back(new ymds::ClickableLabel(L"‚¹‚Â‚ß‚¢", font_handler, Window::Center().movedBy(0, labelOffset + labelHeight + labelInterval), Palette::White,
-		[this](ymds::ClickableLabel&) { changeScene(SceneName::Explain); },
+		[this](ymds::ClickableLabel&) { SoundAsset(L"select").playMulti(); changeScene(SceneName::Explain); },
 		[](ymds::ClickableLabel& label) { label.setColor(Palette::Darkslategray); },
 		[](ymds::ClickableLabel& label) { label.setColor(Palette::White); }
 	));
@@ -69,22 +72,22 @@ void Title::init() {
 	const int backButtonSize = Window::Height() / 5;
 
 	targets.emplace_back(new ymds::ClickablePanel(L"2PlayerPanel", selectViewPos.movedBy(panelLeft, panelOver), Size(panelSize, panelSize),
-		[this](ymds::ClickablePanel&) { m_data->numOfPlayer = 2; changeScene(SceneName::Game); },
+		[this](ymds::ClickablePanel&) { SoundAsset(L"select").playMulti(); m_data->numOfPlayer = 2; changeScene(SceneName::Game); },
 		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"2PlayerPanel_"); },
 		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"2PlayerPanel"); }
 	));
 	targets.emplace_back(new ymds::ClickablePanel(L"3PlayerPanel", selectViewPos.movedBy(panelLeft + panelSize + panelInterval, panelOver), Size(panelSize, panelSize),
-		[this](ymds::ClickablePanel&) { m_data->numOfPlayer = 3; changeScene(SceneName::Game); },
+		[this](ymds::ClickablePanel&) { SoundAsset(L"select").playMulti(); m_data->numOfPlayer = 3; changeScene(SceneName::Game); },
 		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"3PlayerPanel_"); },
 		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"3PlayerPanel"); }
 	));
 	targets.emplace_back(new ymds::ClickablePanel(L"4PlayerPanel", selectViewPos.movedBy(panelLeft + panelSize * 2 + panelInterval * 2, panelOver), Size(panelSize, panelSize),
-		[this](ymds::ClickablePanel&) { m_data->numOfPlayer = 4; changeScene(SceneName::Game); },
+		[this](ymds::ClickablePanel&) { SoundAsset(L"select").playMulti(); m_data->numOfPlayer = 4; changeScene(SceneName::Game); },
 		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"4PlayerPanel_"); },
 		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"4PlayerPanel"); }
 	));
 	targets.emplace_back(new ymds::ClickablePanel(L"back", selectViewPos.movedBy(backButtonMargin, backButtonMargin), Size(backButtonSize, backButtonSize),
-		[this](ymds::ClickablePanel&) { transition = true; }
+		[this](ymds::ClickablePanel&) { SoundAsset(L"select").playMulti(); transition = true; }
 	));
 
 
@@ -94,11 +97,11 @@ void Title::init() {
 	for (auto& pointer : pointers) {
 		clickDetector.addPointer(pointer);
 	}
-
 }
 
 Title::~Title() {
 	ymds::GamepadManager::get().inactivate();
+	SoundAsset(L"title_bgm").stop();
 }
 
 void Title::update() {

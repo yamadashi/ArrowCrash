@@ -35,7 +35,7 @@ private:
 	std::vector<int>& scores;
 	Color backColor;
 	Stopwatch timer;
-	enum class State { Init, Wait, Show	} state;
+	enum class State { Wait1, Init, Wait2, Show	} state;
 
 	std::vector<bool> winner;
 	std::vector<bool> checked;
@@ -78,6 +78,7 @@ private:
 	const int time_limit;
 
 	bool issued10sBeforeRunner = false;
+	bool issued1mBeforeRunner = false;
 
 	std::vector<Player> players;
 
