@@ -81,7 +81,10 @@ void Result::update() {
 		break;
 
 	case Result::State::Wait:
-		if (timer.ms() >= 1000) state = State::Show;
+		if (timer.ms() >= 1000) {
+			state = State::Show;
+			timer.restart();
+		}
 		break;
 
 	case Result::State::Show:
@@ -114,7 +117,34 @@ void Result::draw() const {
 			if (winner[i]) TextureAsset(L"WIN").scale(scale).draw(pos, color);
 			else TextureAsset(L"LOSE").scale(scale).draw(pos, color);
 		}
+
+		Color guideColor = (timer.ms() / 500) % 2 == 0 ? Palette::White : Palette::Darkgray;
+		FontAsset(L"digital")(L"press 2 key").drawAt(Window::Center().movedBy(0, Window::Height()/4), guideColor);
 	}
+}
+
+
+Runner::Runner(String text_)
+	:text(text_),
+	speed((float)Window::Width() / 180.0f),
+	font_handler(L"runner-font"),
+	size(FontAsset(font_handler)(text).region().size),
+	pos(Window::Width(), Window::Height()/2 - size.y / 2),
+	x_pos(pos.x)
+{}
+
+void Runner::update() {
+
+	//終了判定
+	if (pos.x + size.x < 0) kill();
+
+	//移動
+	x_pos -= speed;
+	pos.x = x_pos;
+}
+
+void Runner::draw() const {
+	FontAsset(font_handler)(text).draw(pos, Palette::White);
 }
 
 
@@ -126,7 +156,7 @@ Game::Game()
 	result(none),
 	timeUp(false),
 	timer(true),
-	time_limit(120),
+	time_limit(30),
 	players()
 {}
 
@@ -160,6 +190,8 @@ void Game::init() {
 
 	//ゲーム画面で表示する情報ウィンドウ
 	InfoWindow::setFont(L"Dash Digital-7", 0.05 * gameData.fieldSize.x);
+
+	FontAsset::Register(L"runner-font", Window::Height() / 20);
 }
 
 void Game::update() {
@@ -172,7 +204,7 @@ void Game::update() {
 	}
 
 	//タイムアップ
-	if (timer.s() >= time_limit) {
+	if (timer.s() >= time_limit || Input::KeyEnter.clicked) {
 		for (int i = 0; i < players.size(); i++) {
 			m_data->scores.at(i) = players.at(i).getScore();
 		}
@@ -180,6 +212,11 @@ void Game::update() {
 
 		result.emplace(m_data->numOfPlayer, gameData, *this, m_data->scores);
 		timeUp = true;
+	}
+	//十秒前
+	if (!issued10sBeforeRunner && time_limit - timer.s() <= 12) {
+		ymds::EventManager::get().registerEvent(new Runner(L"10秒前"));
+		issued10sBeforeRunner = true;
 	}
 
 	static auto startClicked = []() {
@@ -286,8 +323,6 @@ void Game::initGameData() {
 		//フィールド基準点
 		gameData.stdPositions.emplace_back(gameData.playerRegion.x*i + uiInfo.fieldLeftMargin, uiInfo.topUIHeight + uiInfo.fieldTopMargin);
 	}
-
-	auto&& window = Window::Size();
 
 	for (int i = 0; i < m_data->numOfPlayer; i++) {
 		playerPanel.emplace_back(

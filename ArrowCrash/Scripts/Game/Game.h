@@ -40,13 +40,30 @@ private:
 	std::vector<bool> winner;
 	std::vector<bool> checked;
 
-
 public:
 	Result(int numOfPlayer, GameData& data, Game& gameScene_, std::vector<int>& scores);
 	~Result() = default;
 
 	void update();
 	void draw() const;
+};
+
+//右から左に走る文字列
+class Runner : public ymds::Event {
+private:
+	String text;
+	float speed;
+	String font_handler;
+	Size size;
+	Point pos;
+	float x_pos;
+
+public:
+	Runner(String text);
+	~Runner() = default;
+	
+	void update() override;
+	void draw() const override;
 };
 
 class Game : public Scene {
@@ -58,7 +75,9 @@ private:
 	bool timeUp;
 
 	Stopwatch timer;
-	const int time_limit; //�b
+	const int time_limit;
+
+	bool issued10sBeforeRunner = false;
 
 	std::vector<Player> players;
 
