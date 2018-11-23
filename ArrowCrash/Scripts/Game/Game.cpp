@@ -122,10 +122,10 @@ void Result::draw() const {
 
 	if (state == State::Show) {
 		for (int i = 0; i < winner.size(); i++) {
-			const Point pos(data.stdPositions[i].movedBy(0, data.fieldSize.y / 5));
+			const Point pos(data.playerRegion.x * i + data.playerRegion.x / 2, data.fieldSize.y);
 			const Color color(checked[i] ? Color(100,100,100) : Palette::White);
-			if (winner[i]) TextureAsset(L"WIN").scale(scale).draw(pos, color);
-			else TextureAsset(L"LOSE").scale(scale).draw(pos, color);
+			if (winner[i]) TextureAsset(L"WIN").scale(scale).drawAt(pos, color);
+			else TextureAsset(L"LOSE").scale(scale).drawAt(pos, color);
 		}
 
 		Color guideColor = (timer.ms() / 500) % 2 == 0 ? Palette::White : Palette::Darkgray;
@@ -232,13 +232,13 @@ void Game::update() {
 	}
 	//十秒前
 	if (!issued10sBeforeRunner && time_limit - timer.s() <= 12) {
-		ymds::EventManager::get().registerEvent(new Runner(L"10秒前"));
+		ymds::EventManager::get().registerEvent(new Runner(L"残り10秒！"));
 		issued10sBeforeRunner = true;
 		SoundAsset(L"whistle_single").play();
 	}
 	//一分前
 	if (!issued1mBeforeRunner && time_limit - timer.s() <= 60) {
-		ymds::EventManager::get().registerEvent(new Runner(L"1分前"));
+		ymds::EventManager::get().registerEvent(new Runner(L"残り1分！"));
 		issued1mBeforeRunner = true;
 		SoundAsset(L"whistle_single").play();
 	}
