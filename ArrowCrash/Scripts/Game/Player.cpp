@@ -72,12 +72,18 @@ void Player::draw() const {
 
 void Player::explode() {
 	int numOfDestroyed = 0;
-	if (arrowBlocks->size() != 0) SoundAsset(L"explosion").playMulti(1.0);
+	static bool explosion_flag = false;
 	for (auto arrow : *arrowBlocks) {
 		const auto& ptr = arrow.lock();
-		if (ptr->isSettled())
+		if (ptr->isSettled()) {
+			if (!explosion_flag) {
+				explosion_flag = true;
+				SoundAsset(L"explosion").playMulti(0.8);
+			}
 			numOfDestroyed += ptr->explode();
+		}
 	}
+	explosion_flag = false;
 	//ちょっと気持ち悪い
 	auto&& itr = std::remove_if(arrowBlocks->begin(), arrowBlocks->end(), [](const std::weak_ptr<ArrowBlock>& ref) { return ref.lock()->isDestroyed(); });
 	arrowBlocks->erase(itr, arrowBlocks->end());

@@ -72,17 +72,29 @@ void Title::init() {
 	const int backButtonSize = Window::Height() / 5;
 
 	targets.emplace_back(new ymds::ClickablePanel(L"2PlayerPanel", selectViewPos.movedBy(panelLeft, panelOver), Size(panelSize, panelSize),
-		[this](ymds::ClickablePanel&) { SoundAsset(L"select").playMulti(); m_data->numOfPlayer = 2; changeScene(SceneName::Game); },
+		[this](ymds::ClickablePanel&) { 
+		SoundAsset(L"select").playMulti();
+		m_data->numOfPlayer = 2;
+		changeScene(SceneName::Game);
+		SoundAsset(L"title_bgm").stop(); },
 		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"2PlayerPanel_"); },
 		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"2PlayerPanel"); }
 	));
 	targets.emplace_back(new ymds::ClickablePanel(L"3PlayerPanel", selectViewPos.movedBy(panelLeft + panelSize + panelInterval, panelOver), Size(panelSize, panelSize),
-		[this](ymds::ClickablePanel&) { SoundAsset(L"select").playMulti(); m_data->numOfPlayer = 3; changeScene(SceneName::Game); },
+		[this](ymds::ClickablePanel&) {
+		SoundAsset(L"select").playMulti();
+		m_data->numOfPlayer = 3;
+		changeScene(SceneName::Game);
+		SoundAsset(L"title_bgm").stop(); },
 		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"3PlayerPanel_"); },
 		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"3PlayerPanel"); }
 	));
 	targets.emplace_back(new ymds::ClickablePanel(L"4PlayerPanel", selectViewPos.movedBy(panelLeft + panelSize * 2 + panelInterval * 2, panelOver), Size(panelSize, panelSize),
-		[this](ymds::ClickablePanel&) { SoundAsset(L"select").playMulti(); m_data->numOfPlayer = 4; changeScene(SceneName::Game); },
+		[this](ymds::ClickablePanel&) {
+		SoundAsset(L"select").playMulti();
+		m_data->numOfPlayer = 4;
+		changeScene(SceneName::Game);
+		SoundAsset(L"title_bgm").stop(); },
 		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"4PlayerPanel_"); },
 		[](ymds::ClickablePanel& panel) { panel.setTextureHandler(L"4PlayerPanel"); }
 	));
@@ -101,7 +113,6 @@ void Title::init() {
 
 Title::~Title() {
 	ymds::GamepadManager::get().inactivate();
-	SoundAsset(L"title_bgm").stop();
 }
 
 void Title::update() {
