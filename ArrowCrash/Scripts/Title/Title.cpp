@@ -14,12 +14,10 @@ Title::Title()
 	alpha(0)
 {
 	Graphics::SetBackground(Palette::Black);
+	SoundAsset(L"title_bgm").play();
 }
 
 void Title::init() {
-
-	SoundAsset(L"title_bgm").setLoop(true);
-	SoundAsset(L"title_bgm").play();
 
 	ymds::GamepadManager::get().activate();
 

@@ -11,7 +11,7 @@ InfoWindow::InfoWindow(int playerNum, GameData& data, const int& score_)
 
 void InfoWindow::draw() const {
 	TextureAsset(L"infoFrame").resize(size).drawAt(centerPos);
-	(*font)(playerNumber+1, L"P socre:", score).drawAt(centerPos);
+	(*font)(playerNumber+1, L"P score:", score).drawAt(centerPos);
 }
 
 void InfoWindow::setFont(String handler, int size) {

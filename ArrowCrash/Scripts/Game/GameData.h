@@ -8,4 +8,5 @@ struct GameData {
 	std::vector<Rect> stockFrames;
 	Size playerRegion;
 	Size fieldSize;
+	std::unordered_map<int, int> gamepadMapper; //実際（ハード的な）の番号とプレイヤー番号のマッピング
 };

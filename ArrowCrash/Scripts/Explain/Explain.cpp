@@ -28,7 +28,8 @@ void Explain::init() {
 	targets.emplace_back(new ymds::ClickablePanel(L"back", { buttonMargin, buttonMargin }, Size(buttonSize, buttonSize),
 		[this](ymds::ClickablePanel&) {
 		SoundAsset(L"select").playMulti();
-		if (counter > 0) counter--; }
+		if (counter > 0) counter--;
+		else changeScene(SceneName::Title); }
 	));
 	targets.emplace_back(new ymds::ClickablePanel(L"forward", { Window::Width() - buttonSize - buttonMargin, buttonMargin }, Size(buttonSize, buttonSize),
 		[this](ymds::ClickablePanel&) {

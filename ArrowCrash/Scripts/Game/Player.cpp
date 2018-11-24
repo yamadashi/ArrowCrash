@@ -50,16 +50,7 @@ void Player::update() {
 		else if (gamepad.clicked(ymds::GamepadIn::TWO)) mngr->getCurrentUnit().rotate(RotateDirection::Right);
 	}
 
-	field->update();
-	if (field->deathCheck()) {
-		PutText(L"", penalty).from(gameData.stdPositions.at(number) + Point(64, 450));
-		for (auto player : players) {
-			if (player != this) {
-				player->score += penalty;
-			}
-		}
-		field->restart();
-	}
+
 	mngr->update();
 }
 
@@ -78,7 +69,7 @@ void Player::explode() {
 		if (ptr->isSettled()) {
 			if (!explosion_flag) {
 				explosion_flag = true;
-				SoundAsset(L"explosion").playMulti(0.8);
+				SoundAsset(L"explosion").playMulti();
 			}
 			numOfDestroyed += ptr->explode();
 		}

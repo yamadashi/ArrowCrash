@@ -12,11 +12,11 @@ void Main()
 	Window::SetFullscreen(true, maxSize);
 
 	ymds::AssetRegisterer().fileRegister(L"Files/").preload();
-	/*SoundAsset(L"bgm").setLoop(true);
-	SoundAsset(L"bgm").play();*/
+	SoundAsset(L"bgm").setLoop(true);
+	SoundAsset(L"title_bgm").setLoop(true);
 
-	FontManager::Register(L"font_1_kokumr_1.00_rls.ttf");
-	FontManager::Register(L"dash_digital-7.ttf");
+	FontManager::Register(L"Files/font/font_1_kokumr_1.00_rls.ttf");
+	FontManager::Register(L"Files/font/dash_digital-7.ttf");
 	FontAsset::Register(L"kokumincho", maxSize.y / 36, L"刻明朝 Regular");
 	FontAsset::Register(L"digital", maxSize.y / 40, L"Dash Digital-7");
 

@@ -181,7 +181,6 @@ Game::~Game() {
 
 void Game::init() {
 
-	SoundAsset(L"bgm").setLoop(true);
 	SoundAsset(L"bgm").setVolume(1.0);
 	SoundAsset(L"bgm").play();
 
