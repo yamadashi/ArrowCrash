@@ -182,7 +182,7 @@ Game::~Game() {
 void Game::init() {
 
 	SoundAsset(L"bgm").setVolume(1.0);
-	SoundAsset(L"bgm").play();
+	//SoundAsset(L"bgm").play();
 
 	ymds::GamepadManager::get().activate();
 

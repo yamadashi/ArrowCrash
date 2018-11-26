@@ -19,6 +19,9 @@ Title::Title()
 
 void Title::init() {
 
+	SoundAsset(L"title_bgm").setLoop(true);
+	SoundAsset(L"title_bgm").play();
+
 	ymds::GamepadManager::get().activate();
 
 	//pointer

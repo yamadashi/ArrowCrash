@@ -14,6 +14,8 @@ private:
 	const Point stdPos; //基準点
 	std::vector<std::weak_ptr<ArrowBlock>>& arrowBlocks;
 
+	std::array<std::array<int, constants::col_len>, constants::row_len> map;
+
 	bool deathFlag;
 
 	const Rect fieldShape;
@@ -49,6 +51,10 @@ public:
 	void effectOn(int type);
 	void effectEnd(int type);
 	int pickUpRandomFlat();//アイテムのランダム生成の左端を返す。平地がなければ-1を返す
+
+	void fall();
+	void mapping();
+	void mapping(Point pos, int number);
 
 	bool deathCheck() { return deathFlag; }
 	void restart() { deathFlag = false; }

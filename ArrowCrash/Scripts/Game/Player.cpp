@@ -50,7 +50,17 @@ void Player::update() {
 		else if (gamepad.clicked(ymds::GamepadIn::TWO)) mngr->getCurrentUnit().rotate(RotateDirection::Right);
 	}
 
+	if(Input::KeySpace.clicked)field->fall();
 
+	field->update();
+	if (field->deathCheck()) {
+		for (auto player : players) {
+			if (player != this) {
+				player->score += penalty;
+			}
+		}
+		field->restart();
+	}
 	mngr->update();
 }
 

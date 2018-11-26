@@ -278,3 +278,63 @@ int Field::pickUpRandomFlat() {
 		return flats.front();
 	}
 }
+
+void Field::fall() {
+	mapping();
+	
+}
+
+void Field::mapping() {
+	for (int i = 0; i < constants::row_len; i++) {
+		for (int j = 0; j < constants::col_len; j++) {
+			if (j != 0 && j != constants::col_len - 1 && blocks[i][j])
+				map[i][j] = -2;
+			else
+				map[i][j] = -1;
+		}
+	}
+
+	int n = 0;
+	for (int i = constants::row_len - 2; i >= 0; i--) {
+		for (int j = 1; j < constants::col_len - 1; j++) {
+			if (map[i][j] == -2) {
+				mapping(Point(i, j), n);
+				n++;
+			}
+		}
+	}
+
+	int checker;
+	std::vector<bool> CompleteFall;
+	for (int i = 0; i < n; n++){
+		CompleteFall.emplace_back(false);
+	}
+	do {
+		checker = false;
+		
+		for (int i = constants::row_len - 3; i >= 0; i--) {
+			for (int j = 1; j < constants::col_len - 1; j++) {
+				if (map[i][j] > 0) {
+					checker = true;
+					if (map[i + 2][j] == 0) {
+						
+						CompleteFall.at[map[i][j]] = true;
+					}
+					else {
+						
+					}
+				}
+			}
+		}
+	} while (checker)
+}
+
+void Field::mapping(Point pos, int number) {
+	map[pos.x][pos.y] = number;
+	for (int x = -1, y = 0, i = 0; i < 4; x += y, y = x - y, x = y - x, ++i)
+		if (contains(pos + Point(x, y), false)) {
+			if (map[pos.x + x][pos.y + y] == -2) {
+				mapping(pos + Point(x, y), number);
+			}
+		}
+}
